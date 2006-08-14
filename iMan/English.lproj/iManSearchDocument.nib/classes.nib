@@ -1,0 +1,20 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {go = id; openPage = id; }; 
+            CLASS = iManSearchDocument; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                goButton = NSButton; 
+                progressMeter = NSProgressIndicator; 
+                searchField = NSTextField; 
+                searchTypeMenu = NSPopUpButton; 
+                tabView = NSTabView; 
+                tableView = NSOutlineView; 
+            }; 
+            SUPERCLASS = NSDocument; 
+        }
+    ); 
+    IBVersion = 1; 
+}

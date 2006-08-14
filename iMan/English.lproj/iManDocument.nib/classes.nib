@@ -1,0 +1,32 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = MNManpageView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
+            ACTIONS = {
+                back = id; 
+                changeExportFormat = id; 
+                doSearch = id; 
+                export = id; 
+                forward = id; 
+                refresh = id; 
+            }; 
+            CLASS = iManDocument; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                accessoryView = NSView; 
+                caseSensitive = NSButton; 
+                findDrawer = NSDrawer; 
+                findResults = NSTableView; 
+                formatMenu = NSPopUpButton; 
+                manpageView = NSTextView; 
+                progressIndicator = NSProgressIndicator; 
+                searchField = NSTextField; 
+                tabView = NSTabView; 
+                useRegexps = NSButton; 
+            }; 
+            SUPERCLASS = NSDocument; 
+        }
+    ); 
+    IBVersion = 1; 
+}

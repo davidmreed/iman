@@ -1,0 +1,45 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                addManPath = id; 
+                alwaysCheckForUpdates = id; 
+                changeBoldStyleTrait = id; 
+                changeBoldStyleUnderline = id; 
+                changeEmStyleColor = id; 
+                changeEmStyleTrait = id; 
+                changeEmStyleUnderline = id; 
+                handleExternalLinks = id; 
+                handlePageLinks = id; 
+                handleSearchResults = id; 
+                removeManPath = id; 
+                selectFont = id; 
+                showPageLinks = id; 
+            }; 
+            CLASS = iManPreferencesController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                alwaysCheckForUpdates = NSButton; 
+                boldStyleBold = NSButton; 
+                boldStyleColor = NSColorWell; 
+                boldStyleItalic = NSButton; 
+                boldStyleUnderline = NSButton; 
+                emStyleBold = NSButton; 
+                emStyleColor = NSColorWell; 
+                emStyleItalic = NSButton; 
+                emStyleUnderline = NSButton; 
+                handleExternalLinks = NSMatrix; 
+                handlePageLinks = NSMatrix; 
+                handleSearchResults = NSMatrix; 
+                manpathList = NSTableView; 
+                pageFont = NSTextField; 
+                pathTable = NSTableView; 
+                removeManpathButton = NSButton; 
+                showPageLinks = NSButton; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}

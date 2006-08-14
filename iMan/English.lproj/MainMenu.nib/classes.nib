@@ -1,0 +1,25 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {back = id; export = id; forward = id; reload = id; toggleFindDrawer = id; }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                checkForUpdates = id; 
+                emptyPageCache = id; 
+                newSearchWindow = id; 
+                showHelp = id; 
+                showPreferences = id; 
+                updateIndex = id; 
+            }; 
+            CLASS = iMan; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {checkForUpdatesItem = NSMenuItem; }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
