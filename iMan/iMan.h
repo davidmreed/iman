@@ -14,8 +14,6 @@
 	IBOutlet NSMenuItem *checkForUpdatesItem;
 	
     iManPreferencesController *_preferencesController;
-	MacPADSocket *socket;
-	BOOL userInitiatedCheck;
 }
 
 - (void)loadManpage:(NSPasteboard *)pboard

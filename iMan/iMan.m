@@ -13,7 +13,6 @@
 #import "iManIndexingWindowController.h"
 #import "NSString+DMRPercentEscapes.h"
 #import <iManEngine/iManEngine.h>
-#import "MacPADSocket.h"
 
 @implementation iMan
 
@@ -66,13 +65,7 @@
 	[NSApp setServicesProvider:self];
 	
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:iManAutoupdate]) {
-		socket = [[MacPADSocket alloc] init];
-		
-		userInitiatedCheck = NO;
-		[checkForUpdatesItem setEnabled:NO];
-		
-		[socket setDelegate:self];
-		[socket performCheck];
+		// FIXME: Re-implement updating.
 	}
 }
 
@@ -95,46 +88,6 @@
 		[iManDocument loadURL:[NSURL URLWithString:[[NSString stringWithFormat:@"man:%@", manpage] stringByAddingPercentEscapes]] inNewDocument:[[NSUserDefaults standardUserDefaults] boolForKey:iManHandleExternalLinks]];
 	}
 }
-
-#pragma mark -
-#pragma mark MacPAD Update Notifications
-
-- (void)macPADErrorOccurred:(NSNotification *)aNotification
-{
-	if (userInitiatedCheck) {
-		NSRunAlertPanel(NSLocalizedString(@"Unable to update.", nil),
-						NSLocalizedString(@"iMan was unable to check for updates due to the following error:\n\n%@", nil),
-						NSLocalizedString(@"OK", nil),
-						nil, nil,
-						[[aNotification userInfo] objectForKey:MacPADErrorMessage]);
-	}
-	[socket release];
-	socket = nil;
-	userInitiatedCheck = NO;
-	[checkForUpdatesItem setEnabled:YES];
-}
-
-- (void)macPADCheckFinished:(NSNotification *)aNotification
-{
-	if ([[[aNotification userInfo] objectForKey:MacPADNewVersionAvailable] boolValue]) {
-		if (NSRunAlertPanel(NSLocalizedString(@"New version available.", nil),
-							NSLocalizedString(@"A new version (%@) of iMan is available. Would you like to download it now?", nil),
-							NSLocalizedString(@"Yes", nil),
-							NSLocalizedString(@"No", nil),
-							nil,
-							[socket newVersion]) == NSOKButton)
-			[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[socket productPageURL]]];
-	} else if (userInitiatedCheck) {
-		NSRunAlertPanel(NSLocalizedString(@"iMan is up to date.", nil),
-						NSLocalizedString(@"You have the latest version of iMan.", nil),
-						NSLocalizedString(@"OK", nil),
-						nil, nil);
-	}
-	[socket release];
-	socket = nil;
-	userInitiatedCheck = NO;
-	[checkForUpdatesItem setEnabled:YES];
-}	
 
 #pragma mark -
 #pragma mark IBActions
@@ -199,7 +152,6 @@
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[socket release];
 	[super dealloc];
 }
 

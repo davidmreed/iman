@@ -11,7 +11,6 @@
 #import "DMRTaskQueue.h"
 #import "iManEnginePreferences.h"
 #import "NSTask+iManExtensions.h"
-#import "NSString+DMRPercentEscapes.h"
 
 #import <zlib.h>
 #import <unistd.h>
@@ -49,7 +48,7 @@ static DMRTaskQueue *_iManPageRenderingQueue;
 + pageWithURL:(NSURL *)url
 {
 	if ([[url scheme] isEqualToString:@"man"]) { // As in "man:groff(1)" or "man://groff(1)"
-		NSScanner *scanner = [NSScanner scannerWithString:[[url resourceSpecifier] stringByRemovingPercentEscapes]];
+		NSScanner *scanner = [NSScanner scannerWithString:[[url resourceSpecifier] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 		NSString *name, *section;
 		
 		// Skip any initial slashes
