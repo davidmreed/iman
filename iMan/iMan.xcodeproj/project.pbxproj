@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		11046A4509FAC93A00C397CE /* iManIndexingWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 11046A4309FAC93A00C397CE /* iManIndexingWindowController.h */; };
 		11046A4609FAC93A00C397CE /* iManIndexingWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11046A4409FAC93A00C397CE /* iManIndexingWindowController.m */; };
 		1117ECC109D1D20A00A5820F /* iMan.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 1117ECBF09D1D20A00A5820F /* iMan.scriptSuite */; };
 		116DE5F90742E456006D5514 /* iManPathEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 116DE5F70742E456006D5514 /* iManPathEditor.nib */; };
@@ -33,6 +32,10 @@
 		1174312F06AF430B00CE425B /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1174311F06AF430B00CE425B /* MainMenu.nib */; };
 		1174313006AF430B00CE425B /* iManToolbarItemForward.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 1174312106AF430B00CE425B /* iManToolbarItemForward.tiff */; };
 		1175BF700708B3B1009B6D58 /* iManToolbarItemReload.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 1175BF6E0708B3B1009B6D58 /* iManToolbarItemReload.tiff */; };
+		11A1B3570A9CB5B900115362 /* AGRegex.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11A1B3540A9CB5AC00115362 /* AGRegex.framework */; };
+		11A1B35A0A9CB5C300115362 /* AGRegex.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11A1B3540A9CB5AC00115362 /* AGRegex.framework */; };
+		11A1B38A0A9CB69600115362 /* iManEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119D4DE70A99475E00D25E74 /* iManEngine.framework */; };
+		11A1B38B0A9CB69E00115362 /* iManEngine.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 119D4DE70A99475E00D25E74 /* iManEngine.framework */; };
 		11B7680D0719C3BB00C503A1 /* iManIndexPanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11B7680B0719C3BB00C503A1 /* iManIndexPanel.nib */; };
 		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -44,7 +47,35 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 119D4DE20A99475E00D25E74 /* iManEngine.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8DC2EF5B0486A6940098B216 /*  */;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = iManEngine;
+		};
+		11A1B3530A9CB5AC00115362 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 11A1B34D0A9CB5AC00115362 /* AGRegex.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216 /* AGRegex.framework */;
+			remoteInfo = AGRegex;
+		};
+		11A1B3550A9CB5AC00115362 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 11A1B34D0A9CB5AC00115362 /* AGRegex.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 11E8B68009D3293100E7A363 /* AGRegexTest.app */;
+			remoteInfo = AGRegexTest;
+		};
+		11A1B35D0A9CB5E400115362 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 11A1B34D0A9CB5AC00115362 /* AGRegex.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AGRegex */;
+			remoteInfo = AGRegex;
+		};
+		11A1B35F0A9CB5E700115362 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 119D4DE20A99475E00D25E74 /* iManEngine.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* iManEngine */;
 			remoteInfo = iManEngine;
 		};
 /* End PBXContainerItemProxy section */
@@ -56,6 +87,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				11A1B38B0A9CB69E00115362 /* iManEngine.framework in CopyFiles */,
+				11A1B35A0A9CB5C300115362 /* AGRegex.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,6 +134,7 @@
 		1174312206AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = English; path = English.lproj/iManToolbarItemForward.tiff; sourceTree = "<group>"; };
 		1175BF6F0708B3B1009B6D58 /* English */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = English; path = English.lproj/iManToolbarItemReload.tiff; sourceTree = "<group>"; };
 		119D4DE20A99475E00D25E74 /* iManEngine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iManEngine.xcodeproj; path = ../iManEngine/iManEngine.xcodeproj; sourceTree = "<group>"; };
+		11A1B34D0A9CB5AC00115362 /* AGRegex.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AGRegex.xcodeproj; path = ../Externals/AGRegex/AGRegex.xcodeproj; sourceTree = SOURCE_ROOT; };
 		11B7680C0719C3BB00C503A1 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/iManIndexPanel.nib; sourceTree = "<group>"; };
 		2A37F4B0FDCFA73011CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = SOURCE_ROOT; };
 		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -114,6 +148,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11A1B38A0A9CB69600115362 /* iManEngine.framework in Frameworks */,
+				11A1B3570A9CB5B900115362 /* AGRegex.framework in Frameworks */,
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -196,7 +232,16 @@
 		119D4DE30A99475E00D25E74 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				119D4DE70A99475E00D25E74 /*  */,
+				119D4DE70A99475E00D25E74 /* iManEngine.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		11A1B34E0A9CB5AC00115362 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				11A1B3540A9CB5AC00115362 /* AGRegex.framework */,
+				11A1B3560A9CB5AC00115362 /* AGRegexTest.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -204,6 +249,7 @@
 		19C28FB0FE9D524F11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				11A1B34D0A9CB5AC00115362 /* AGRegex.xcodeproj */,
 				119D4DE20A99475E00D25E74 /* iManEngine.xcodeproj */,
 				8D15AC370486D014006FF6A4 /* iMan.app */,
 			);
@@ -286,7 +332,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				11046A4509FAC93A00C397CE /* iManIndexingWindowController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,6 +352,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				11A1B35E0A9CB5E400115362 /* PBXTargetDependency */,
+				11A1B3600A9CB5E700115362 /* PBXTargetDependency */,
 			);
 			name = iMan;
 			productInstallPath = "$(HOME)/Applications";
@@ -325,6 +372,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 11A1B34E0A9CB5AC00115362 /* Products */;
+					ProjectRef = 11A1B34D0A9CB5AC00115362 /* AGRegex.xcodeproj */;
+				},
+				{
 					ProductGroup = 119D4DE30A99475E00D25E74 /* Products */;
 					ProjectRef = 119D4DE20A99475E00D25E74 /* iManEngine.xcodeproj */;
 				},
@@ -336,13 +387,26 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		119D4DE70A99475E00D25E74 /*  */ = {
+		119D4DE70A99475E00D25E74 /* iManEngine.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = "";
-			path = /Users/parmadil/Projects/Build/Development;
+			path = iManEngine.framework;
 			remoteRef = 119D4DE60A99475E00D25E74 /* PBXContainerItemProxy */;
-			sourceTree = "<absolute>";
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		11A1B3540A9CB5AC00115362 /* AGRegex.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AGRegex.framework;
+			remoteRef = 11A1B3530A9CB5AC00115362 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		11A1B3560A9CB5AC00115362 /* AGRegexTest.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = AGRegexTest.app;
+			remoteRef = 11A1B3550A9CB5AC00115362 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
 
@@ -409,6 +473,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		11A1B35E0A9CB5E400115362 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AGRegex;
+			targetProxy = 11A1B35D0A9CB5E400115362 /* PBXContainerItemProxy */;
+		};
+		11A1B3600A9CB5E700115362 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = iManEngine;
+			targetProxy = 11A1B35F0A9CB5E700115362 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		089C165FFE840EACC02AAC07 /* InfoPlist.strings */ = {

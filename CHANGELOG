@@ -4,7 +4,7 @@
 	Added system service to load pages from selected title(section) string.
 	Added x-man-page: URL handler.
 	Added ability to update whatis.db.
-	Added automatic updating via MacPAD.
+	Added automatic updating via Sparkle.
 	Changed iMan's bundle identifier from reed.david.iMan to net.sf.iman-macosx.iman.
 	Cleaned up namespace by changing all identifiers with the old "MN" prefix to the "iMan" prefix. 
 	Fixed broken find result display code.

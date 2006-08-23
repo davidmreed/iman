@@ -11,7 +11,6 @@
 #import "iManSearchDocument.h"
 #import "iManPreferencesController.h"
 #import "iManIndexingWindowController.h"
-#import "NSString+DMRPercentEscapes.h"
 #import <iManEngine/iManEngine.h>
 
 @implementation iMan
@@ -48,15 +47,6 @@
             nil]];
 }
 
-- init
-{
-	self = [super init];
-		
-	userInitiatedCheck = NO;
-	
-	return self;
-}
-
 #pragma mark -
 #pragma mark NSApplication Delegate methods
 
@@ -85,7 +75,7 @@
 	
 	if (manpage != nil) {
 		[NSApp activateIgnoringOtherApps:YES];
-		[iManDocument loadURL:[NSURL URLWithString:[[NSString stringWithFormat:@"man:%@", manpage] stringByAddingPercentEscapes]] inNewDocument:[[NSUserDefaults standardUserDefaults] boolForKey:iManHandleExternalLinks]];
+		[iManDocument loadURL:[NSURL URLWithString:[[NSString stringWithFormat:@"man:%@", manpage] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] inNewDocument:[[NSUserDefaults standardUserDefaults] boolForKey:iManHandleExternalLinks]];
 	}
 }
 
@@ -94,13 +84,7 @@
 
 - (IBAction)checkForUpdates:(id)sender
 {
-	socket = [[MacPADSocket alloc] init];
-	
-	userInitiatedCheck = YES;
-	[checkForUpdatesItem setEnabled:NO];
-
-	[socket setDelegate:self];
-	[socket performCheck];
+	// FIXME: implement
 }
 
 - (IBAction)updateIndex:(id)sender
