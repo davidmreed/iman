@@ -32,26 +32,43 @@
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildStyle section */
+		11D3C60D0AAC8F6500B23AE9 /* Development */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Development;
+		};
+		11D3C60E0AAC8F6500B23AE9 /* Deployment */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			name = Deployment;
+		};
+/* End PBXBuildStyle section */
+
 /* Begin PBXContainerItemProxy section */
 		11A1B2D80A9CB54800115362 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 11A1B2D20A9CB54800115362 /* AGRegex.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8DC2EF5B0486A6940098B216 /* AGRegex.framework */;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = AGRegex;
 		};
 		11A1B2DA0A9CB54800115362 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 11A1B2D20A9CB54800115362 /* AGRegex.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 11E8B68009D3293100E7A363 /* AGRegexTest.app */;
+			remoteGlobalIDString = 11E8B68009D3293100E7A363;
 			remoteInfo = AGRegexTest;
 		};
 		11A1B2E60A9CB56200115362 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 11A1B2D20A9CB54800115362 /* AGRegex.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AGRegex */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AGRegex;
 		};
 /* End PBXContainerItemProxy section */
@@ -72,7 +89,7 @@
 		117FF2C409F9E29800B5E28E /* NSFileManager+DMRFindFolderExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+DMRFindFolderExtensions.m"; sourceTree = "<group>"; };
 		117FF2D909F9E42C00B5E28E /* NSString+DMRHFSUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+DMRHFSUtilities.h"; sourceTree = "<group>"; };
 		117FF2DA09F9E42C00B5E28E /* NSString+DMRHFSUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+DMRHFSUtilities.m"; sourceTree = "<group>"; };
-		11A1B2A60A9CB52C00115362 /* iManEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = iManEngine.framework; path = /Users/parmadil/Projects/Build/Development/iManEngine.framework; sourceTree = "<absolute>"; };
+		11A1B2A60A9CB52C00115362 /* iManEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = iManEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		11A1B2D20A9CB54800115362 /* AGRegex.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AGRegex.xcodeproj; path = ../Externals/AGRegex/AGRegex.xcodeproj; sourceTree = SOURCE_ROOT; };
 		11BABB0509D1DF2C00A3D6B1 /* iManSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManSearch.h; sourceTree = "<group>"; };
 		11BABB0609D1DF2C00A3D6B1 /* iManIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManIndex.h; sourceTree = "<group>"; };
@@ -286,6 +303,12 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 119D4D370A99152A00D25E74 /* Build configuration list for PBXProject "iManEngine" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				11D3C60D0AAC8F6500B23AE9 /* Development */,
+				11D3C60E0AAC8F6500B23AE9 /* Deployment */,
+			);
 			hasScannedForEncodings = 1;
 			mainGroup = 0867D691FE84028FC02AAC07 /* iManEngine */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;

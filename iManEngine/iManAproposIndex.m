@@ -60,7 +60,7 @@
 			
 			{ // Ensure the directory exists so makewhatis won't complain
 				NSString *folder = @"";
-				NSMutableArray *pathComponents = [[whatisDBPath pathComponents] mutableCopy];
+				NSMutableArray *pathComponents = [[[whatisDBPath stringByDeletingLastPathComponent] pathComponents] mutableCopy];
 				BOOL isDir;
 				
 				while ([pathComponents count] != 0) {

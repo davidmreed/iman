@@ -261,7 +261,8 @@ static DMRTaskQueue *_iManPageRenderingQueue;
 	return resolving_;
 }
 
-// When a load or resolve request is made, we create a new DMRTask with this page as the delegate. Then, when we are notified that the operation completed, we use the main-thread notification center to post a notification.
+// When a load or resolve request is made, we create a new DMRTask with this page as the delegate. 
+// Then, when we are notified that the operation completed, we use the main-thread notification center to post a notification.
 
 - (void)load
 {
