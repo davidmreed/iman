@@ -531,17 +531,17 @@ static DMRTaskQueue *_iManPageRenderingQueue;
             if ((index + 1) < length) {
                 if (*(bytes + index) == '_') { // underline
                     [str appendAttributedString:
-                        [[[NSAttributedString alloc] initWithString:[NSString stringWithCString:(bytes + index + 2) length:1] attributes:underlineDictionary] autorelease]];
+                        [[[NSAttributedString alloc] initWithString:[NSString stringWithCString:(char *)(bytes + index + 2) length:1] attributes:underlineDictionary] autorelease]];
                 } else {
                     [str appendAttributedString:
-                        [[[NSAttributedString alloc] initWithString:[NSString stringWithCString:(bytes + index) length:1] attributes:boldDictionary] autorelease]];
+                        [[[NSAttributedString alloc] initWithString:[NSString stringWithCString:(char *)(bytes + index) length:1] attributes:boldDictionary] autorelease]];
                 }
 				
                 index += 2;
             }
         } else {
             [str appendAttributedString:
-                [[[NSAttributedString alloc] initWithString:[NSString stringWithCString:(bytes + index) length:1]
+                [[[NSAttributedString alloc] initWithString:[NSString stringWithCString:(char *)(bytes + index) length:1]
                                                  attributes:normalDictionary] autorelease]];
         }
     }

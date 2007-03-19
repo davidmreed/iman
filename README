@@ -41,6 +41,6 @@ iMan also uses some "external" code. The packages prefixed "DMR" are portions of
 
 If you have obtained the iMan sources via Subversion, these should all be pulled in via svn:externals definitions. Current versions are included in iMan source snapshots.
 
-The source code is fairly lightly commented, but some important parts have more information about what's going on. If you have questions (or patches, or bugs, or improvements, or...), please send me an email.
+The source code is fairly lightly commented. Documentation for iManEngine is included in HeaderDoc comments. If you have questions (or patches, or bugs, or improvements, or...), please send me an email.
 
 -- David Reed <parmadil@gmail.com>

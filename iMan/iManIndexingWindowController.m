@@ -70,6 +70,7 @@ NSString *const iManIndexingCompletedNotification = @"iManIndexingCompletedNotif
 	
 	indexing_ = YES;
 	
+	// "Morph" the window -- delete the list view, resize the window around its current center, and add the progress bar.
 	[listView removeFromSuperview];
 	[wind setFrame:NSMakeRect(NSMinX([wind frame]) + floor(deltaX / 2),
 							  NSMinY([wind frame]) + floor(deltaY / 2),
@@ -85,6 +86,7 @@ NSString *const iManIndexingCompletedNotification = @"iManIndexingCompletedNotif
 
 	[wind setContentView:progressView];
 
+	// Register for notifications from the asynchronous update.
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_indexDidUpdate:) name:iManIndexDidUpdateNotification object:currentIndex_];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_indexDidNotUpdate:) name:iManIndexDidFailUpdateNotification object:currentIndex_];
 
@@ -98,13 +100,17 @@ NSString *const iManIndexingCompletedNotification = @"iManIndexingCompletedNotif
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	if ([selectedIndexes_ count] > 0) {
+		// If there are more indices to update, set the UI accordingly and trigger the update.
 		currentIndex_ = [[selectedIndexes_ objectAtIndex:0] retain]; 
 		[selectedIndexes_ removeObjectAtIndex:0];
 		[textField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Updating index \"%@\". Please wait...", nil), [currentIndex_ name]]];
 	
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_indexDidUpdate:) name:iManIndexDidUpdateNotification object:currentIndex_];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_indexDidNotUpdate:) name:iManIndexDidFailUpdateNotification object:currentIndex_];
+		
+		[currentIndex_ update];
 	} else {
+		// Updates are complete. Dismiss the window and post the appropriate notification so anything waiting on index completion (search windows) can continue.
 		[NSApp stopModalWithCode:NSOKButton];
 		[[self window] orderOut:self];
 		[[NSNotificationCenter defaultCenter] postNotificationName:iManIndexingCompletedNotification 
