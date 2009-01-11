@@ -176,7 +176,7 @@ enum {
 								   NULL,
 								   NULL,
 								   NULL,
-								   NSLocalizedString(@"The search failed due to the following error:\n\n%@", nil), 
+								   @"%@", // Yes, this is intentional. 
 								   [[notification userInfo] objectForKey:iManSearchError]);
 }	
 

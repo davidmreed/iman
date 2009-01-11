@@ -100,11 +100,18 @@ static DMRTaskQueue *_iManSearchQueue;
 	NSString *argument;
 	NSMutableArray *manpaths = [[[iManEnginePreferences sharedInstance] manpaths] mutableCopy];
 	unsigned index;
-		
-	// Adjust all manpaths to refer to the index directories inside the App Support folder.
-	// FIXME: this should check to see if they exist and if not use the originals.
+	char tempDir[] = "/tmp/imanXXXXXXXX";
+	NSString *tempLink;
+	
+	// We'll create a temporary directory with a symlink inside that points to our Application Support index folder. This obviates the need to workaround shell scripts breaking because of the space in "Application Support", or international characters which might or might not exist in the path to that folder.
+	if (mkdtemp(&tempDir) == NULL) [NSException raise:NSGenericException format:NSLocalizedStringFromTableInBundle(@"Unable to create temporary index directory.", @"Localizable.strings", [NSBundle bundleForClass:[self class]], nil)];
+	tempLink = [[NSString stringWithCString:tempDir] stringByAppendingPathComponent:@"man"];
+	if (![[NSFileManager defaultManager] createSymbolicLinkAtPath:tempLink pathContent:[aproposIndex indexPath]])
+		[NSException raise:NSGenericException format:NSLocalizedStringFromTableInBundle(@"Unable to create temporary index directory.", @"Localizable.strings", [NSBundle bundleForClass:[self class]], nil)];
+	
+	// Adjust all manpaths to refer to the index directories inside the symlinked App Support folder.
 	for (index = 0; index < [manpaths count]; index++)
-		[manpaths replaceObjectAtIndex:index withObject:[[aproposIndex indexPath] stringByAppendingPathComponent:[manpaths objectAtIndex:index]]];
+		[manpaths replaceObjectAtIndex:index withObject:[tempLink stringByAppendingPathComponent:[manpaths objectAtIndex:index]]];
 		
 	if ([searchType_ isEqualToString:iManSearchTypeApropos])
 		argument = @"-k";
@@ -112,27 +119,24 @@ static DMRTaskQueue *_iManSearchQueue;
 		argument = @"-f";
 	
 	if (![[aproposIndex lock] tryLock])
-		[NSException raise:NSGenericException format:@"Index is locked."];
+		[NSException raise:NSGenericException format:NSLocalizedStringFromTableInBundle(@"The index is locked. Please make sure that the index is not being modified by any other applications before searching.", @"Localizable.strings", [NSBundle bundleForClass:[self class]], nil)];
 	
-    data = [NSTask invokeTool:@"man"
-					arguments:[NSArray arrayWithObjects:
-						argument,
-						[self term],
-						nil]
+	data = [NSTask invokeTool:@"man"
+					arguments:[NSArray arrayWithObjects:argument, [self term], nil]
 				  environment:[NSDictionary dictionaryWithObject:[manpaths componentsJoinedByString:@":"] forKey:@"MANPATH"]];
-	
 	[[aproposIndex lock] unlock];
+	// The following method does not traverse symbolic links.
+	[[NSFileManager defaultManager] removeFileAtPath:tempLink handler:nil];
 	
     if (data != nil) {
         NSEnumerator *lines;
         NSString *line;
-
+		
         [resultsLock_ lock];
 		[results_ removeAllObjects];
 		
 		// Split the output into lines.
         lines = [[[NSString stringWithCString:[data bytes] length:[data length]] componentsSeparatedByString:@"\n"] objectEnumerator];
-		
         while ((line = [lines nextObject]) != nil) {
 			// The format of each line is always pageName(n)[, pageName2(n), ...] - description.
 			// Let's parse it.
@@ -164,7 +168,7 @@ static DMRTaskQueue *_iManSearchQueue;
 		
 		[resultsLock_ unlock];
     } else {
-		[NSException raise:NSGenericException format:@"couldn't search"];
+		[NSException raise:NSGenericException format:NSLocalizedStringFromTableInBundle(@"The search tool returned an error. Try rebuilding the index and searching again, and ensure (if applicable) that your search is a valid regular expression.", @"Localizable.strings", [NSBundle bundleForClass:[self class]], @"Error message displayed when apropos or whatis exits nonzero.")];
 	}
 }
 
