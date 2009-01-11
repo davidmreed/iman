@@ -55,7 +55,7 @@
 			[NSException raise:NSGenericException format:@""];
 		
 		while ((path = [pathEnumerator nextObject]) != nil) {
-			NSString *whatisDBPath = [[[indexPath stringByAppendingPathComponent:path] stringByAppendingPathComponent:@"whatis.db"] stringByStandardizingPath];
+			NSString *whatisDBPath = [[[indexPath stringByAppendingPathComponent:path] stringByAppendingPathComponent:@"whatis"] stringByStandardizingPath];
 			NSTask *task = [[[NSTask alloc] init] autorelease];
 			
 			{ // Ensure the directory exists so makewhatis won't complain
@@ -80,7 +80,7 @@
 			}
 			
 			[task setLaunchPath:[[iManEnginePreferences sharedInstance] pathForTool:@"makewhatis"]];
-			[task setArguments:[NSArray arrayWithObjects:@"-o", whatisDBPath, path, nil]]; //FIXME: is this locale-aware? That is, how will locale subdirectories be handled.
+			[task setArguments:[NSArray arrayWithObjects:@"-o", whatisDBPath, path, nil]]; // FIXME: is this locale-aware? That is, how will locale subdirectories be handled? (Also, does man or groff handle rendering manpages in non-UTF-8 encodings *into* UTF-8, for after we fix the parser to handle that encoding?)
 			
 			[task launch];
 			[task waitUntilExit];
