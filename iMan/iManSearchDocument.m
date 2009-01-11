@@ -13,8 +13,8 @@
 
 // Constants for tab view indices.
 enum {
-    k_iManSearchDocumentResults,
-    k_iManSearchDocumentProgress
+    kiManSearchDocumentResultsTabIndex,
+    kiManSearchDocumentProgressTabIndex
 };
 
 @implementation iManSearchDocument
@@ -87,7 +87,7 @@ enum {
 		[searchTypeMenu setEnabled:NO];
 		[goButton setEnabled:NO];
 		[searchField setEnabled:NO];
-		[tabView selectTabViewItemAtIndex:k_iManSearchDocumentProgress];
+		[tabView selectTabViewItemAtIndex:kiManSearchDocumentProgressTabIndex];
 		[[[[[self windowControllers] lastObject] window] standardWindowButton:NSWindowCloseButton] setEnabled:NO];
 		[progressMeter startAnimation:self];
 
@@ -152,7 +152,7 @@ enum {
     [searchTypeMenu setEnabled:YES];
     [goButton setEnabled:YES];
     [searchField setEnabled:YES];
-    [tabView selectTabViewItemAtIndex:k_iManSearchDocumentResults];
+    [tabView selectTabViewItemAtIndex:kiManSearchDocumentResultsTabIndex];
     [[[self windowControllers] lastObject] synchronizeWindowTitleWithDocumentName];
 	
     [tableView reloadData];
@@ -165,7 +165,7 @@ enum {
     [searchTypeMenu setEnabled:YES];
     [goButton setEnabled:YES];
     [searchField setEnabled:YES];
-    [tabView selectTabViewItemAtIndex:k_iManSearchDocumentResults];
+    [tabView selectTabViewItemAtIndex:kiManSearchDocumentResultsTabIndex];
     [[[self windowControllers] lastObject] synchronizeWindowTitleWithDocumentName];
 	NSBeginInformationalAlertSheet(NSLocalizedString(@"Search Failed", nil),
 								   NSLocalizedString(@"OK", nil),
