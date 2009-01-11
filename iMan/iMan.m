@@ -93,8 +93,7 @@
 	
 	[indexingWindowController doRunModalUpdateWindow];
 	
-	// FIXME: commenting this out fixes the crash. If it is uncommented, we get a crash on cancel but not on update-fails.
-	//[indexingWindowController release];
+	[indexingWindowController release];
 }
 
 - (IBAction)emptyPageCache:(id)sender

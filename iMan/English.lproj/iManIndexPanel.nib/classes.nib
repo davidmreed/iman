@@ -1,25 +1,49 @@
-{
-    IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            CLASS = iMan; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {indexPanel = NSPanel; indexProgress = NSProgressIndicator; }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            ACTIONS = {cancel = id; update = id; }; 
-            CLASS = iManIndexingWindowController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                indexList = NSTableView; 
-                listView = NSView; 
-                progressBar = NSProgressIndicator; 
-                progressView = NSView; 
-                textField = NSTextField; 
-            }; 
-            SUPERCLASS = NSWindowController; 
-        }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>cancel</key>
+				<string>id</string>
+				<key>runModalUpdateWindow</key>
+				<string>id</string>
+				<key>update</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>iManIndexingWindowController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>indexList</key>
+				<string>NSTableView</string>
+				<key>listView</key>
+				<string>NSView</string>
+				<key>progressBar</key>
+				<string>NSProgressIndicator</string>
+				<key>progressView</key>
+				<string>NSView</string>
+				<key>textField</key>
+				<string>NSTextField</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSWindowController</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>

@@ -71,7 +71,6 @@ NSString *const iManIndexingCompletedNotification = @"iManIndexingCompletedNotif
 	indexing_ = YES;
 	
 	// "Morph" the window -- delete the list view, resize the window around its current center, and add the progress bar.
-	[listView removeFromSuperview];
 	[wind setFrame:NSMakeRect(NSMinX([wind frame]) + floor(deltaX / 2),
 							  NSMinY([wind frame]) + floor(deltaY / 2),
 							  NSWidth([progressView frame]),
@@ -170,8 +169,9 @@ NSString *const iManIndexingCompletedNotification = @"iManIndexingCompletedNotif
 
 - (void)dealloc
 {
+	// Don't release progressView. Apparently NSWindowController automatically handles releasing top-level nib objects.
+	// (The damn thing crashes if we do).
 	[selectedIndexes_ release];
-	[progressView release];
 	[super dealloc];
 }
 
