@@ -53,6 +53,6 @@
  @method manpathsForTools
  @abstract Returns the actual colon-separated MANPATH.
  */
-- (NSString *)manpathsForTools;
+- (NSString *)manpathString;
 
 @end

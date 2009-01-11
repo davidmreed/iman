@@ -361,14 +361,14 @@ static DMRTaskQueue *_iManPageRenderingQueue;
     if (pageSection_ == nil) {
         args = [NSArray arrayWithObjects:
 			@"-M",
-			[[iManEnginePreferences sharedInstance] manpathsForTools],
+			[[iManEnginePreferences sharedInstance] manpathString],
             @"-w",
             pageName_,
             nil];
     } else {
         args = [NSArray arrayWithObjects:
 			@"-M",
-			[[iManEnginePreferences sharedInstance] manpathsForTools],
+			[[iManEnginePreferences sharedInstance] manpathString],
             @"-w",
             pageSection_,
             pageName_,

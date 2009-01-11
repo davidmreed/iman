@@ -128,9 +128,10 @@ static NSString *const iManEngineManpaths = @"iManEngineManpaths";
 	[_prefsLock unlock];
 }
 
-- (NSString *)manpathsForTools
+- (NSString *)manpathString
 {
-	return [[self manpaths] componentsJoinedByString:@":"];
+	// FIXME: is it correct in all circumstances to escape spaces? For example, if we set this value as MANPATH in the environment of some process, need it be escaped?
+	return [[[self manpaths] componentsJoinedByString:@":"] stringByReplacingOccurrencesOfString:@" " withString:@"\\ "];
 }
 	
 @end
