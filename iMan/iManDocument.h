@@ -19,9 +19,8 @@
     IBOutlet NSProgressIndicator *progressIndicator;
 
     IBOutlet NSDrawer *findDrawer;
-    IBOutlet NSTextField *searchField;
+    IBOutlet NSSearchField *searchField;
     IBOutlet NSButton *useRegexps;
-    IBOutlet NSButton *caseSensitive;
     IBOutlet NSTableView *findResults;
 
     NSUndoManager *_historyUndoManager;

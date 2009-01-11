@@ -14,7 +14,8 @@
 
 #import <zlib.h>
 #import <unistd.h>
-#import <AGRegex/AGRegex.h>
+#import "RegexKitLite/RegexKitLite.h"
+#import "RegexKitLiteSupport/RKLMatchEnumerator.h"
 
 @interface iManPage (Private)
 
@@ -121,8 +122,6 @@ static DMRTaskQueue *_iManPageRenderingQueue;
 	if (self) {
 		path_ = [path retain];
 		resolving_ = loading_ = NO;
-		pathLock_ = [[NSLock alloc] init];
-		pageLock_ = [[NSLock alloc] init];
 	}
 	
 	return self;
@@ -136,8 +135,6 @@ static DMRTaskQueue *_iManPageRenderingQueue;
 		pageName_ = [name retain];
 		pageSection_ = [section retain];
 		resolving_ = loading_ = NO;		
-		pathLock_ = [[NSLock alloc] init];
-		pageLock_ = [[NSLock alloc] init];
 	}
 	
 	return self;
@@ -147,9 +144,9 @@ static DMRTaskQueue *_iManPageRenderingQueue;
 {
 	NSString *path;
 	
-	[pathLock_ lock];
-	path = [[path_ retain] autorelease];
-	[pathLock_ unlock];
+	@synchronized (path_) {
+		path = [[path_ retain] autorelease];
+	}
 	
 	return path;
 }
@@ -180,9 +177,9 @@ static DMRTaskQueue *_iManPageRenderingQueue;
 {
 	NSAttributedString *page;
 	
-	[pageLock_ lock];
-	page = [[page_ retain] autorelease];
-	[pageLock_ unlock];
+	@synchronized (page_) {
+		page = [[page_ retain] autorelease];
+	}
 	
 	return page;
 }
@@ -348,10 +345,10 @@ static DMRTaskQueue *_iManPageRenderingQueue;
 	if ((data = [self attributedStringFromData:data]) == nil)
 		[self _reportFailure:@"The requested man page exists, but could not be rendered."];
 	
-	[pageLock_ lock];
-	[page_ release];
-	page_ = [data retain];
-	[pageLock_ unlock];
+	@synchronized (page_) {
+		[page_ release];
+		page_ = [data retain];
+	}
 }
 
 - (void)_resolve:(id)ignored
@@ -382,10 +379,10 @@ static DMRTaskQueue *_iManPageRenderingQueue;
     // the data returned has a newline at the end, so if we got some data,
     // convert it to an NSString, omitting the newline, and make sure it's an OK path.
     if (ret != nil) {
-		[pathLock_ lock];
-		[path_ release];
-        path_ = [[[NSString stringWithCString:[ret bytes] length:([ret length] - 1)] stringByStandardizingPath] retain];
-		[pathLock_ unlock];
+		@synchronized (path_) {
+			[path_ release];
+			path_ = [[[NSString stringWithCString:[ret bytes] length:([ret length] - 1)] stringByStandardizingPath] retain];
+		}
 	} else {
 		[self _reportFailure:@"The requested man page could not be located."];
 	}
@@ -425,6 +422,7 @@ static DMRTaskQueue *_iManPageRenderingQueue;
     NSPipe *input = [NSPipe pipe];
     NSString *launchPath = [[iManEnginePreferences sharedInstance] pathForTool:@"groff"];
     NSData *data;
+	NSFileHandle *readHandle;
     int returnStatus;
 	
     gzFile theFile;
@@ -466,17 +464,17 @@ static DMRTaskQueue *_iManPageRenderingQueue;
     }
 	
     [task launch];
-	
     fd = [[input fileHandleForWriting] fileDescriptor];    
+	readHandle = [output fileHandleForReading];
 	
     while ((bytesRead = gzread(theFile, buf, 4096)) > 0) {
         write(fd, buf, bytesRead); // send it on to groff.
     }
-	
+		
     [[input fileHandleForWriting] closeFile];
     gzclose(theFile);
 	
-    data = [[output fileHandleForReading] readDataToEndOfFile];
+	data = [readHandle readDataToEndOfFile];
     [task waitUntilExit];
 	
     returnStatus = [task terminationStatus];
@@ -546,22 +544,25 @@ static DMRTaskQueue *_iManPageRenderingQueue;
         }
     }
 	
-    // Now, use AGRegex to find anything that looks like a page reference and add a link.
-    // Pattern for link matching: [^\s]+\([0-9][a-z]*\)
+    // Now, use RegexKitLite to find anything that looks like a page reference and add a link.
+    // Pattern for link matching: \S+\(\d[a-z]*\)
     
 	{
-        AGRegex *regex = [AGRegex regexWithPattern:@"[^\\s]+\\([0-9][a-z]*\\)"];
-        AGRegexMatch *match;
         NSEnumerator *results;
+		NSString *searchText = [str string];
+		NSValue *match;
+
+        results = [searchText matchEnumeratorWithRegex:@"\\S+\\(\\d[a-z]*\\)" options:RKLNoOptions | RKLMultiline];
 		
-        results = [regex findEnumeratorInString:[str string]];
 		
-        while ((match = [results nextObject]) != nil) {
-            NSRange range = [match range];
+		while ((match = [results nextObject]) != nil) {
+            NSRange range = [match rangeValue];
+			NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"man:%@", [searchText substringWithRange:range]]];
 			
-            [str addAttribute:iManPageLinkAttributeName
-                        value:[NSURL URLWithString:[NSString stringWithFormat:@"man:%@", [match group]]]
-                        range:range];
+			if (url != nil)
+				[str addAttribute:iManPageLinkAttributeName
+							value:url
+							range:range];
         }
     }
 	
@@ -572,9 +573,7 @@ static DMRTaskQueue *_iManPageRenderingQueue;
 
 - (void)dealloc
 {
-	[pageLock_ release];
 	[page_ release];
-	[pathLock_ release];
 	[path_ release];
 	[pageName_ release];
 	[pageSection_ release];

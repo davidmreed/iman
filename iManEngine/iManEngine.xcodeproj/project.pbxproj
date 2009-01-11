@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 45;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,7 +13,6 @@
 		11230C0D09D1E56D0079DFCF /* DMRQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 11230C0509D1E56D0079DFCF /* DMRQueue.m */; };
 		117FF2C609F9E29800B5E28E /* NSFileManager+DMRFindFolderExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 117FF2C409F9E29800B5E28E /* NSFileManager+DMRFindFolderExtensions.m */; };
 		117FF2DC09F9E42C00B5E28E /* NSString+DMRHFSUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 117FF2DA09F9E42C00B5E28E /* NSString+DMRHFSUtilities.m */; };
-		11A1B2DC0A9CB55600115362 /* AGRegex.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11A1B2D90A9CB54800115362 /* AGRegex.framework */; };
 		11BABB1009D1DF2C00A3D6B1 /* iManSearch.h in Headers */ = {isa = PBXBuildFile; fileRef = 11BABB0509D1DF2C00A3D6B1 /* iManSearch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		11BABB1109D1DF2C00A3D6B1 /* iManIndex.h in Headers */ = {isa = PBXBuildFile; fileRef = 11BABB0609D1DF2C00A3D6B1 /* iManIndex.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		11BABB1309D1DF2C00A3D6B1 /* iManEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 11BABB0809D1DF2C00A3D6B1 /* iManEngine.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -29,49 +28,11 @@
 		11BABB2C09D1DF6A00A3D6B1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11BABB2809D1DF6A00A3D6B1 /* Localizable.strings */; };
 		11BABB5209D1E05600A3D6B1 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 11BABB5109D1E05600A3D6B1 /* libz.dylib */; };
 		11DB19A909F756A10037B978 /* iManAproposIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 11DB19A709F756A10037B978 /* iManAproposIndex.m */; };
+		635B7AA90F169DBA0043FFEF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7AA50F169DBA0043FFEF /* RegexKitLite.m */; };
+		635B7AAB0F169DBA0043FFEF /* RKLMatchEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7AA70F169DBA0043FFEF /* RKLMatchEnumerator.m */; };
+		635B7BB10F16A23A0043FFEF /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 635B7BB00F16A23A0043FFEF /* libicucore.dylib */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXBuildStyle section */
-		11D3C60D0AAC8F6500B23AE9 /* Development */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-			};
-			name = Development;
-		};
-		11D3C60E0AAC8F6500B23AE9 /* Deployment */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-			};
-			name = Deployment;
-		};
-/* End PBXBuildStyle section */
-
-/* Begin PBXContainerItemProxy section */
-		11A1B2D80A9CB54800115362 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 11A1B2D20A9CB54800115362 /* AGRegex.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
-			remoteInfo = AGRegex;
-		};
-		11A1B2DA0A9CB54800115362 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 11A1B2D20A9CB54800115362 /* AGRegex.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 11E8B68009D3293100E7A363;
-			remoteInfo = AGRegexTest;
-		};
-		11A1B2E60A9CB56200115362 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 11A1B2D20A9CB54800115362 /* AGRegex.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = AGRegex;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -90,7 +51,6 @@
 		117FF2D909F9E42C00B5E28E /* NSString+DMRHFSUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+DMRHFSUtilities.h"; sourceTree = "<group>"; };
 		117FF2DA09F9E42C00B5E28E /* NSString+DMRHFSUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+DMRHFSUtilities.m"; sourceTree = "<group>"; };
 		11A1B2A60A9CB52C00115362 /* iManEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = iManEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		11A1B2D20A9CB54800115362 /* AGRegex.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AGRegex.xcodeproj; path = ../Externals/AGRegex/AGRegex.xcodeproj; sourceTree = SOURCE_ROOT; };
 		11BABB0509D1DF2C00A3D6B1 /* iManSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManSearch.h; sourceTree = "<group>"; };
 		11BABB0609D1DF2C00A3D6B1 /* iManIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManIndex.h; sourceTree = "<group>"; };
 		11BABB0709D1DF2C00A3D6B1 /* NSTask+iManExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTask+iManExtensions.h"; sourceTree = "<group>"; };
@@ -109,6 +69,11 @@
 		11DB199F09F756430037B978 /* iManIndex+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "iManIndex+Private.h"; sourceTree = "<group>"; };
 		11DB19A609F756A10037B978 /* iManAproposIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManAproposIndex.h; sourceTree = "<group>"; };
 		11DB19A709F756A10037B978 /* iManAproposIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManAproposIndex.m; sourceTree = "<group>"; };
+		635B7AA40F169DBA0043FFEF /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
+		635B7AA50F169DBA0043FFEF /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
+		635B7AA60F169DBA0043FFEF /* RKLMatchEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKLMatchEnumerator.h; sourceTree = "<group>"; };
+		635B7AA70F169DBA0043FFEF /* RKLMatchEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RKLMatchEnumerator.m; sourceTree = "<group>"; };
+		635B7BB00F16A23A0043FFEF /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -117,9 +82,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				11A1B2DC0A9CB55600115362 /* AGRegex.framework in Frameworks */,
 				8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */,
 				11BABB5209D1E05600A3D6B1 /* libz.dylib in Frameworks */,
+				635B7BB10F16A23A0043FFEF /* libicucore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,7 +94,6 @@
 		034768DFFF38A50411DB9C8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				11A1B2D20A9CB54800115362 /* AGRegex.xcodeproj */,
 				11A1B2A60A9CB52C00115362 /* iManEngine.framework */,
 			);
 			name = Products;
@@ -190,6 +154,7 @@
 			children = (
 				11230B1209D1E41D0079DFCF /* Carbon.framework */,
 				11BABB5109D1E05600A3D6B1 /* libz.dylib */,
+				635B7BB00F16A23A0043FFEF /* libicucore.dylib */,
 				1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";
@@ -207,6 +172,8 @@
 		11230BF809D1E5300079DFCF /* Externals */ = {
 			isa = PBXGroup;
 			children = (
+				637FAC610F1A67830080BA28 /* RegexKitLiteSupport */,
+				635B7AA20F169DA00043FFEF /* RegexKitLite */,
 				119D4D500A99169000D25E74 /* DMRFilesystem */,
 				119D4D570A9916A900D25E74 /* DMRThreads */,
 			);
@@ -238,15 +205,6 @@
 			path = DMRThreads;
 			sourceTree = "<group>";
 		};
-		11A1B2D30A9CB54800115362 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				11A1B2D90A9CB54800115362 /* AGRegex.framework */,
-				11A1B2DB0A9CB54800115362 /* AGRegexTest.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		11DB199E09F756240037B978 /* Private Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -257,6 +215,25 @@
 				11BABB0E09D1DF2C00A3D6B1 /* NSTask+iManExtensions.m */,
 			);
 			name = "Private Classes";
+			sourceTree = "<group>";
+		};
+		635B7AA20F169DA00043FFEF /* RegexKitLite */ = {
+			isa = PBXGroup;
+			children = (
+				635B7AA40F169DBA0043FFEF /* RegexKitLite.h */,
+				635B7AA50F169DBA0043FFEF /* RegexKitLite.m */,
+			);
+			path = RegexKitLite;
+			sourceTree = "<group>";
+		};
+		637FAC610F1A67830080BA28 /* RegexKitLiteSupport */ = {
+			isa = PBXGroup;
+			children = (
+				635B7AA60F169DBA0043FFEF /* RKLMatchEnumerator.h */,
+				635B7AA70F169DBA0043FFEF /* RKLMatchEnumerator.m */,
+			);
+			name = RegexKitLiteSupport;
+			path = ../RegexKitLiteSupport;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -289,7 +266,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				11A1B2E70A9CB56200115362 /* PBXTargetDependency */,
 			);
 			name = iManEngine;
 			productInstallPath = "$(HOME)/Library/Frameworks";
@@ -303,44 +279,17 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 119D4D370A99152A00D25E74 /* Build configuration list for PBXProject "iManEngine" */;
-			buildSettings = {
-			};
-			buildStyles = (
-				11D3C60D0AAC8F6500B23AE9 /* Development */,
-				11D3C60E0AAC8F6500B23AE9 /* Deployment */,
-			);
+			compatibilityVersion = "Xcode 3.1";
 			hasScannedForEncodings = 1;
 			mainGroup = 0867D691FE84028FC02AAC07 /* iManEngine */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 11A1B2D30A9CB54800115362 /* Products */;
-					ProjectRef = 11A1B2D20A9CB54800115362 /* AGRegex.xcodeproj */;
-				},
-			);
+			projectRoot = "";
 			targets = (
 				8DC2EF4F0486A6940098B216 /* iManEngine */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		11A1B2D90A9CB54800115362 /* AGRegex.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = AGRegex.framework;
-			remoteRef = 11A1B2D80A9CB54800115362 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		11A1B2DB0A9CB54800115362 /* AGRegexTest.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = AGRegexTest.app;
-			remoteRef = 11A1B2DA0A9CB54800115362 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		8DC2EF520486A6940098B216 /* Resources */ = {
@@ -372,18 +321,12 @@
 				11DB19A909F756A10037B978 /* iManAproposIndex.m in Sources */,
 				117FF2C609F9E29800B5E28E /* NSFileManager+DMRFindFolderExtensions.m in Sources */,
 				117FF2DC09F9E42C00B5E28E /* NSString+DMRHFSUtilities.m in Sources */,
+				635B7AA90F169DBA0043FFEF /* RegexKitLite.m in Sources */,
+				635B7AAB0F169DBA0043FFEF /* RKLMatchEnumerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		11A1B2E70A9CB56200115362 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AGRegex;
-			targetProxy = 11A1B2E60A9CB56200115362 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		11230BE209D1E4620079DFCF /* InfoPlist.strings */ = {
@@ -502,7 +445,10 @@
 		119D4D380A99152A00D25E74 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/..",
+					"${SRCROOT}/../Externals",
+				);
 			};
 			name = Development;
 		};
@@ -514,18 +460,23 @@
 					i386,
 				);
 				DEPLOYMENT_POSTPROCESSING = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/..",
+					"${SRCROOT}/../Externals",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_ppc = /Developer/SDKs/MacOSX10.3.9.sdk;
+				SDKROOT = macosx10.4;
 			};
 			name = Deployment;
 		};
 		119D4D3A0A99152A00D25E74 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/..",
+					"${SRCROOT}/../Externals",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
 			name = Default;
 		};

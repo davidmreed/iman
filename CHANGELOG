@@ -1,3 +1,9 @@
+* 0.3
+	Replaced AGRegex (old, decrepit) with RegexKitLite.
+	Recompiled on 10.5 as Universal Binary.
+	Fixed some errors in thread handling; deleted some locks and replaced with @synchronized.
+	Many minor bugfixes.
+	
 * 0.2
 	Extensive rewrite of application and engine.
 	Added Reload function.

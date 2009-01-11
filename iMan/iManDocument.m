@@ -10,7 +10,8 @@
 #import "NSUserDefaults+DMRArchiving.h"
 #import <iManEngine/iManEngine.h>
 #import <unistd.h>
-#import <AGRegex/AGRegex.h>
+#import "RegexKitLite/RegexKitLite.h"
+#import "RegexKitLiteSupport/RKLMatchEnumerator.h"
 
 // Indices of tab view panes.
 enum {
@@ -176,23 +177,15 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
     _findResultRanges = [[NSMutableArray alloc] init];
     
     if ([useRegexps state] == NSOnState) {
-        AGRegex *regex = [AGRegex regexWithPattern:[searchField stringValue]
-                                           options:AGRegexMultiline | (([caseSensitive state] == NSOnState) ? 0 : AGRegexCaseInsensitive)];
         NSEnumerator *enumerator;
-        AGRegexMatch *match;
-        //AGRegex *whitespaceRegex = [AGRegex regexWithPattern:@"([\t\n]+)|([ ]{3,})"];
         NSString *string = [[manpageView textStorage] string];
-        //NSString *resultText;
-        //NSMutableAttributedString *attrString;
+		NSValue *match;
 
-        enumerator = [regex findEnumeratorInString:string];
+        enumerator = [string matchEnumeratorWithRegex:[searchField stringValue]];
 
-        while ((match = [enumerator nextObject]) != nil) {
-            NSRange range = [match range];
-            //unsigned leftMargin, rightMargin, length = [string length];
-
-            [_findResultRanges addObject:[NSValue valueWithRange:range]];
-                        [_lastFindResults addObject:[self findResultFromRange:[match range]]];
+        while ((match = [enumerator nextObject]) != nil) {            
+            [_findResultRanges addObject:match];
+			[_lastFindResults addObject:[self findResultFromRange:[match rangeValue]]];
             
         }
     } else {
@@ -204,7 +197,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
                                                      (CFStringRef)string,
                                                      (CFStringRef)[searchField stringValue],
                                                      CFRangeMake(0, [string length]),
-                                                     ([caseSensitive state] == NSOnState) ? 0 : kCFCompareCaseInsensitive);
+													 kCFCompareCaseInsensitive);
 
         if (results != NULL) {
             for (index = 0; index < CFArrayGetCount(results); index++) {

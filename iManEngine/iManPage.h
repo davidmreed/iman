@@ -13,7 +13,6 @@
 	NSString *pageName_;
 	NSString *pageSection_;
 	BOOL resolving_, loading_;
-	NSLock *pathLock_, *pageLock_;
 }
 
 + (void)clearCache;

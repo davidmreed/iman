@@ -208,7 +208,7 @@ enum {
 {    
     if ([[tableColumn identifier] isEqualToString:@"Page"]) {
         if ([item isKindOfClass:[NSArray class]]) { // if it is a multiple-page entry
-            return [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"%d pages", nil), [(NSArray *)item count]]
+            return [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"%@ (%d pages)", nil), [(NSArray *)item objectAtIndex:0], [(NSArray *)item count]]
                                                     attributes:[NSDictionary dictionaryWithObject:[NSColor disabledControlTextColor] forKey:NSForegroundColorAttributeName]] autorelease];
         } else {
             return item;

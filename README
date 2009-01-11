@@ -1,5 +1,5 @@
 iMan 0.2
-Copyright (c) 2004-2006 by David Reed. This application and its source code are distributed under the terms of the BSD License, which should be included in this distribution.
+Copyright (c) 2004-2009 by David Reed. This application and its source code are distributed under the terms of the BSD License, which should be included in this distribution.
 
 Thanks for downloading iMan. This directory contains almost everything you'll need to build or make changes to iMan: source code, resources, and and links to the third-party frameworks needed (see below). 
 
@@ -33,11 +33,7 @@ iManEngine.framework holds the following classes:
 	* NSTask+iManExtensions
 	This is a simple category to launch a task synchronously and get its output. It is private to iManEngine.
 
-iMan also uses some "external" code. The packages prefixed "DMR" are portions of my code-snippet library. AGRegex is a modernized version of Aram Greenman's package (http://sourceforge.net/projects/agkit/), which I have modified as follows:
-	- Replaced .pbproj with .xcodeproj.
-	- Replaced PCRE 4.3 (enormously out of date) with PCRE 6.7, and changed the previous compilation-by-project-inclusion to have AGRegex link to a static libpcre.a built via configure/make.
-	- Set all targets (including libpcre) to build Universal Binaries.
-	- Fixed a couple minor bugs in the code.
+iMan also uses some "external" code. The packages prefixed "DMR" are portions of my code-snippet library. RegexKitLite, by John Englehart, can be found at http://regexkit.sourceforge.net/. A modified version of Mr. Englehart's supplied example RKLMatchEnumerator.m is included with iMan.
 
 If you have obtained the iMan sources via Subversion, these should all be pulled in via svn:externals definitions. Current versions are included in iMan source snapshots.
 
