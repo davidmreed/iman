@@ -43,7 +43,6 @@
             [NSNumber numberWithInt:k_iManHandleLinkInCurrentWindow], iManHandlePageLinks,
             [NSNumber numberWithInt:k_iManHandleLinkInNewWindow], iManHandleExternalLinks,
             [NSNumber numberWithInt:k_iManHandleLinkInNewWindow], iManHandleSearchResults,
-			[NSNumber numberWithBool:YES], iManAutoupdate,
             nil]];
 }
 
@@ -53,10 +52,6 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
 	[NSApp setServicesProvider:self];
-	
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:iManAutoupdate]) {
-		// FIXME: Re-implement updating.
-	}
 }
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender
@@ -81,11 +76,6 @@
 
 #pragma mark -
 #pragma mark IBActions
-
-- (IBAction)checkForUpdates:(id)sender
-{
-	// FIXME: implement
-}
 
 - (IBAction)updateIndex:(id)sender
 {

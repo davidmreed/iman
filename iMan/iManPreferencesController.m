@@ -55,10 +55,7 @@
     [handlePageLinks selectCellAtRow:[defaults integerForKey:iManHandlePageLinks] column:0];
     [handleExternalLinks selectCellAtRow:[defaults integerForKey:iManHandleExternalLinks] column:0];
     [handleSearchResults selectCellAtRow:[defaults integerForKey:iManHandleSearchResults] column:0];
-	
-	// Set the update pane.
-	[alwaysCheckForUpdates setState:[defaults boolForKey:iManAutoupdate]];
-	
+		
 	// Set the double action for the manpath editor.
 	[manpathList setDoubleAction:@selector(editManpath:)];
 	[pathTable setDoubleAction:@selector(editPath:)];
@@ -218,14 +215,6 @@
 - (IBAction)handleSearchResults:(id)sender
 {
     [[NSUserDefaults standardUserDefaults] setInteger:[sender selectedRow] forKey:iManHandleSearchResults];
-}
-
-#pragma mark -
-#pragma mark Update Checking
-
-- (IBAction)alwaysCheckForUpdates:(id)sender
-{
-	[[NSUserDefaults standardUserDefaults] setBool:[sender state] forKey:iManAutoupdate];
 }
 
 #pragma mark -

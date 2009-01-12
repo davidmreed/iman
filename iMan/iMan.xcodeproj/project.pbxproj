@@ -40,6 +40,9 @@
 		635B7A880F1698CA0043FFEF /* RKLMatchEnumerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 635B7A840F1698CA0043FFEF /* RKLMatchEnumerator.h */; };
 		635B7A890F1698CA0043FFEF /* RKLMatchEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7A850F1698CA0043FFEF /* RKLMatchEnumerator.m */; };
 		635B7AE70F16A19A0043FFEF /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 635B7AE60F16A19A0043FFEF /* libicucore.dylib */; };
+		63CEBADE0F1B0227001180EC /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CEBADD0F1B0227001180EC /* Sparkle.framework */; };
+		63CEBAF50F1B0397001180EC /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 63CEBAF40F1B0397001180EC /* dsa_pub.pem */; };
+		63FCFBF50F1BB7D1004B3D5F /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63CEBADD0F1B0227001180EC /* Sparkle.framework */; };
 		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
@@ -69,6 +72,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				63FCFBF50F1BB7D1004B3D5F /* Sparkle.framework in CopyFiles */,
 				11A1B38B0A9CB69E00115362 /* iManEngine.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -124,6 +128,8 @@
 		635B7A840F1698CA0043FFEF /* RKLMatchEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKLMatchEnumerator.h; sourceTree = "<group>"; };
 		635B7A850F1698CA0043FFEF /* RKLMatchEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RKLMatchEnumerator.m; sourceTree = "<group>"; };
 		635B7AE60F16A19A0043FFEF /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
+		63CEBADD0F1B0227001180EC /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Externals/Sparkle/Sparkle.framework; sourceTree = SOURCE_ROOT; };
+		63CEBAF40F1B0397001180EC /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* iMan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iMan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -136,6 +142,7 @@
 				11A1B38A0A9CB69600115362 /* iManEngine.framework in Frameworks */,
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				635B7AE70F16A19A0043FFEF /* libicucore.dylib in Frameworks */,
+				63CEBADE0F1B0227001180EC /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +152,7 @@
 		1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				63CEBADD0F1B0227001180EC /* Sparkle.framework */,
 				635B7AE60F16A19A0043FFEF /* libicucore.dylib */,
 				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
 			);
@@ -281,6 +289,7 @@
 		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				63CEBAF40F1B0397001180EC /* dsa_pub.pem */,
 				8D15AC360486D014006FF6A4 /* Info.plist */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
 				1174310B06AF430B00CE425B /* Localizable.strings */,
@@ -416,6 +425,7 @@
 				11B7680D0719C3BB00C503A1 /* iManIndexPanel.nib in Resources */,
 				116DE5F90742E456006D5514 /* iManPathEditor.nib in Resources */,
 				1117ECC109D1D20A00A5820F /* iMan.scriptSuite in Resources */,
+				63CEBAF50F1B0397001180EC /* dsa_pub.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -625,6 +635,10 @@
 		119D4D1E0A9914D900D25E74 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../Externals/Sparkle\"",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
@@ -651,6 +665,10 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../Externals/Sparkle\"",
+				);
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -680,7 +698,10 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = NO;
-				FRAMEWORK_SEARCH_PATHS = /Users/parmadil/Projects/Source/iMan;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Users/parmadil/Projects/Source/iMan,
+					"\"$(SRCROOT)/../Externals/Sparkle\"",
+				);
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;

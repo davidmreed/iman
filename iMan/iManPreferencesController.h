@@ -28,9 +28,7 @@
     IBOutlet NSMatrix *handlePageLinks;
     IBOutlet NSMatrix *handleExternalLinks;
     IBOutlet NSMatrix *handleSearchResults;
-    
-	IBOutlet NSButton *alwaysCheckForUpdates;
-	
+    	
 	IBOutlet NSPanel *pathEditPanel;
 	IBOutlet NSTextField *pathEditField;
 	IBOutlet NSTextField *pathEditError;
@@ -59,8 +57,6 @@
 
 - (void)addManpathDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (void)editManpathDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
-
-- (IBAction)alwaysCheckForUpdates:(id)sender;
 
 - (IBAction)pathEditOK:(id)sender;
 - (IBAction)pathEditCancel:(id)sender;

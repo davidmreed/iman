@@ -16,4 +16,3 @@ NSString *const iManShowPageLinks = @"iManShowPageLinks";
 NSString *const iManHandlePageLinks = @"iManHandlePageLinks";
 NSString *const iManHandleExternalLinks = @"iManHandleExternalLinks";
 NSString *const iManHandleSearchResults = @"iManHandleSearchResults";
-NSString *const iManAutoupdate = @"iManAutoupdate";

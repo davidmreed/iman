@@ -17,8 +17,6 @@ extern NSString *const iManHandlePageLinks;
 extern NSString *const iManHandleExternalLinks;
 extern NSString *const iManHandleSearchResults;
 
-extern NSString *const iManAutoupdate;
-
 enum {
     k_iManHandleLinkInCurrentWindow = 0,
     k_iManHandleLinkInNewWindow

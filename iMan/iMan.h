@@ -7,20 +7,15 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class iManPreferencesController, MacPADSocket;
+@class iManPreferencesController;
 
 @interface iMan : NSObject
-{
-	IBOutlet NSMenuItem *checkForUpdatesItem;
-	
+{	
     iManPreferencesController *_preferencesController;
 }
 
-- (void)loadManpage:(NSPasteboard *)pboard
-		   userData:(NSString *)userData
-			  error:(NSString **)error;
+- (void)loadManpage:(NSPasteboard *)pboard userData:(NSString *)userData error:(NSString **)error;
 
-- (IBAction)checkForUpdates:(id)sender;
 - (IBAction)updateIndex:(id)sender;
 - (IBAction)emptyPageCache:(id)sender;
 - (IBAction)showPreferences:(id)sender;
