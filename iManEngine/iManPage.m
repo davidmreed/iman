@@ -48,43 +48,28 @@ static DMRTaskQueue *_iManPageRenderingQueue;
 
 + pageWithURL:(NSURL *)url
 {
-	if ([[url scheme] isEqualToString:@"man"]) { // As in "man:groff(1)" or "man://groff(1)"
-		NSScanner *scanner = [NSScanner scannerWithString:[[url resourceSpecifier] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-		NSString *name, *section;
+	NSString *grohtmlStyleURL = @"\\/{1,2}([^\\/\\s]+)\\/(\\d+[a-z]*)\\/?";
+	NSString *iManStyleURL = @"\\/{0,2}(\\S+)\\((\\d+[a-z]*)\\)";
+	NSString *xmanpageStyleURL = @"\\/{1,2}(\\d)\\/([^\\/\\s]+)\\/?";
+	NSString *name, *section;
+	NSString *manpage = [[url resourceSpecifier] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 		
-		// Skip any initial slashes
-		[scanner scanCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"/"] intoString:NULL];
-		
-		[scanner scanUpToString:@"(" intoString:&name];
-	
-		if (![scanner isAtEnd]) {
-			[scanner scanString:@"(" intoString:nil];
-			[scanner scanUpToString:@")" intoString:&section];
-		}
-		
-		if ((name != nil) && ([name length] > 0))
-			return [iManPage pageWithName:name inSection:section];
-	} else if ([[url scheme] isEqualToString:@"x-man-page"]) { // As in "x-man-page://1/groff"
-		NSArray *components = [[url resourceSpecifier] componentsSeparatedByString:@"/"];
-		NSString *name, *section;
-		
-		if ([components count] != 0) {
-			while ([[components objectAtIndex:0] length] == 0) // Artifact(s) of initial double-slash being present.
-				components = [components subarrayWithRange:NSMakeRange(1, [components count] - 1)];
-			
-			if ([components count] > 1) {
-				section = [components objectAtIndex:0];
-				name = [components objectAtIndex:1];
-			} else {
-				section = @"";
-				name = [components lastObject];
-			}
-		
-		
-			
-			return [iManPage pageWithName:name inSection:section];
-		}
+	if ([manpage isMatchedByRegex:grohtmlStyleURL]) {
+		// It's a URL of the format man://groff/1 (as used by grohtml(1))
+		name = [manpage stringByMatching:grohtmlStyleURL capture:1];
+		section = [manpage stringByMatching:grohtmlStyleURL capture:2];
+	} else if ([manpage isMatchedByRegex:iManStyleURL]) {
+		// It's a URL of the format man:groff(1) (as used by earlier versions of iMan).
+		name = [manpage stringByMatching:iManStyleURL capture:1];
+		section = [manpage stringByMatching:iManStyleURL capture:2];
+	} else if ([manpage isMatchedByRegex:xmanpageStyleURL]) {
+		// It's a URL of the format (x-man-page:)//1/groff
+		name = [manpage stringByMatching:iManStyleURL capture:2];
+		section = [manpage stringByMatching:iManStyleURL capture:1];
 	}
+	
+	if ((name != nil) && ([name length] > 0))
+		return [iManPage pageWithName:name inSection:section];
 	
 	return nil;
 }	
