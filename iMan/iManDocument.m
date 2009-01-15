@@ -15,9 +15,9 @@
 
 // Indices of tab view panes.
 enum {
-    k_iManPageView,
-    k_iManNoPageView,
-    k_iManLoadingView
+    kiManPageTabIndex,
+    kiManNoPageTabIndex,
+    kiManLoadingTabIndex
 };
 
 // Local constants for this file only.
@@ -118,7 +118,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 
 - (IBAction)changeExportFormat:(id)sender
 {
-    [((NSSavePanel *)[formatMenu window]) setRequiredFileType:[[NSArray arrayWithObjects:@"rtf", @"txt", @"pdf", nil] objectAtIndex:[sender indexOfSelectedItem]]];
+    [((NSSavePanel *)[formatMenu window]) setRequiredFileType:[[NSArray arrayWithObjects:@"rtf", @"txt", nil] objectAtIndex:[sender indexOfSelectedItem]]];
 }
 
 - (void)exportPanelDidEnd:(NSSavePanel *)savePanel returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -128,8 +128,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
         id fileData = nil;
         enum {
             iManFormatRTF,
-            iManFormatPlainText,
-            iManFormatPDF
+            iManFormatPlainText
         } format = [formatMenu indexOfSelectedItem];
 
         switch (format) {
@@ -138,22 +137,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
                 break;
             case iManFormatPlainText:
                 fileData = [[[manpageView textStorage] string] dataUsingEncoding:NSASCIIStringEncoding];
-                break;
-            case iManFormatPDF:
-            {
-                    NSPrintInfo *printInfo = [self printInfo];
-                    
-                    [printInfo setHorizontalPagination:NSFitPagination];
-
-                    fileData = [NSMutableData data];
-                    if ([[NSPrintOperation PDFOperationWithView:manpageView
-                                                     insideRect:NSMakeRect(0, 0, [printInfo paperSize].width, [printInfo paperSize].height)
-                                                         toData:fileData
-                                                      printInfo:printInfo] runOperation] == NO) {
-                        fileData = nil;
-                    }
-                }
-                break;			
+				break;
         }
 
         if (fileData != nil) {
@@ -217,6 +201,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 
 - (NSAttributedString *)findResultFromRange:(NSRange)range
 {
+	// FIXME: ideally, we should supply a chunk of (alphanumerical) context on each side of the matched text; this way yields a lot of spaces.
     NSMutableAttributedString *ret;
     static NSAttributedString *greyEllipses;
     unsigned leftMargin, rightMargin, length, resLength;
@@ -338,7 +323,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 
 - (void)beginAsyncLoad
 {
-	[tabView selectTabViewItemAtIndex:k_iManLoadingView];
+	[tabView selectTabViewItemAtIndex:kiManLoadingTabIndex];
 	[progressIndicator startAnimation:self];
 	[[[[[self windowControllers] lastObject] window] standardWindowButton:NSWindowCloseButton] setEnabled:NO];	
 }
@@ -346,14 +331,14 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 - (void)endAsyncLoad
 {
 	[[[[[self windowControllers] lastObject] window] standardWindowButton:NSWindowCloseButton] setEnabled:YES];
-	[tabView selectTabViewItemAtIndex:k_iManPageView];
+	[tabView selectTabViewItemAtIndex:kiManPageTabIndex];
 	
 	[progressIndicator stopAnimation:self]; 
 }
 
 - (void)updateInterface
 {
-	[tabView selectTabViewItemAtIndex:k_iManPageView];
+	[tabView selectTabViewItemAtIndex:kiManPageTabIndex];
 	[[manpageView textStorage] setAttributedString:[[self page] pageWithStyle:[self displayStringOptions]]];
 	
 	[(NSTextField *)[pageItem view] setStringValue:[[self page] pageName]];
@@ -411,7 +396,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 			[findResults reloadData];
 		}
     } else {
-		[tabView selectTabViewItemAtIndex:k_iManNoPageView];
+		[tabView selectTabViewItemAtIndex:kiManNoPageTabIndex];
 	}
 	
     [[[self windowControllers] lastObject] synchronizeWindowTitleWithDocumentName];
@@ -475,7 +460,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
     // Initialize the undo manager we use for history (back/forward) handling.
     _historyUndoManager = [[NSUndoManager alloc] init];
 
-	[tabView selectTabViewItemAtIndex:k_iManNoPageView];
+	[tabView selectTabViewItemAtIndex:kiManNoPageTabIndex];
 	
 	// Update the UI
     [self setPage:[self page]];
@@ -511,19 +496,19 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
     if ((action == @selector(printDocument:)) ||
 		(action == @selector(reload:)) ||
         (action == @selector(export:)))
-        return (tabIndex == k_iManPageView);
+        return (tabIndex == kiManPageTabIndex);
     // Check undo manager for these.
     if (action == @selector(back:))
-        return ([_historyUndoManager canUndo] && (tabIndex != k_iManLoadingView));
+        return ([_historyUndoManager canUndo] && (tabIndex != kiManLoadingTabIndex));
     if (action == @selector(forward:))
-        return ([_historyUndoManager canRedo] && (tabIndex != k_iManLoadingView));
+        return ([_historyUndoManager canRedo] && (tabIndex != kiManLoadingTabIndex));
     // Make sure, if we are loading, that another load request doesn't happen, nor should the window close.
     if ((action == @selector(refresh:)) ||
 		(action == @selector(reload:)) ||
 		(action == @selector(back:)) ||
 		(action == @selector(forward:)) ||
 		(action == @selector(performClose:)))
-        return (tabIndex != k_iManLoadingView);
+        return (tabIndex != kiManLoadingTabIndex);
 	
     return ret;
 }
