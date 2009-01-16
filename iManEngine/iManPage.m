@@ -48,9 +48,9 @@ static DMRTaskQueue *_iManPageRenderingQueue;
 
 + pageWithURL:(NSURL *)url
 {
-	NSString *grohtmlStyleURL = @"\\/{1,2}([^\\/\\s]+)\\/(\\d+[a-z]*)\\/?";
-	NSString *iManStyleURL = @"\\/{0,2}(\\S+)\\((\\d+[a-z]*)\\)";
-	NSString *xmanpageStyleURL = @"\\/{1,2}(\\d)\\/([^\\/\\s]+)\\/?";
+	NSString *grohtmlStyleURL = @"\\/{1,2}([^\\/\\s]+)\\/(\\d+[a-zA-Z]*)\\/?";
+	NSString *iManStyleURL = @"\\/{0,2}(\\S+)\\((\\d+[a-zA-Z]*)\\)";
+	NSString *xmanpageStyleURL = @"\\/{1,2}(\\d+[a-zA-Z]*)\\/([^\\/\\s]+)\\/?";
 	NSString *name, *section;
 	NSString *manpage = [[url resourceSpecifier] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 		
@@ -537,7 +537,7 @@ static DMRTaskQueue *_iManPageRenderingQueue;
 		NSString *searchText = [str string];
 		NSValue *match;
 
-        results = [searchText matchEnumeratorWithRegex:@"\\S+\\(\\d[a-z]*\\)" options:RKLNoOptions | RKLMultiline];
+        results = [searchText matchEnumeratorWithRegex:@"\\S+\\(\\d[a-zA-Z]*\\)" options:RKLNoOptions | RKLMultiline];
 		
 		
 		while ((match = [results nextObject]) != nil) {
