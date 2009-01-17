@@ -14,7 +14,7 @@
 - performDefaultImplementation
 {
 	[iManDocument loadURL:[NSURL URLWithString:[self directParameter]]
-			inNewDocument:([[NSUserDefaults standardUserDefaults] integerForKey:iManHandleExternalLinks] == k_iManHandleLinkInNewWindow)];
+			inNewDocument:([[NSUserDefaults standardUserDefaults] integerForKey:iManHandleExternalLinks] == kiManHandleLinkInNewWindow)];
 	    
     return nil;
 }

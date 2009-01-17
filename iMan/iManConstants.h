@@ -18,6 +18,6 @@ extern NSString *const iManHandleExternalLinks;
 extern NSString *const iManHandleSearchResults;
 
 enum {
-    k_iManHandleLinkInCurrentWindow = 0,
-    k_iManHandleLinkInNewWindow
+    kiManHandleLinkInCurrentWindow = 0,
+    kiManHandleLinkInNewWindow
 };

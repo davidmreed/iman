@@ -136,7 +136,7 @@ enum {
         item = [item objectAtIndex:0];
 
 	[iManDocument loadURL:[NSURL URLWithString:[NSString stringWithFormat:@"man:%@", item]]
-			inNewDocument:([[NSUserDefaults standardUserDefaults] integerForKey:iManHandleSearchResults] == k_iManHandleLinkInNewWindow)];
+			inNewDocument:([[NSUserDefaults standardUserDefaults] integerForKey:iManHandleSearchResults] == kiManHandleLinkInNewWindow)];
 }
 
 #pragma mark -

@@ -552,7 +552,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 
 - (BOOL)textView:(NSTextView *)textView clickedOnLink:(id)link atIndex:(unsigned)charIndex
 {
-    if ([[NSUserDefaults standardUserDefaults] integerForKey:iManHandlePageLinks] == k_iManHandleLinkInCurrentWindow) {
+    if ([[NSUserDefaults standardUserDefaults] integerForKey:iManHandlePageLinks] == kiManHandleLinkInCurrentWindow) {
         iManPage *page = [iManPage pageWithURL:link];
 		if (page != nil) {
 			[self setPage:page];

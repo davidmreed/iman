@@ -40,9 +40,9 @@
             [NSArchiver archivedDataWithRootObject:boldStyle], iManBoldStyle,
             [NSArchiver archivedDataWithRootObject:emStyle], iManEmphasizedStyle,
             [NSNumber numberWithBool:YES], iManShowPageLinks,
-            [NSNumber numberWithInt:k_iManHandleLinkInCurrentWindow], iManHandlePageLinks,
-            [NSNumber numberWithInt:k_iManHandleLinkInNewWindow], iManHandleExternalLinks,
-            [NSNumber numberWithInt:k_iManHandleLinkInNewWindow], iManHandleSearchResults,
+            [NSNumber numberWithInt:kiManHandleLinkInCurrentWindow], iManHandlePageLinks,
+            [NSNumber numberWithInt:kiManHandleLinkInNewWindow], iManHandleExternalLinks,
+            [NSNumber numberWithInt:kiManHandleLinkInNewWindow], iManHandleSearchResults,
             nil]];
 }
 
