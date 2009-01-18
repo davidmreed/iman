@@ -20,6 +20,12 @@ enum {
     kiManLoadingTabIndex
 };
 
+// Tags of search field menu items.
+enum {
+	kiManMatchCaseMenuItemTag = 10,
+	kiManUseRegularExpressionsMenuItemTag
+};
+
 // Local constants for this file only.
 static NSString *const iManDocumentToolbarIdentifier = @"iManDocumentToolbarIdentifier";
 
@@ -94,6 +100,11 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 	[findDrawer toggle:sender];
 }
 
+- (void)drawerDidOpen:(NSNotification *)notification
+{
+	[searchField becomeFirstResponder];
+}
+
 - (IBAction)export:(id)sender
 {
     NSSavePanel *savePanel = [NSSavePanel savePanel];
@@ -153,19 +164,20 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
     }
 }
 
-- (IBAction)doSearch:(id)sender
+- (IBAction)performSearch:(id)sender
 {
+	// FIXME: Disable this field when loading or viewing no page.
     [_lastFindResults release];
     _lastFindResults = [[NSMutableArray alloc] init];
     [_findResultRanges release];
     _findResultRanges = [[NSMutableArray alloc] init];
     
-    if ([useRegexps state] == NSOnState) {
+    if (shouldUseRegexps) {
         NSEnumerator *enumerator;
         NSString *string = [[manpageView textStorage] string];
 		NSValue *match;
 
-        enumerator = [string matchEnumeratorWithRegex:[searchField stringValue]];
+        enumerator = [string matchEnumeratorWithRegex:[searchField stringValue] options: (shouldMatchCase ? RKLNoOptions : RKLNoOptions | RKLCaseless)];
 
         while ((match = [enumerator nextObject]) != nil) {            
             [_findResultRanges addObject:match];
@@ -181,7 +193,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
                                                      (CFStringRef)string,
                                                      (CFStringRef)[searchField stringValue],
                                                      CFRangeMake(0, [string length]),
-													 kCFCompareCaseInsensitive);
+													 shouldMatchCase ? 0 : kCFCompareCaseInsensitive);
 
         if (results != NULL) {
             for (index = 0; index < CFArrayGetCount(results); index++) {
@@ -296,6 +308,31 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 	[[self page] reload];
 }
 
+- (IBAction)setUseRegularExpressions:(id)sender
+{
+	NSMenu *searchFieldMenu = [[[searchField cell] searchMenuTemplate] copy];
+
+	shouldUseRegexps = ([sender state] == NSOnState) ? NO : YES;
+	[[searchFieldMenu itemWithTag:kiManUseRegularExpressionsMenuItemTag] setState:shouldUseRegexps];
+	[[searchField cell] setSearchMenuTemplate:searchFieldMenu];
+	[searchFieldMenu release];
+	[self performSearch:searchField];
+}
+
+- (IBAction)setCaseSensitive:(id)sender
+{
+	NSMenu *searchFieldMenu = [[[searchField cell] searchMenuTemplate] copy];
+	
+	shouldMatchCase = ([sender state] == NSOnState) ? NO : YES;
+	[[searchFieldMenu itemWithTag:kiManMatchCaseMenuItemTag] setState:shouldMatchCase];
+	[[searchField cell] setSearchMenuTemplate:searchFieldMenu];
+	[searchFieldMenu release];
+	[self performSearch:searchField];
+}
+
+#pragma mark -
+#pragma mark UI Methods
+
 - (void)pageLoadDidComplete:(NSNotification *)notification
 {
 	[self endAsyncLoad];
@@ -317,9 +354,6 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 	[self back:nil];
 	[_historyUndoManager enableUndoRegistration];
 }
-
-#pragma mark -
-#pragma mark UI Methods
 
 - (void)beginAsyncLoad
 {
@@ -461,6 +495,17 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
     _historyUndoManager = [[NSUndoManager alloc] init];
 
 	[tabView selectTabViewItemAtIndex:kiManNoPageTabIndex];
+	
+	// Setup the search menu.
+	{
+		NSMenu *searchFieldMenu = [[[searchField cell] searchMenuTemplate] copy];
+		
+		shouldMatchCase = shouldUseRegexps = YES;
+		[[searchFieldMenu itemWithTag:kiManMatchCaseMenuItemTag] setState:shouldMatchCase];
+		[[searchFieldMenu itemWithTag:kiManUseRegularExpressionsMenuItemTag] setState:shouldUseRegexps];
+		[[searchField cell] setSearchMenuTemplate:searchFieldMenu];
+		[searchFieldMenu release];
+	}
 	
 	// Update the UI
     [self setPage:[self page]];

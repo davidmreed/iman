@@ -11,13 +11,17 @@
 				<string>id</string>
 				<key>changeExportFormat</key>
 				<string>id</string>
-				<key>doSearch</key>
-				<string>id</string>
 				<key>export</key>
 				<string>id</string>
 				<key>forward</key>
 				<string>id</string>
+				<key>performSearch</key>
+				<string>id</string>
 				<key>refresh</key>
+				<string>id</string>
+				<key>setCaseSensitive</key>
+				<string>id</string>
+				<key>setUseRegularExpressions</key>
 				<string>id</string>
 				<key>toggleFindDrawer</key>
 				<string>id</string>
@@ -30,8 +34,6 @@
 			<dict>
 				<key>accessoryView</key>
 				<string>NSView</string>
-				<key>caseSensitive</key>
-				<string>NSButton</string>
 				<key>findDrawer</key>
 				<string>NSDrawer</string>
 				<key>findResults</key>
@@ -40,14 +42,18 @@
 				<string>NSPopUpButton</string>
 				<key>manpageView</key>
 				<string>NSTextView</string>
+				<key>matchCase</key>
+				<string>NSMenuItem</string>
 				<key>progressIndicator</key>
 				<string>NSProgressIndicator</string>
 				<key>searchField</key>
-				<string>NSTextField</string>
+				<string>NSSearchField</string>
+				<key>searchFieldMenu</key>
+				<string>NSMenu</string>
 				<key>tabView</key>
 				<string>NSTabView</string>
 				<key>useRegexps</key>
-				<string>NSButton</string>
+				<string>NSMenuItem</string>
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSDocument</string>

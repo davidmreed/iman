@@ -20,7 +20,6 @@
 
     IBOutlet NSDrawer *findDrawer;
     IBOutlet NSSearchField *searchField;
-    IBOutlet NSButton *useRegexps;
     IBOutlet NSTableView *findResults;
 
     NSUndoManager *_historyUndoManager;
@@ -30,6 +29,7 @@
 
     NSMutableArray *_lastFindResults;
     NSMutableArray *_findResultRanges;
+	BOOL shouldMatchCase, shouldUseRegexps;
 }
 
 + (void)loadURL:(NSURL *)url inNewDocument:(BOOL)inNewDocument;
@@ -45,7 +45,10 @@
 - (IBAction)back:(id)sender;
 - (IBAction)forward:(id)sender;
 - (IBAction)refresh:(id)sender;
-- (IBAction)doSearch:(id)sender;
+- (IBAction)performSearch:(id)sender;
+
+- (IBAction)setUseRegularExpressions:(id)sender;
+- (IBAction)setCaseSensitive:(id)sender;
 
 - (NSAttributedString *)findResultFromRange:(NSRange)range;
 
