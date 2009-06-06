@@ -89,11 +89,13 @@
 - (IBAction)emptyPageCache:(id)sender
 {
 	if (NSRunAlertPanel(NSLocalizedString(@"Empty Cache?", nil),
-						NSLocalizedString(@"Do you want to empty the page cache? This will force iMan to reload manpages from disk.", nil),
+						NSLocalizedString(@"Do you want to empty the page cache? iMan will reload manpages from the disk. This action will clear your page history in all open windows.", nil),
 						NSLocalizedString(@"OK", nil),
 						NSLocalizedString(@"Cancel", nil),
-						nil) == NSOKButton)
+						nil) == NSOKButton) {
 		[iManPage clearCache];
+		[[[NSDocumentController sharedDocumentController] documents] makeObjectsPerformSelector:@selector(clearHistory:) withObject:self];
+	}
 }
 						
 

@@ -55,7 +55,7 @@
 	<key>CFBundleIconFile</key>
 	<string>iMan.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>net.sf.iman-macosx.iman</string>
+	<string>org.ktema.iman</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>SUFeedURL</key>

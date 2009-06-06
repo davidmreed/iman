@@ -18,7 +18,7 @@
 
 - (NSString *)identifier
 {
-	return @"net.sf.iman-macosx.index.apropos";
+	return @"org.ktema.iman.iman-macosx.index.apropos";
 }
 
 - (BOOL)isValid
@@ -31,7 +31,7 @@
 	if ([[self lock] tryLock]) {
 		[[NSDistributedNotificationCenter defaultCenter] addObserver:self
 															selector:@selector(_updateIndexesCompleted:)
-																name:@"net.sf.iman-macosx.imanengine.makewhatis"
+																name:@"org.ktema.iman.iman-macosx.imanengine.makewhatis"
 															  object:nil
 												  suspensionBehavior:NSNotificationSuspensionBehaviorDeliverImmediately];	
 		
@@ -88,13 +88,13 @@
 				[NSException raise:NSGenericException format:@""];
 		}
 	} @catch (NSException *e) {
-		[[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"net.sf.iman-macosx.imanengine.makewhatis" object:@"1"];
+		[[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"org.ktema.iman.iman-macosx.imanengine.makewhatis" object:@"1"];
 	}
 	
 	// This will make -valid return YES.
 	[@"1" writeToFile:[[self indexPath] stringByAppendingPathComponent:@"index.valid"] atomically:YES];
 
-	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"net.sf.iman-macosx.imanengine.makewhatis" object:@"0"];
+	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"org.ktema.iman.iman-macosx.imanengine.makewhatis" object:@"0"];
 	
 	[pool release];
 }

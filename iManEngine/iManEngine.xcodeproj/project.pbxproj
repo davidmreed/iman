@@ -174,14 +174,14 @@
 			children = (
 				637FAC610F1A67830080BA28 /* RegexKitLiteSupport */,
 				635B7AA20F169DA00043FFEF /* RegexKitLite */,
-				119D4D500A99169000D25E74 /* DMRFilesystem */,
+				119D4D500A99169000D25E74 /* DMRCarbon */,
 				119D4D570A9916A900D25E74 /* DMRThreads */,
 			);
 			name = Externals;
 			path = ../Externals;
 			sourceTree = "<group>";
 		};
-		119D4D500A99169000D25E74 /* DMRFilesystem */ = {
+		119D4D500A99169000D25E74 /* DMRCarbon */ = {
 			isa = PBXGroup;
 			children = (
 				117FF2D909F9E42C00B5E28E /* NSString+DMRHFSUtilities.h */,
@@ -189,7 +189,7 @@
 				117FF2C309F9E29800B5E28E /* NSFileManager+DMRFindFolderExtensions.h */,
 				117FF2C409F9E29800B5E28E /* NSFileManager+DMRFindFolderExtensions.m */,
 			);
-			path = DMRFilesystem;
+			path = DMRCarbon;
 			sourceTree = "<group>";
 		};
 		119D4D570A9916A900D25E74 /* DMRThreads */ = {
@@ -449,16 +449,14 @@
 					"${SRCROOT}/..",
 					"${SRCROOT}/../Externals",
 				);
+				SDKROOT = macosx10.4;
 			};
 			name = Development;
 		};
 		119D4D390A99152A00D25E74 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/..",
@@ -477,6 +475,7 @@
 					"${SRCROOT}/../Externals",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				SDKROOT = macosx10.4;
 			};
 			name = Default;
 		};

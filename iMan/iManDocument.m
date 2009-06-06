@@ -166,7 +166,9 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 
 - (IBAction)performSearch:(id)sender
 {
-	// FIXME: Disable this field when loading or viewing no page.
+	if (([self page] == nil) || (![[self page] isLoaded]))
+		return;
+	
     [_lastFindResults release];
     _lastFindResults = [[NSMutableArray alloc] init];
     [_findResultRanges release];
@@ -286,12 +288,18 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 
 - (IBAction)back:(id)sender
 {
-    [_historyUndoManager undo];
+    [[self historyUndoManager] undo];
 }
 
 - (IBAction)forward:(id)sender
 {
-    [_historyUndoManager redo];
+    [[self historyUndoManager] redo];
+}
+
+- (IBAction)clearHistory:(id)sender
+{
+	[[self historyUndoManager] removeAllActions];
+	[[[[self windowControllers] lastObject] toolbar] validateVisibleItems];
 }
 
 - (IBAction)refresh:(id)sender
@@ -436,6 +444,11 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
     [[[self windowControllers] lastObject] synchronizeWindowTitleWithDocumentName];
 }
 
+- (NSUndoManager *)historyUndoManager
+{
+	return _historyUndoManager;
+}
+
 #pragma mark -
 #pragma mark Font and Style Methods
 
@@ -537,10 +550,11 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 	SEL action = [anItem action];
 	int tabIndex = [tabView indexOfTabViewItem:[tabView selectedTabViewItem]];
 	
-    // Only allow printing/exporting if a man page is being displayed.
+    // Only allow printing/exporting/searching if a man page is being displayed.
     if ((action == @selector(printDocument:)) ||
 		(action == @selector(reload:)) ||
-        (action == @selector(export:)))
+        (action == @selector(export:)) ||
+		(action == @selector(performSearch:)))
         return (tabIndex == kiManPageTabIndex);
     // Check undo manager for these.
     if (action == @selector(back:))

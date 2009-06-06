@@ -1,4 +1,4 @@
-iMan 0.2
+iMan 0.3
 Copyright (c) 2004-2009 by David Reed. This application and its source code are distributed under the terms of the BSD License, which should be included in this distribution.
 
 Thanks for downloading iMan. This directory contains almost everything you'll need to build or make changes to iMan: source code, resources, and and links to the third-party frameworks needed (see below). 
@@ -39,4 +39,4 @@ If you have obtained the iMan sources via Subversion, these should all be pulled
 
 The source code is fairly lightly commented. Documentation for iManEngine is included in HeaderDoc comments. If you have questions (or patches, or bugs, or improvements, or...), please send me an email.
 
--- David Reed <parmadil@gmail.com>
+-- David Reed <david@ktema.org>

@@ -21,7 +21,7 @@ static iManEnginePreferences *_sharedInstance;
 static NSDictionary *_pathDictionary;
 static NSLock *_prefsLock;
 
-static NSString *const iManEngineBundleIdentifier = @"net.sf.iman-macosx.imanengine";
+static NSString *const iManEngineBundleIdentifier = @"org.ktema.iman.imanengine";
 static NSString *const iManEnginePathDictionary = @"iManEnginePathDictionary";
 static NSString *const iManEngineManpaths = @"iManEngineManpaths";
 

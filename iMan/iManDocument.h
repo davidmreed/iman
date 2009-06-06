@@ -37,6 +37,8 @@
 - (iManPage *)page;
 - (void)setPage:(iManPage *)page;
 
+- (NSUndoManager *)historyUndoManager;
+
 - (IBAction)export:(id)sender;
 - (IBAction)changeExportFormat:(id)sender;
 - (void)exportPanelDidEnd:(NSSavePanel *)savePanel returnCode:(int)returnCode contextInfo:(void *)contextInfo;
@@ -45,6 +47,7 @@
 - (IBAction)back:(id)sender;
 - (IBAction)forward:(id)sender;
 - (IBAction)refresh:(id)sender;
+- (IBAction)clearHistory:(id)sender;
 - (IBAction)performSearch:(id)sender;
 
 - (IBAction)setUseRegularExpressions:(id)sender;
