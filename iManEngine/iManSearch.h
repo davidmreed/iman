@@ -84,3 +84,6 @@
 extern NSString *const iManSearchDidCompleteNotification;
 extern NSString *const iManSearchDidFailNotification;
 extern NSString *const iManSearchError;
+
+extern NSString *const iManSearchTypeApropos;
+extern NSString *const iManSearchTypeWhatis;

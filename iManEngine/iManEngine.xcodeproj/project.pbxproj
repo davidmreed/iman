@@ -8,11 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		11230BE409D1E4620079DFCF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11230BE209D1E4620079DFCF /* InfoPlist.strings */; };
-		11230C0909D1E56D0079DFCF /* DMRTaskQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 11230C0109D1E56D0079DFCF /* DMRTaskQueue.m */; };
-		11230C0B09D1E56D0079DFCF /* DMRTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 11230C0309D1E56D0079DFCF /* DMRTask.m */; };
-		11230C0D09D1E56D0079DFCF /* DMRQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 11230C0509D1E56D0079DFCF /* DMRQueue.m */; };
-		117FF2C609F9E29800B5E28E /* NSFileManager+DMRFindFolderExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 117FF2C409F9E29800B5E28E /* NSFileManager+DMRFindFolderExtensions.m */; };
-		117FF2DC09F9E42C00B5E28E /* NSString+DMRHFSUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 117FF2DA09F9E42C00B5E28E /* NSString+DMRHFSUtilities.m */; };
 		11BABB1009D1DF2C00A3D6B1 /* iManSearch.h in Headers */ = {isa = PBXBuildFile; fileRef = 11BABB0509D1DF2C00A3D6B1 /* iManSearch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		11BABB1109D1DF2C00A3D6B1 /* iManIndex.h in Headers */ = {isa = PBXBuildFile; fileRef = 11BABB0609D1DF2C00A3D6B1 /* iManIndex.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		11BABB1309D1DF2C00A3D6B1 /* iManEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 11BABB0809D1DF2C00A3D6B1 /* iManEngine.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -28,6 +23,12 @@
 		11BABB2C09D1DF6A00A3D6B1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11BABB2809D1DF6A00A3D6B1 /* Localizable.strings */; };
 		11BABB5209D1E05600A3D6B1 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 11BABB5109D1E05600A3D6B1 /* libz.dylib */; };
 		11DB19A909F756A10037B978 /* iManAproposIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 11DB19A709F756A10037B978 /* iManAproposIndex.m */; };
+		6342BF6310B77136006995CA /* iManRenderOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 6342BF6110B77136006995CA /* iManRenderOperation.h */; };
+		6342BF6410B77136006995CA /* iManRenderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6342BF6210B77136006995CA /* iManRenderOperation.m */; };
+		6342BF7310B777A7006995CA /* iManResolveOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 6342BF7110B777A7006995CA /* iManResolveOperation.h */; };
+		6342BF7410B777A7006995CA /* iManResolveOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6342BF7210B777A7006995CA /* iManResolveOperation.m */; };
+		6342BFDE10B797AB006995CA /* iManSearchOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 6342BFDC10B797AB006995CA /* iManSearchOperation.h */; };
+		6342BFDF10B797AB006995CA /* iManSearchOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6342BFDD10B797AB006995CA /* iManSearchOperation.m */; };
 		635B7AA90F169DBA0043FFEF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7AA50F169DBA0043FFEF /* RegexKitLite.m */; };
 		635B7AAB0F169DBA0043FFEF /* RKLMatchEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7AA70F169DBA0043FFEF /* RKLMatchEnumerator.m */; };
 		635B7BB10F16A23A0043FFEF /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 635B7BB00F16A23A0043FFEF /* libicucore.dylib */; };
@@ -40,16 +41,6 @@
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		11230B1209D1E41D0079DFCF /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		11230BE309D1E4620079DFCF /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		11230C0109D1E56D0079DFCF /* DMRTaskQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMRTaskQueue.m; sourceTree = "<group>"; };
-		11230C0209D1E56D0079DFCF /* DMRTaskQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMRTaskQueue.h; sourceTree = "<group>"; };
-		11230C0309D1E56D0079DFCF /* DMRTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMRTask.m; sourceTree = "<group>"; };
-		11230C0409D1E56D0079DFCF /* DMRTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMRTask.h; sourceTree = "<group>"; };
-		11230C0509D1E56D0079DFCF /* DMRQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMRQueue.m; sourceTree = "<group>"; };
-		11230C0609D1E56D0079DFCF /* DMRQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMRQueue.h; sourceTree = "<group>"; };
-		117FF2C309F9E29800B5E28E /* NSFileManager+DMRFindFolderExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+DMRFindFolderExtensions.h"; sourceTree = "<group>"; };
-		117FF2C409F9E29800B5E28E /* NSFileManager+DMRFindFolderExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+DMRFindFolderExtensions.m"; sourceTree = "<group>"; };
-		117FF2D909F9E42C00B5E28E /* NSString+DMRHFSUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+DMRHFSUtilities.h"; sourceTree = "<group>"; };
-		117FF2DA09F9E42C00B5E28E /* NSString+DMRHFSUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+DMRHFSUtilities.m"; sourceTree = "<group>"; };
 		11A1B2A60A9CB52C00115362 /* iManEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = iManEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		11BABB0509D1DF2C00A3D6B1 /* iManSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManSearch.h; sourceTree = "<group>"; };
 		11BABB0609D1DF2C00A3D6B1 /* iManIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManIndex.h; sourceTree = "<group>"; };
@@ -69,6 +60,12 @@
 		11DB199F09F756430037B978 /* iManIndex+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "iManIndex+Private.h"; sourceTree = "<group>"; };
 		11DB19A609F756A10037B978 /* iManAproposIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManAproposIndex.h; sourceTree = "<group>"; };
 		11DB19A709F756A10037B978 /* iManAproposIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManAproposIndex.m; sourceTree = "<group>"; };
+		6342BF6110B77136006995CA /* iManRenderOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManRenderOperation.h; sourceTree = "<group>"; };
+		6342BF6210B77136006995CA /* iManRenderOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManRenderOperation.m; sourceTree = "<group>"; };
+		6342BF7110B777A7006995CA /* iManResolveOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManResolveOperation.h; sourceTree = "<group>"; };
+		6342BF7210B777A7006995CA /* iManResolveOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManResolveOperation.m; sourceTree = "<group>"; };
+		6342BFDC10B797AB006995CA /* iManSearchOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManSearchOperation.h; sourceTree = "<group>"; };
+		6342BFDD10B797AB006995CA /* iManSearchOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManSearchOperation.m; sourceTree = "<group>"; };
 		635B7AA40F169DBA0043FFEF /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		635B7AA50F169DBA0043FFEF /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		635B7AA60F169DBA0043FFEF /* RKLMatchEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKLMatchEnumerator.h; sourceTree = "<group>"; };
@@ -104,7 +101,7 @@
 			children = (
 				08FB77AEFE84172EC02AAC07 /* Public Classes */,
 				11DB199E09F756240037B978 /* Private Classes */,
-				11230BF809D1E5300079DFCF /* Externals */,
+				11230BF809D1E5300079DFCF /* iMan */,
 				089C1665FE841158C02AAC07 /* Resources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
@@ -136,6 +133,8 @@
 		08FB77AEFE84172EC02AAC07 /* Public Classes */ = {
 			isa = PBXGroup;
 			children = (
+				6342BFDC10B797AB006995CA /* iManSearchOperation.h */,
+				6342BFDD10B797AB006995CA /* iManSearchOperation.m */,
 				11BABB0809D1DF2C00A3D6B1 /* iManEngine.h */,
 				11BABB0C09D1DF2C00A3D6B1 /* iManEnginePreferences.h */,
 				11BABB0B09D1DF2C00A3D6B1 /* iManEnginePreferences.m */,
@@ -143,6 +142,10 @@
 				11BABB0A09D1DF2C00A3D6B1 /* iManIndex.m */,
 				11BABB0F09D1DF2C00A3D6B1 /* iManPage.h */,
 				11BABB0909D1DF2C00A3D6B1 /* iManPage.m */,
+				6342BF7110B777A7006995CA /* iManResolveOperation.h */,
+				6342BF7210B777A7006995CA /* iManResolveOperation.m */,
+				6342BF6110B77136006995CA /* iManRenderOperation.h */,
+				6342BF6210B77136006995CA /* iManRenderOperation.m */,
 				11BABB0509D1DF2C00A3D6B1 /* iManSearch.h */,
 				11BABB0D09D1DF2C00A3D6B1 /* iManSearch.m */,
 			);
@@ -169,40 +172,14 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		11230BF809D1E5300079DFCF /* Externals */ = {
+		11230BF809D1E5300079DFCF /* iMan */ = {
 			isa = PBXGroup;
 			children = (
 				637FAC610F1A67830080BA28 /* RegexKitLiteSupport */,
 				635B7AA20F169DA00043FFEF /* RegexKitLite */,
-				119D4D500A99169000D25E74 /* DMRCarbon */,
-				119D4D570A9916A900D25E74 /* DMRThreads */,
 			);
-			name = Externals;
-			path = ../Externals;
-			sourceTree = "<group>";
-		};
-		119D4D500A99169000D25E74 /* DMRCarbon */ = {
-			isa = PBXGroup;
-			children = (
-				117FF2D909F9E42C00B5E28E /* NSString+DMRHFSUtilities.h */,
-				117FF2DA09F9E42C00B5E28E /* NSString+DMRHFSUtilities.m */,
-				117FF2C309F9E29800B5E28E /* NSFileManager+DMRFindFolderExtensions.h */,
-				117FF2C409F9E29800B5E28E /* NSFileManager+DMRFindFolderExtensions.m */,
-			);
-			path = DMRCarbon;
-			sourceTree = "<group>";
-		};
-		119D4D570A9916A900D25E74 /* DMRThreads */ = {
-			isa = PBXGroup;
-			children = (
-				11230C0109D1E56D0079DFCF /* DMRTaskQueue.m */,
-				11230C0209D1E56D0079DFCF /* DMRTaskQueue.h */,
-				11230C0309D1E56D0079DFCF /* DMRTask.m */,
-				11230C0409D1E56D0079DFCF /* DMRTask.h */,
-				11230C0509D1E56D0079DFCF /* DMRQueue.m */,
-				11230C0609D1E56D0079DFCF /* DMRQueue.h */,
-			);
-			path = DMRThreads;
+			name = iMan;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		11DB199E09F756240037B978 /* Private Classes */ = {
@@ -232,8 +209,7 @@
 				635B7AA60F169DBA0043FFEF /* RKLMatchEnumerator.h */,
 				635B7AA70F169DBA0043FFEF /* RKLMatchEnumerator.m */,
 			);
-			name = RegexKitLiteSupport;
-			path = ../RegexKitLiteSupport;
+			path = RegexKitLiteSupport;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -248,6 +224,9 @@
 				11BABB1309D1DF2C00A3D6B1 /* iManEngine.h in Headers */,
 				11BABB1709D1DF2C00A3D6B1 /* iManEnginePreferences.h in Headers */,
 				11BABB1A09D1DF2C00A3D6B1 /* iManPage.h in Headers */,
+				6342BF6310B77136006995CA /* iManRenderOperation.h in Headers */,
+				6342BF7310B777A7006995CA /* iManResolveOperation.h in Headers */,
+				6342BFDE10B797AB006995CA /* iManSearchOperation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,14 +294,12 @@
 				11BABB1609D1DF2C00A3D6B1 /* iManEnginePreferences.m in Sources */,
 				11BABB1809D1DF2C00A3D6B1 /* iManSearch.m in Sources */,
 				11BABB1909D1DF2C00A3D6B1 /* NSTask+iManExtensions.m in Sources */,
-				11230C0909D1E56D0079DFCF /* DMRTaskQueue.m in Sources */,
-				11230C0B09D1E56D0079DFCF /* DMRTask.m in Sources */,
-				11230C0D09D1E56D0079DFCF /* DMRQueue.m in Sources */,
 				11DB19A909F756A10037B978 /* iManAproposIndex.m in Sources */,
-				117FF2C609F9E29800B5E28E /* NSFileManager+DMRFindFolderExtensions.m in Sources */,
-				117FF2DC09F9E42C00B5E28E /* NSString+DMRHFSUtilities.m in Sources */,
 				635B7AA90F169DBA0043FFEF /* RegexKitLite.m in Sources */,
 				635B7AAB0F169DBA0043FFEF /* RKLMatchEnumerator.m in Sources */,
+				6342BF6410B77136006995CA /* iManRenderOperation.m in Sources */,
+				6342BF7410B777A7006995CA /* iManResolveOperation.m in Sources */,
+				6342BFDF10B797AB006995CA /* iManSearchOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

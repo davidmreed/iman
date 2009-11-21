@@ -17,9 +17,8 @@
     NSTask *task = [[NSTask alloc] init];
     NSPipe *output = [NSPipe pipe];
     NSString *launchPath = [[iManEnginePreferences sharedInstance] pathForTool:tool];
-    NSData *data;
+    NSData *data = nil;
     int returnStatus;
-
 
     if (launchPath != nil) {
         [task setLaunchPath:launchPath];

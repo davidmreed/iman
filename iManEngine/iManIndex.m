@@ -9,10 +9,6 @@
 #import "iManIndex+Private.h"
 #import "iManAproposIndex.h"
 #import "iManEnginePreferences.h"
-#import <unistd.h>
-#import <Carbon/Carbon.h>
-#import "NSFileManager+DMRFindFolderExtensions.h"
-
 
 @implementation iManIndex
 
@@ -53,9 +49,12 @@
 - (NSString *)indexPath
 {
 	if ([[self class] isSubclassOfClass:[iManIndex class]]) {
-		NSString *folder = [[NSFileManager defaultManager] pathForFindFolderSelector:kApplicationSupportFolderType inDomain:kUserDomain createFlag:YES];
-		NSMutableArray *pathComponents = [NSMutableArray arrayWithObjects:[[NSBundle bundleForClass:[iManIndex class]] bundleIdentifier], [self identifier], nil];
+		NSString *folder;
+		NSMutableArray *pathComponents;
 		BOOL isDir;
+
+		folder = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
+		pathComponents = [NSMutableArray arrayWithObjects:[[NSBundle bundleForClass:[iManIndex class]] bundleIdentifier], [self identifier], nil];
 		
 		while ([pathComponents count] != 0) {
 			folder = [folder stringByAppendingPathComponent:[pathComponents objectAtIndex:0]];
