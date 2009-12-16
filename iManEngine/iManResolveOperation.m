@@ -19,6 +19,7 @@
 	if (self != nil) {
 		_name = [name copy];
 		_section = [section copy];
+		_path = nil;
 	}
 	
 	return self;
@@ -28,6 +29,7 @@
 {
 	if ([self isFinished])
 		return _path;
+	
 	return nil;
 }
 
@@ -38,7 +40,8 @@
 	NSArray *args;
 	NSString *manpath = [[iManEnginePreferences sharedInstance] manpathString];
     NSData *ret;
-	
+
+	// FIXME: find a better way to report errors.
 	if ((manpath == nil) || ([manpath length] == 0))
 		[NSException raise:NSGenericException format:@"No manpaths configured."];
 	

@@ -10,23 +10,15 @@
 #import "iManEnginePreferences.h"
 #import "iManRenderOperation.h"
 #import "iManResolveOperation.h"
-#import "NSTask+iManExtensions.h"
-
-#import <zlib.h>
-#import <unistd.h>
-#import "RegexKitLite/RegexKitLite.h"
-#import "RegexKitLiteSupport/RKLMatchEnumerator.h"
 
 @interface iManPage (Private)
 
+// Initializers are private because we cache instances.
 - initWithPath:(NSString *)path;
 - initWithName:(NSString *)name inSection:(NSString *)section;
-- (void)_load:(id)ignored;
-- (void)_resolve:(id)ignored;
-- (void)_reportFailure:(NSString *)error;
-- (NSData *)renderedDataFromPath:(NSString *)path;
-- (NSData *)_renderedDataFromGzippedPath:(NSString *)path;
-- (NSAttributedString *)attributedStringFromData:(NSData *)data;
+
+- (void)_handleRenderOperationFinished:(iManRenderOperation *)operation;
+- (void)_handleResolveOperationFinished:(iManResolveOperation *)operation;
 
 @end
 
@@ -96,7 +88,6 @@ static NSOperationQueue *_iManPageRenderingQueue;
 	
 	ret = [[iManPage alloc] initWithName:name inSection:section];
 	[_iManPageCache setObject:ret forKey:[NSString stringWithFormat:@"%@(%@)", name, section]];
-	
 	return [ret autorelease];
 }
 
@@ -127,11 +118,13 @@ static NSOperationQueue *_iManPageRenderingQueue;
 
 - (NSString *)path
 {
+	// FIXME: make property KVO-compliant.
 	return path_;
 }
 
 - (NSString *)pageName
 {
+	// FIXME: make property KVO-compliant.
 	if (pageName_)
 		return pageName_;
 	
@@ -140,6 +133,7 @@ static NSOperationQueue *_iManPageRenderingQueue;
 
 - (NSString *)pageSection
 {	
+	// FIXME: make property KVO-compliant.
 	if ((pageSection_ != nil) && ([pageSection_ length] > 0)) {
 		return pageSection_;
 	} else {	
@@ -154,13 +148,8 @@ static NSOperationQueue *_iManPageRenderingQueue;
 
 - (NSAttributedString *)page
 {
-	NSAttributedString *page;
-	
-	@synchronized (page_) {
-		page = [[page_ retain] autorelease];
-	}
-	
-	return page;
+	// FIXME: make property KVO-compliant.
+	return [[page_ copy] autorelease];
 }
 
 - (NSAttributedString *)pageWithStyle:(NSDictionary *)style
@@ -219,38 +208,58 @@ static NSOperationQueue *_iManPageRenderingQueue;
 
 - (BOOL)isLoaded
 {
+	// FIXME: make property KVO-compliant.
+
 	return ([self page] != nil);
 }
 
 - (BOOL)isLoading
 {
+	// FIXME: make property KVO-compliant.
+
 	return loading_;
 }
 
 - (BOOL)isResolved
 {
+	// FIXME: make property KVO-compliant.
+
 	return ([self path] != nil);
 }
 
 - (BOOL)isResolving
 {
+	// FIXME: make property KVO-compliant.
+
 	return resolving_;
 }
 
-// When a load or resolve request is made, we create a new NSOperation and observe changes in its "finished" property. 
+// When a load or resolve request is made, we create a new NSOperation and observe changes in its "isFinished" property. 
 
 - (void)load
 {
 	if (![self isLoaded] && !loading_ && !resolving_) {
 		iManRenderOperation *operation;
-		if ([self isResolved])
-			operation = [[[iManRenderOperation alloc] initWithPath:[self path]] autorelease];
-		else
-			operation = [[[iManRenderOperation alloc] initWithName:[self pageName] section:[self pageSection]] autorelease];
 		
 		loading_ = YES;
-		[operation addObserver:self forKeyPath:@"finished" options:0 context:NULL];
-		[_iManPageRenderingQueue addOperation:operation];
+
+		if ([self isResolved]) {
+			operation = [[iManRenderOperation alloc] initWithPath:[self path]];
+			[_iManPageRenderingQueue addOperation:operation];
+		} else {
+			iManResolveOperation *resolveOperation;
+			
+			resolveOperation = [[iManResolveOperation alloc] initWithName:[self pageName] section:[self pageSection]];
+			operation = [[iManRenderOperation alloc] initWithDeferredPath];
+			[operation addDependency:resolveOperation];
+			[resolveOperation addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
+			[_iManPageRenderingQueue addOperation:operation];
+			[_iManPageRenderingQueue addOperation:resolveOperation];
+			[resolveOperation release];
+		}
+		
+		[operation addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
+		[operation release];
 	}
 }
 
@@ -269,42 +278,55 @@ static NSOperationQueue *_iManPageRenderingQueue;
 		iManResolveOperation *operation = [[[iManResolveOperation alloc] initWithName:[self pageName] section:[self pageSection]] autorelease];
 		
 		resolving_ = YES;
-		[operation addObserver:self forKeyPath:@"finished" options:0 context:NULL];
+		[operation addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
 		[_iManPageRenderingQueue addOperation:operation];
 	}
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+- (void)_handleRenderOperationFinished:(iManRenderOperation *)operation
 {
-	if ([keyPath isEqualToString:@"finished"]) {
-		if ([object isMemberOfClass:[iManRenderOperation class]]) {
-			[page_ release];
-			[path_ release];
-			page_ = path_ = nil;
-			loading_ = NO;
-
-			if ([object page] != nil) {
-				page_ = [[object page] copy];
-				path_ = [[object path] copy];
-				[[NSNotificationCenter defaultCenter] postNotificationName:iManPageLoadDidCompleteNotification object:self userInfo:nil];
-			} else {
-				[[NSNotificationCenter defaultCenter] postNotificationName:iManPageLoadDidFailNotification object:self userInfo:nil];
-			}
-		} else if ([object isMemberOfClass:[iManResolveOperation class]]) {
-			resolving_ = NO;
-			[path_ release];
-			path_ = nil;
-			
-			if ([object path] != nil) {
-				path_ = [[object path] copy];
-				// Update the page cache so that attempts to load our newly resolved path will return this object.
-				[_iManPageCache setObject:self forKey:[self path]];
-				[[NSNotificationCenter defaultCenter] postNotificationName:iManPageResolveDidCompleteNotification object:self userInfo:nil];
-			} else {
-				[[NSNotificationCenter defaultCenter] postNotificationName:iManPageResolveDidFailNotification object:self userInfo:nil];
-			}
-		}
+	// This method called on main thread when KVO notification tells us (on *worker* thread, because that's where the KVO notification is posted) that the operation is finished.
+	[page_ release];
+	[path_ release];
+	page_ = path_ = nil;
+	loading_ = NO;
 	
+	if ([operation page] != nil) {
+		page_ = [[operation page] copy];
+		path_ = [[operation path] copy];
+		[[NSNotificationCenter defaultCenter] postNotificationName:iManPageLoadDidCompleteNotification object:self userInfo:nil];
+	} else {
+		[[NSNotificationCenter defaultCenter] postNotificationName:iManPageLoadDidFailNotification object:self userInfo:nil];
+	}
+	[operation release]; // Passed to us with a -retain since it is likely to get released right after -observeValueForKeyPath:... returns.
+}
+
+- (void)_handleResolveOperationFinished:(iManResolveOperation *)operation
+{
+	// This method called on main thread when KVO notification tells us (on *worker* thread, because that's where the KVO notification is posted) that the operation is finished.
+	resolving_ = NO;
+	[path_ release];
+	path_ = nil;
+	
+	if ([operation path] != nil) {
+		path_ = [[operation path] copy];
+		// Update the page cache so that attempts to load our newly resolved path will return this object.
+		[_iManPageCache setObject:self forKey:[self path]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:iManPageResolveDidCompleteNotification object:self userInfo:nil];
+	} else {
+		[[NSNotificationCenter defaultCenter] postNotificationName:iManPageResolveDidFailNotification object:self userInfo:nil];
+	}
+	[operation release]; // Passed to us with a -retain since it is likely to get released right after -observeValueForKeyPath:... returns.
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{	
+	if ([keyPath isEqualToString:@"isFinished"]) {
+		if ([object isMemberOfClass:[iManRenderOperation class]]) {
+			[self performSelectorOnMainThread:@selector(_handleRenderOperationFinished:) withObject:[object retain] waitUntilDone:NO];
+		} else if ([object isMemberOfClass:[iManResolveOperation class]]) {
+			[self performSelectorOnMainThread:@selector(_handleResolveOperationFinished:) withObject:[object retain] waitUntilDone:NO];
+		}
 		[object removeObserver:self forKeyPath:keyPath];
 	}
 }

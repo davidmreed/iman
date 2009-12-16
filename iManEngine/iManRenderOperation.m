@@ -29,19 +29,22 @@
 - (iManRenderOperation *)initWithPath:(NSString *)path
 {
 	self = [super init];
-	
-	if (self != nil)
+
+	if (self != nil) {
 		_path = [path copy];
+		_pendingResolution = NO;
+	}
 	
 	return self;
 }
 
-- (iManRenderOperation *)initWithName:(NSString *)name section:(NSString *)section
+- (iManRenderOperation *)initWithDeferredPath
 {
 	self = [super init];
 	
 	if (self != nil) {
-		[self addDependency:[[[iManResolveOperation alloc] initWithName:name section:section] autorelease]];
+		_path = nil;
+		_pendingResolution = YES;
 	}
 	
 	return self;
@@ -51,11 +54,16 @@
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	if (_path == nil) {
-		_path = [[[self dependencies] lastObject] path];
+	if (_pendingResolution) {
+		_path = [[[[self dependencies] lastObject] path] copy];
 	}
-	if (_path != nil) 
+
+	if (_path != nil) {
 		_page = [[self _attributedStringFromData:[self _renderedDataFromPath:[self path]]] retain];
+	} else {
+		// FIXME: more sophisticated error reporting?
+		_page = nil;
+	}
 	
 	[pool release];
 }
