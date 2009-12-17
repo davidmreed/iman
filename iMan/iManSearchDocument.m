@@ -206,6 +206,7 @@ enum {
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {    
+	// FIXME: CRASH at line 210 on second click of "Go".
     if ([[tableColumn identifier] isEqualToString:@"Page"]) {
         if ([item isKindOfClass:[NSArray class]]) { // if it is a multiple-page entry
             return [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"%@ (%d pages)", nil), [(NSArray *)item objectAtIndex:0], [(NSArray *)item count]]

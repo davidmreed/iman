@@ -8,6 +8,8 @@
 #import "iManAproposIndex.h"
 #import "iManIndex+Private.h"
 #import "iManEnginePreferences.h"
+#import "iManMakewhatisOperation.h"
+#import "iManErrors.h"
 
 @implementation iManAproposIndex
 
@@ -18,101 +20,52 @@
 
 - (NSString *)identifier
 {
-	return @"org.ktema.iman.iman-macosx.index.apropos";
+	return @"org.ktema.iman.index.apropos";
 }
 
 - (BOOL)isValid
 {	
-	return ([[NSFileManager defaultManager] fileExistsAtPath:[[self indexPath] stringByAppendingPathComponent:@"index.valid"] isDirectory:NULL]);
+	return ([[NSFileManager defaultManager] fileExistsAtPath:[[self indexPath] stringByAppendingPathComponent:@"index.valid"] isDirectory:NULL] && [[NSString stringWithContentsOfFile:[[self indexPath] stringByAppendingPathComponent:@"index.valid"] encoding:NSUTF8StringEncoding error:NULL] isEqualToString:[[iManEnginePreferences sharedInstance] manpathString]]);
 }	
 
 - (void)update
 {
 	if ([[self lock] tryLock]) {
-		[[NSDistributedNotificationCenter defaultCenter] addObserver:self
-															selector:@selector(_updateIndexesCompleted:)
-																name:@"org.ktema.iman.iman-macosx.imanengine.makewhatis"
-															  object:nil
-												  suspensionBehavior:NSNotificationSuspensionBehaviorDeliverImmediately];	
+		iManMakewhatisOperation *operation = [[iManMakewhatisOperation alloc] initWithPath:[[self indexPath] stringByAppendingPathComponent:@"whatis"]];
 		
-		
-		[NSThread detachNewThreadSelector:@selector(_update:) toTarget:self withObject:[self indexPath]];
+		[operation addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
+		[_iManSearchQueue addOperation:operation];
+		[operation release];
 	} else {
-		[[NSNotificationCenter defaultCenter] postNotificationName:iManIndexDidFailUpdateNotification
-															object:self];
 	}
 }
 
-- (void)_update:(NSString *)indexPath
-{
-	// FIXME: NSOperation-ize this stuff.
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSArray *manPaths = [[iManEnginePreferences sharedInstance] manpaths];
-	NSEnumerator *pathEnumerator = [manPaths objectEnumerator];
-	NSString *path;
-		
-	@try {
-		if (indexPath == nil) 
-			[NSException raise:NSGenericException format:@""];
-		
-		while ((path = [pathEnumerator nextObject]) != nil) {
-			NSString *whatisDBPath = [[[indexPath stringByAppendingPathComponent:path] stringByAppendingPathComponent:@"whatis"] stringByStandardizingPath];
-			NSTask *task = [[[NSTask alloc] init] autorelease];
-			
-			{ // Ensure the directory exists so makewhatis won't complain
-				NSString *folder = @"";
-				NSMutableArray *pathComponents = [[[whatisDBPath stringByDeletingLastPathComponent] pathComponents] mutableCopy];
-				BOOL isDir;
-				
-				while ([pathComponents count] != 0) {
-					folder = [folder stringByAppendingPathComponent:[pathComponents objectAtIndex:0]];
-					[pathComponents removeObjectAtIndex:0];
-					
-					if (!([[NSFileManager defaultManager] fileExistsAtPath:folder isDirectory:&isDir] && isDir)) {
-						if (![[NSFileManager defaultManager] createDirectoryAtPath:folder attributes:[NSDictionary dictionary]]) {
-							NSLog(@"iManAproposIndex: couldn't create directory \"%@\"", folder);
-							folder = nil;
-							break;
-						}
-					}
-				}
-				
-				[pathComponents release];
-			}
-			
-			[task setLaunchPath:[[iManEnginePreferences sharedInstance] pathForTool:@"makewhatis"]];
-			[task setArguments:[NSArray arrayWithObjects:@"-o", whatisDBPath, path, nil]]; // FIXME: is this locale-aware? That is, how will locale subdirectories be handled? (Also, does man or groff handle rendering manpages in non-UTF-8 encodings *into* UTF-8, for after we fix the parser to handle that encoding?)
-			
-			[task launch];
-			[task waitUntilExit];
-			if ([task terminationStatus] != 0)
-				[NSException raise:NSGenericException format:@""];
-		}
-	} @catch (NSException *e) {
-		[[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"org.ktema.iman.iman-macosx.imanengine.makewhatis" object:@"1"];
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{	
+	// We get this KVO notification on the thread on which the operation has been executing. Annoying. Reroute to main thread.
+	if ([keyPath isEqualToString:@"isFinished"]) {
+		[self performSelectorOnMainThread:@selector(_handleUpdateIndexFinished:) withObject:[object retain] waitUntilDone:NO];
+		[object removeObserver:self forKeyPath:keyPath];
 	}
-	
-	// This will make -valid return YES.
-	[@"1" writeToFile:[[self indexPath] stringByAppendingPathComponent:@"index.valid"] atomically:YES];
-
-	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"org.ktema.iman.iman-macosx.imanengine.makewhatis" object:@"0"];
-	
-	[pool release];
 }
 
-- (void)_updateIndexesCompleted:(NSNotification *)notification
+- (void)_handleUpdateIndexFinished:(iManMakewhatisOperation *)operation
 {
+	// operation is retained to keep it from getting deallocated as soon as -observeValueForKeyPath: returns.
 	[[self lock] unlock];
 	
-	// The other thread returns success/fail in the notification's object.
-	if ([[notification object] intValue] == 0)
+	if ([operation error] == nil) {
+		// Create a file to mark the index's validity.
+		[[[iManEnginePreferences sharedInstance] manpathString] writeToFile:[[self indexPath] stringByAppendingPathComponent:@"index.valid"] atomically:NO encoding:NSUTF8StringEncoding error:NULL];
 		[[NSNotificationCenter defaultCenter] postNotificationName:iManIndexDidUpdateNotification
 															object:self];
-	else
+	} else {
 		[[NSNotificationCenter defaultCenter] postNotificationName:iManIndexDidFailUpdateNotification
-															object:self];
+															object:self
+														  userInfo:[NSDictionary dictionaryWithObject:[operation error] forKey:iManErrorKey]];
+	}
 	
-	[[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
+	[operation release];
 }
 
 @end

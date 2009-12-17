@@ -19,6 +19,8 @@ NSString *const iManSearchDidCompleteNotification = @"iManSearchDidCompleteNotif
 NSString *const iManSearchDidFailNotification = @"iManSearchDidFailNotification";
 NSString *const iManSearchError = @"iManSearchError";
 
+NSOperationQueue *_iManSearchQueue;
+
 @interface iManSearch (iManSearchPrivate)
 
 - (void)_search:(id)ignored;
@@ -26,8 +28,6 @@ NSString *const iManSearchError = @"iManSearchError";
 @end
 
 @implementation iManSearch
-
-static NSOperationQueue *_iManSearchQueue;
 
 + (void)initialize
 {

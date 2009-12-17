@@ -14,3 +14,5 @@
 - (NSDistributedLock *)lock;
 
 @end
+
+extern NSOperationQueue *_iManSearchQueue;

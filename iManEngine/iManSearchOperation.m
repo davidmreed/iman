@@ -34,7 +34,6 @@
 	iManIndex *aproposIndex = [iManIndex aproposIndex];
     NSData *data;
 	NSString *argument;
-	NSMutableArray *manpaths = [[[iManEnginePreferences sharedInstance] manpaths] mutableCopy];
 	unsigned index;
 	char tempDir[] = "/tmp/imanXXXXXXXX";
 	NSString *tempLink;
@@ -61,10 +60,6 @@
 		return;
 	}		
 	
-	// Adjust all manpaths to refer to the index directories inside the symlinked App Support folder.
-	for (index = 0; index < [manpaths count]; index++)
-		[manpaths replaceObjectAtIndex:index withObject:[tempLink stringByAppendingPathComponent:[manpaths objectAtIndex:index]]];
-	
 	if ([_searchType isEqualToString:iManSearchTypeApropos])
 		argument = @"-k";
 	else 
@@ -73,7 +68,7 @@
 	
 	data = [NSTask invokeTool:@"man"
 					arguments:[NSArray arrayWithObjects:argument, _term, nil]
-				  environment:[NSDictionary dictionaryWithObject:[manpaths componentsJoinedByString:@":"] forKey:@"MANPATH"]
+				  environment:[NSDictionary dictionaryWithObject:tempLink forKey:@"MANPATH"]
 						error:&taskError];
 	
 	[[aproposIndex lock] unlock];
