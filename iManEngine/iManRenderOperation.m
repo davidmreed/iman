@@ -108,7 +108,6 @@
 
 - (NSData *)_renderedDataFromGzippedPath:(NSString *)path error:(NSError **)error
 {
-	// FIXME: error handling
     // This is a rather clunky but workable hack to deal with gzip'ed man pages.
     // Much of this code is copied from the NSTask category, but it has had an input pipe
     // with on-the-fly decompression added (courtesy of zlib).
@@ -255,13 +254,15 @@
         NSEnumerator *results;
 		NSString *searchText = [str string];
 		NSValue *match;
+		NSString *regex = @"\\(S+)\\(\\d[a-zA-Z]*\\)";
 		
-        results = [searchText matchEnumeratorWithRegex:@"\\S+\\(\\d[a-zA-Z]*\\)" options:RKLNoOptions | RKLMultiline];
+        results = [searchText matchEnumeratorWithRegex:regex options:RKLNoOptions | RKLMultiline];
 		
 		
 		while ((match = [results nextObject]) != nil) {
             NSRange range = [match rangeValue];
-			NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"man:%@", [searchText substringWithRange:range]]];
+			NSString *matchString = [searchText substringWithRange:range];
+			NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"man://%@/%@", [matchString stringByMatching:regex capture:2], [matchString stringByMatching:regex capture:1]]];
 			
 			if (url != nil)
 				[str addAttribute:iManPageLinkAttributeName
