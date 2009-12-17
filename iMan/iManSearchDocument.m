@@ -84,6 +84,11 @@ enum {
 	iManIndex *index = [iManSearch indexForSearchType:[[searchTypeMenu selectedItem] representedObject]];
 	
 	if ([index isValid]) {
+		if (sortedResults != nil) {
+			[sortedResults release];
+			sortedResults = nil;
+			[tableView reloadData];
+		}
 		[searchTypeMenu setEnabled:NO];
 		[goButton setEnabled:NO];
 		[searchField setEnabled:NO];
@@ -198,15 +203,18 @@ enum {
 
 - (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
 {
-    if (item == nil)
-        return [sortedResults count];
-
+    if (item == nil) {
+		if (sortedResults != nil)
+			return [sortedResults count];
+		else
+			return 0;
+	}
+	
     return [(NSArray *)item count];
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {    
-	// FIXME: CRASH at line 210 on second click of "Go".
     if ([[tableColumn identifier] isEqualToString:@"Page"]) {
         if ([item isKindOfClass:[NSArray class]]) { // if it is a multiple-page entry
             return [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"%@ (%d pages)", nil), [(NSArray *)item objectAtIndex:0], [(NSArray *)item count]]
