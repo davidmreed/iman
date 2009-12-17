@@ -85,7 +85,7 @@ static NSOperationQueue *_iManSearchQueue;
 {
 	if (!searching_) {
 		iManSearchOperation *operation = [[iManSearchOperation alloc] initWithTerm:[self term] searchType:[self searchType]];		
-		[operation addObserver:self forKeyPath:@"finished" options:0 context:NULL];
+		[operation addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
 		[_iManSearchQueue addOperation:operation];
 		[operation release];
 		searching_ = YES;
@@ -100,7 +100,7 @@ static NSOperationQueue *_iManSearchQueue;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	if ([keyPath isEqualToString:@"finished"]) {
+	if ([keyPath isEqualToString:@"isFinished"]) {
 		[results_ release];
 		results_ = nil;
 		searching_ = NO;
