@@ -7,6 +7,7 @@
 //
 
 #import "iManResolveOperation.h"
+#import "iManErrors.h"
 #import "iManEnginePreferences.h"
 #import "NSTask+iManExtensions.h"
 
@@ -20,6 +21,7 @@
 		_name = [name copy];
 		_section = [section copy];
 		_path = nil;
+		_error = nil;
 	}
 	
 	return self;
@@ -33,6 +35,11 @@
 	return nil;
 }
 
+- (NSError *)error 
+{
+	return _error;
+}
+
 - (void)main
 {
 	// Calls man -w section page, via our NSTask category, to get the filename to load.
@@ -40,10 +47,13 @@
 	NSArray *args;
 	NSString *manpath = [[iManEnginePreferences sharedInstance] manpathString];
     NSData *ret;
+	NSError *taskError;
 
-	// FIXME: find a better way to report errors.
-	if ((manpath == nil) || ([manpath length] == 0))
-		[NSException raise:NSGenericException format:@"No manpaths configured."];
+	if ((manpath == nil) || ([manpath length] == 0)) {
+		_error = [[NSError alloc] initWithDomain:iManEngineErrorDomain code:iManToolNotConfiguredError userInfo:nil];
+		[pool release];
+		return;
+	}
 	
     // Set up the arguments based on whether or not the section is known.
     if (_section == nil) {
@@ -62,13 +72,15 @@
 				_name,
 				nil];
     }
-    ret = [NSTask invokeTool:@"man" arguments:args environment:nil];
+    ret = [NSTask invokeTool:@"man" arguments:args environment:nil error:&taskError];
 	
     // the data returned has a newline at the end, so if we got some data,
     // convert it to an NSString, omitting the newline, and make sure it's an OK path.
     if (ret != nil) {
 		_path = [[[NSString stringWithCString:[ret bytes] length:([ret length] - 1)] stringByStandardizingPath] retain];
-	} 
+	} else {
+		_error = [taskError retain];
+	}
 	
 	[pool release];
 }
@@ -78,6 +90,7 @@
 	[_path release];
 	[_section release];
 	[_name release];
+	[_error release];
 	[super dealloc];
 }
 

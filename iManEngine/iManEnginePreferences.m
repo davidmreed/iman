@@ -107,7 +107,7 @@ static NSString *const iManEngineManpaths = @"iManEngineManpaths";
 	if (ret != nil)
 		return ret;
 	
-	dat = [NSTask invokeTool:@"manpath" arguments:[NSArray arrayWithObject:@"-q"] environment:nil];
+	dat = [NSTask invokeTool:@"manpath" arguments:[NSArray arrayWithObject:@"-q"] environment:nil error:nil];
 	
 	if (dat != nil) {
 		string = [NSString stringWithCString:[dat bytes] length:[dat length] - 1];

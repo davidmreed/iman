@@ -354,8 +354,8 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 								   nil, nil,
 								   [self windowForSheet],
 								   nil, NULL, NULL, NULL,
-//								  FIXME [[notification userInfo] objectForKey:iManPageError]);
-								   @"The requested manpage could not be loaded.");
+								   NSLocalizedString(@"The requested man page could not be loaded. The error returned was \"%@\".", nil),
+								  [[[notification userInfo] objectForKey:iManErrorKey] localizedDescription]);
 	[self endAsyncLoad];
 	[_historyUndoManager disableUndoRegistration];
 	[self setPage:nil];

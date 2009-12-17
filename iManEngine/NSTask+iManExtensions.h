@@ -11,6 +11,7 @@
 
 + (NSData *)invokeTool:(NSString *)tool
              arguments:(NSArray *)arguments
-           environment:(NSDictionary *)environment;
+           environment:(NSDictionary *)environment
+				 error:(NSError **)returnedError;
 
 @end

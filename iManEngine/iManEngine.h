@@ -9,3 +9,7 @@
 #import <iManEngine/iManSearch.h>
 #import <iManEngine/iManIndex.h>
 #import <iManEngine/iManEnginePreferences.h>
+#import <iManEngine/iManErrors.h>
+#import <iManEngine/iManSearchOperation.h>
+#import <iManEngine/iManResolveOperation.h>
+#import <iManEngine/iManRenderOperation.h>

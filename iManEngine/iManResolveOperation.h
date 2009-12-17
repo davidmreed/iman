@@ -13,10 +13,12 @@
 	NSString *_name;
 	NSString *_section;
 	NSString *_path;
+	NSError *_error;
 }
 
 - initWithName:(NSString *)name section:(NSString *)section;
 
 - (NSString *)path;
+- (NSError *)error;
 
 @end

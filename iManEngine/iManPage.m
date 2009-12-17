@@ -7,9 +7,11 @@
 
 
 #import "iManPage.h"
+#import "iManErrors.h"
 #import "iManEnginePreferences.h"
 #import "iManRenderOperation.h"
 #import "iManResolveOperation.h"
+#import "RegexKitLite.h"
 
 @interface iManPage (Private)
 
@@ -296,7 +298,7 @@ static NSOperationQueue *_iManPageRenderingQueue;
 		path_ = [[operation path] copy];
 		[[NSNotificationCenter defaultCenter] postNotificationName:iManPageLoadDidCompleteNotification object:self userInfo:nil];
 	} else {
-		[[NSNotificationCenter defaultCenter] postNotificationName:iManPageLoadDidFailNotification object:self userInfo:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:iManPageLoadDidFailNotification object:self userInfo:[NSDictionary dictionaryWithObject:[operation error] forKey:iManErrorKey]];
 	}
 	[operation release]; // Passed to us with a -retain since it is likely to get released right after -observeValueForKeyPath:... returns.
 }
@@ -314,7 +316,7 @@ static NSOperationQueue *_iManPageRenderingQueue;
 		[_iManPageCache setObject:self forKey:[self path]];
 		[[NSNotificationCenter defaultCenter] postNotificationName:iManPageResolveDidCompleteNotification object:self userInfo:nil];
 	} else {
-		[[NSNotificationCenter defaultCenter] postNotificationName:iManPageResolveDidFailNotification object:self userInfo:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:iManPageResolveDidFailNotification object:self userInfo:[NSDictionary dictionaryWithObject:[operation error] forKey:iManErrorKey]];
 	}
 	[operation release]; // Passed to us with a -retain since it is likely to get released right after -observeValueForKeyPath:... returns.
 }

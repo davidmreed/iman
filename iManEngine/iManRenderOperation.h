@@ -11,6 +11,7 @@
 
 @interface iManRenderOperation : NSOperation {
 	NSString *_path;
+	NSError *_error;
 	BOOL _pendingResolution;
 	NSAttributedString *_page;
 }
@@ -20,5 +21,6 @@
 
 - (NSString *)path;
 - (NSAttributedString *)page;
+- (NSError *)error;
 
 @end

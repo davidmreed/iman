@@ -45,6 +45,7 @@
 
 - (void)_update:(NSString *)indexPath
 {
+	// FIXME: NSOperation-ize this stuff.
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *manPaths = [[iManEnginePreferences sharedInstance] manpaths];
 	NSEnumerator *pathEnumerator = [manPaths objectEnumerator];

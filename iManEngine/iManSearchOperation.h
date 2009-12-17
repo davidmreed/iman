@@ -13,10 +13,12 @@
 	NSString *_term;
 	NSString *_searchType;
 	NSMutableDictionary *_results;
+	NSError *_error;
 }
 
 - initWithTerm:(NSString *)term searchType:(NSString *)searchType;
 
 - (NSDictionary *)results;
+- (NSError *)error;
 
 @end

@@ -11,15 +11,16 @@
 #import "NSTask+iManExtensions.h"
 #import "iManEnginePreferences.h"
 #import "iManPage.h"
+#import "iManErrors.h"
 #import "RegexKitLite.h"
 #import "RKLMatchEnumerator.h"
 #import <zlib.h>
 
 @interface iManRenderOperation (Private)
 
-- (NSData *)_renderedDataFromPath:(NSString *)path;
-- (NSData *)_renderedDataFromGzippedPath:(NSString *)path;
-- (NSAttributedString *)_attributedStringFromData:(NSData *)data;
+- (NSData *)_renderedDataFromPath:(NSString *)path error:(NSError **)error;
+- (NSData *)_renderedDataFromGzippedPath:(NSString *)path error:(NSError **)error;
+- (NSAttributedString *)_attributedStringFromData:(NSData *)data error:(NSError **)error;
 
 @end
 
@@ -32,6 +33,7 @@
 
 	if (self != nil) {
 		_path = [path copy];
+		_error = nil;
 		_pendingResolution = NO;
 	}
 	
@@ -55,23 +57,40 @@
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	if (_pendingResolution) {
-		_path = [[[[self dependencies] lastObject] path] copy];
+		iManResolveOperation *resolveOperation = [[self dependencies] lastObject];
+		
+		if ([resolveOperation path] != nil)
+			_path = [[resolveOperation path] copy];
+		else
+			_error = [[resolveOperation error] retain];
 	}
 
 	if (_path != nil) {
-		_page = [[self _attributedStringFromData:[self _renderedDataFromPath:[self path]]] retain];
+		NSData *data;
+		NSAttributedString *formattedPage;
+		NSError *taskError;
+		
+		data = [self _renderedDataFromPath:[self path] error:&taskError];
+		if (data != nil) {
+			formattedPage = [self _attributedStringFromData:data error:&taskError];
+			if (formattedPage != nil)
+				_page = [formattedPage retain];
+		}
+		
+		_error = [taskError retain]; // if no error occurred, no-op; _error must be nil, operation is run-once.
 	} else {
-		// FIXME: more sophisticated error reporting?
 		_page = nil;
+		if (_error == nil) // i.e., if we have not inherited an error from the resolve operation -- we then have an internal inconsistency error.
+			_error = [[NSError alloc] initWithDomain:iManEngineErrorDomain code:iManInternalInconsistencyError userInfo:nil];
 	}
 	
 	[pool release];
 }
 
-- (NSData *)_renderedDataFromPath:(NSString *)path
+- (NSData *)_renderedDataFromPath:(NSString *)path error:(NSError **)error
 {
 	if ([[[path lastPathComponent] pathExtension] isEqualToString:@"gz"])
-		return [self _renderedDataFromGzippedPath:path];
+		return [self _renderedDataFromGzippedPath:path error:error];
 	
 	return [NSTask invokeTool:@"groff"
 					arguments:[NSArray arrayWithObjects:
@@ -83,11 +102,13 @@
 							   @"-mandoc", // appropriate macro package
 							   path,
 							   nil]
-				  environment:nil];
+				  environment:nil
+						error:error];
 }
 
-- (NSData *)_renderedDataFromGzippedPath:(NSString *)path
+- (NSData *)_renderedDataFromGzippedPath:(NSString *)path error:(NSError **)error
 {
+	// FIXME: error handling
     // This is a rather clunky but workable hack to deal with gzip'ed man pages.
     // Much of this code is copied from the NSTask category, but it has had an input pipe
     // with on-the-fly decompression added (courtesy of zlib).
@@ -105,67 +126,71 @@
     unsigned bytesRead;
     int fd;
 	
-	@try{
-		// Set up the task.
-		if (launchPath != nil) {
-			[task setLaunchPath:launchPath];
-		} else {
-			[NSException raise:NSInternalInconsistencyException format:@"Tool path missing"];
-		}
-		
-		[task setArguments:[NSArray arrayWithObjects:
-							@"-Tascii",		// ASCII output, UTF-8 doesn't work right now
-							@"-P",			// -P sends next argument to postprocessor
-							@"-c",			// tells grotty to use old-style format codes
-							@"-S",			// safe mode (on by default, just to be sure)
-							@"-t",			// preprocess with tbl (man default).
-							@"-mandoc",		// appropriate macro package
-							@"-",			// input on stdin
-							nil]];
-		
-		[task setStandardInput:input];
-		[task setStandardOutput:output];
-		[task setStandardError:[NSFileHandle fileHandleWithNullDevice]];
-		
-		if ((theFile = gzopen([[NSFileManager defaultManager] fileSystemRepresentationWithPath:path],
-							  "rb")) == nil)
-			[NSException raise:NSGenericException format:@"gzopen failed"];
-		if ((buf = malloc(4096)) == nil)
-			[NSException raise:NSGenericException format:@"malloc failed"];
-		
-		[task launch];
-		fd = [[input fileHandleForWriting] fileDescriptor];    
-		readHandle = [output fileHandleForReading];
-		
-		while ((bytesRead = gzread(theFile, buf, 4096)) > 0) {
-			write(fd, buf, bytesRead); // send it on to groff.
-		}
-		
-		[[input fileHandleForWriting] closeFile];
-		
-		data = [readHandle readDataToEndOfFile];
-		[task waitUntilExit];
-		
-		returnStatus = [task terminationStatus];
-	
-		if (returnStatus != EXIT_SUCCESS) {
-			[NSException raise:NSGenericException format:@"groff returned nonzero exit code %d", returnStatus];	
-			[data release];
-			data = nil;
-		}
-	} @catch (NSException *e) {
-		NSLog(@"An error occurred while attempting to render %@. The error is: \"%s\"", [self path], [e reason]);
-		return nil;
-	} @finally {
+	// Set up the task.
+	if (launchPath != nil) {
+		[task setLaunchPath:launchPath];
+	} else {
 		[task release];
-		if (theFile != NULL)
-			gzclose(theFile);
+		if (error != nil) *error = [NSError errorWithDomain:iManEngineErrorDomain code:iManToolNotConfiguredError userInfo:nil];
+		return nil;
+	}
+	
+	[task setArguments:[NSArray arrayWithObjects:
+						@"-Tascii",		// ASCII output, UTF-8 doesn't work right now
+						@"-P",			// -P sends next argument to postprocessor
+						@"-c",			// tells grotty to use old-style format codes
+						@"-S",			// safe mode (on by default, just to be sure)
+						@"-t",			// preprocess with tbl (man default).
+						@"-mandoc",		// appropriate macro package
+						@"-",			// input on stdin
+						nil]];
+	
+	[task setStandardInput:input];
+	[task setStandardOutput:output];
+	[task setStandardError:[NSFileHandle fileHandleWithNullDevice]];
+	
+	if ((theFile = gzopen([[NSFileManager defaultManager] fileSystemRepresentationWithPath:path], "rb")) == nil) {
+		// if errno == 0, memory allocation failed. Otherwise, errno contains the real error (file couldn't be opened)
+		if (errno == 0)
+			if (error != nil) *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOMEM userInfo:nil];
+		else
+			if (error != nil) *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
+		[task release];
+		return nil;
+	}
+	if ((buf = malloc(4096)) == nil) {
+		if (error != nil) *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOMEM userInfo:nil];
+		[task release];
+		gzclose(theFile);
+		return nil;
+	}
+	
+	[task launch];
+	fd = [[input fileHandleForWriting] fileDescriptor];    
+	readHandle = [output fileHandleForReading];
+	
+	while ((bytesRead = gzread(theFile, buf, 4096)) > 0) {
+		write(fd, buf, bytesRead); // send it on to groff.
+	}
+	
+	[[input fileHandleForWriting] closeFile];
+	gzclose(theFile);
+	data = [readHandle readDataToEndOfFile];
+	[task waitUntilExit];
+	
+	returnStatus = [task terminationStatus];
+	[task release];
+	
+	if (returnStatus != EXIT_SUCCESS) {
+		[data release];
+		data = nil;
+		if (error != nil) *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:returnStatus userInfo:nil];
 	}
 	
 	return data;
 }
 
-- (NSAttributedString *)_attributedStringFromData:(NSData *)data
+- (NSAttributedString *)_attributedStringFromData:(NSData *)data error:(NSError **)error
 {
     // This function converts the output of grotty(1) from old-style formatted ASCII
     // to an NSAttributedString, replacing the crude format codes with attributes.
@@ -245,6 +270,7 @@
         }
     }
 	
+	if (error != nil) *error = nil; // Currently formatting errors are just ignored.
     return [str autorelease];
 }
 
@@ -259,8 +285,14 @@
 		return _page;
 }
 
+- (NSError *)error
+{
+	return _error;
+}
+
 - (void)dealloc
 {
+	[_error release];
 	[_path release];
 	[_page release];
 	[super dealloc];

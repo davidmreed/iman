@@ -7,23 +7,28 @@
 
 #import "NSTask+iManExtensions.h"
 #import "iManEnginePreferences.h"
+#import "iManErrors.h"
 
 @implementation NSTask (iManExtensions)
 
 + (NSData *)invokeTool:(NSString *)tool
              arguments:(NSArray *)arguments
            environment:(NSDictionary *)environment
+				 error:(NSError **)returnedError
 {
     NSTask *task = [[NSTask alloc] init];
     NSPipe *output = [NSPipe pipe];
     NSString *launchPath = [[iManEnginePreferences sharedInstance] pathForTool:tool];
     NSData *data = nil;
+	NSError *err;
     int returnStatus;
 
     if (launchPath != nil) {
         [task setLaunchPath:launchPath];
     } else {
         [task release];
+		if (returnedError != nil)
+			*returnedError = [NSError errorWithDomain:iManEngineErrorDomain code:iManToolNotConfiguredError userInfo:nil];
         return nil;
     }
     if (arguments != nil)
@@ -41,10 +46,15 @@
     returnStatus = [task terminationStatus];
     [task release];
 
-    if (returnStatus == EXIT_SUCCESS)
-        return data;
-    else
+    if (returnStatus == EXIT_SUCCESS) {
+		if (returnedError != nil)
+			*returnedError = nil;
+		return data;
+    } else {
+		if (returnedError != nil)
+			*returnedError = [NSError errorWithDomain:NSPOSIXErrorDomain code:returnStatus userInfo:nil];
         return nil;
+	}
 }
 
 @end

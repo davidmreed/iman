@@ -32,6 +32,8 @@
 		635B7AA90F169DBA0043FFEF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7AA50F169DBA0043FFEF /* RegexKitLite.m */; };
 		635B7AAB0F169DBA0043FFEF /* RKLMatchEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7AA70F169DBA0043FFEF /* RKLMatchEnumerator.m */; };
 		635B7BB10F16A23A0043FFEF /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 635B7BB00F16A23A0043FFEF /* libicucore.dylib */; };
+		63D688AE10D9C72F008F63E6 /* iManErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 63D688AC10D9C72F008F63E6 /* iManErrors.h */; };
+		63D688AF10D9C72F008F63E6 /* iManErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D688AD10D9C72F008F63E6 /* iManErrors.m */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
@@ -70,6 +72,8 @@
 		635B7AA60F169DBA0043FFEF /* RKLMatchEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKLMatchEnumerator.h; sourceTree = "<group>"; };
 		635B7AA70F169DBA0043FFEF /* RKLMatchEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RKLMatchEnumerator.m; sourceTree = "<group>"; };
 		635B7BB00F16A23A0043FFEF /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
+		63D688AC10D9C72F008F63E6 /* iManErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManErrors.h; sourceTree = "<group>"; };
+		63D688AD10D9C72F008F63E6 /* iManErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManErrors.m; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -132,6 +136,8 @@
 		08FB77AEFE84172EC02AAC07 /* Public Classes */ = {
 			isa = PBXGroup;
 			children = (
+				63D688AC10D9C72F008F63E6 /* iManErrors.h */,
+				63D688AD10D9C72F008F63E6 /* iManErrors.m */,
 				6342BFDC10B797AB006995CA /* iManSearchOperation.h */,
 				6342BFDD10B797AB006995CA /* iManSearchOperation.m */,
 				11BABB0809D1DF2C00A3D6B1 /* iManEngine.h */,
@@ -225,6 +231,7 @@
 				6342BF6310B77136006995CA /* iManRenderOperation.h in Headers */,
 				6342BF7310B777A7006995CA /* iManResolveOperation.h in Headers */,
 				6342BFDE10B797AB006995CA /* iManSearchOperation.h in Headers */,
+				63D688AE10D9C72F008F63E6 /* iManErrors.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -298,6 +305,7 @@
 				6342BF6410B77136006995CA /* iManRenderOperation.m in Sources */,
 				6342BF7410B777A7006995CA /* iManResolveOperation.m in Sources */,
 				6342BFDF10B797AB006995CA /* iManSearchOperation.m in Sources */,
+				63D688AF10D9C72F008F63E6 /* iManErrors.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
