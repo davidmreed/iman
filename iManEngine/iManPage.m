@@ -42,10 +42,13 @@ static NSOperationQueue *_iManPageRenderingQueue;
 
 + pageWithURL:(NSURL *)url
 {
+	// grohtml style: man://groff/1. Regex: \/{1,2}([^\/\s]+)\/(\d+[a-zA-Z]*)\/? 
 	NSString *grohtmlStyleURL = @"\\/{1,2}([^\\/\\s]+)\\/(\\d+[a-zA-Z]*)\\/?";
+	// The old iMan style: man:groff(1). Regex: \/{0,2}(\S+)\((\d+[a-zA-Z]*)\)
 	NSString *iManStyleURL = @"\\/{0,2}(\\S+)\\((\\d+[a-zA-Z]*)\\)";
+	// x-man-page: style: x-man-page://1/groff. Regex: \/{1,2}(\d+[a-zA-Z]*)\/([^\/\s]+)\/?
 	NSString *xmanpageStyleURL = @"\\/{1,2}(\\d+[a-zA-Z]*)\\/([^\\/\\s]+)\\/?";
-	NSString *name, *section;
+	NSString *name = nil, *section = nil;
 	NSString *manpage = [[url resourceSpecifier] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 		
 	if ([manpage isMatchedByRegex:grohtmlStyleURL]) {
@@ -58,8 +61,8 @@ static NSOperationQueue *_iManPageRenderingQueue;
 		section = [manpage stringByMatching:iManStyleURL capture:2];
 	} else if ([manpage isMatchedByRegex:xmanpageStyleURL]) {
 		// It's a URL of the format (x-man-page:)//1/groff
-		name = [manpage stringByMatching:iManStyleURL capture:2];
-		section = [manpage stringByMatching:iManStyleURL capture:1];
+		name = [manpage stringByMatching:xmanpageStyleURL capture:2];
+		section = [manpage stringByMatching:xmanpageStyleURL capture:1];
 	}
 	
 	if ((name != nil) && ([name length] > 0))

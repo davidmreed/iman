@@ -254,7 +254,7 @@
         NSEnumerator *results;
 		NSString *searchText = [str string];
 		NSValue *match;
-		NSString *regex = @"\\(S+)\\(\\d[a-zA-Z]*\\)";
+		NSString *regex = @"(\\S+)\\((\\d[a-zA-Z]*)\\)";
 		
         results = [searchText matchEnumeratorWithRegex:regex options:RKLNoOptions | RKLMultiline];
 		
@@ -262,7 +262,7 @@
 		while ((match = [results nextObject]) != nil) {
             NSRange range = [match rangeValue];
 			NSString *matchString = [searchText substringWithRange:range];
-			NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"man://%@/%@", [matchString stringByMatching:regex capture:2], [matchString stringByMatching:regex capture:1]]];
+			NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"man://%@/%@", [matchString stringByMatching:regex capture:1], [matchString stringByMatching:regex capture:2]]];
 			
 			if (url != nil)
 				[str addAttribute:iManPageLinkAttributeName

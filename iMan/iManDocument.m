@@ -52,7 +52,20 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 + (void)loadURL:(NSURL *)url inNewDocument:(BOOL)inNewDocument
 {
 	iManDocument *docToLoad = nil;
+	iManPage *page = [iManPage pageWithURL:url];
 
+	
+	if (page == nil) {
+		NSBeginAlertSheet(NSLocalizedString(@"Invalid link.", nil),
+						  NSLocalizedString(@"OK", nil),
+						  nil, nil,
+						  nil,
+						  nil, NULL, NULL, NULL,
+						  NSLocalizedString(@"The link \"%@\" is invalid and cannot be opened.", nil),
+						  url);
+		return;
+	}
+	
     if (!inNewDocument) { // open in current doc if possible.
         NSEnumerator *enumerator = [[NSApp orderedDocuments] objectEnumerator];
         id obj;
@@ -75,20 +88,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 	}
 	
 	[[[[docToLoad windowControllers] lastObject] window] makeKeyAndOrderFront:nil];
-	{        
-		iManPage *page = [iManPage pageWithURL:url];
-		if (page != nil) {
-			[docToLoad setPage:page];
-		} else {
-			NSBeginAlertSheet(NSLocalizedString(@"Invalid link.", nil),
-							  NSLocalizedString(@"OK", nil),
-							  nil, nil,
-							  [docToLoad windowForSheet],
-							  nil, NULL, NULL, NULL,
-							  NSLocalizedString(@"The link \"%@\" is invalid and cannot be opened.", nil),
-							  link);
-		}
-	}
+	[docToLoad setPage:page];
 }	
 
 #pragma mark -
