@@ -610,11 +610,11 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 
 - (BOOL)textView:(NSTextView *)textView clickedOnLink:(id)link atIndex:(unsigned)charIndex
 {
+	// This method handles "local" clicks on links; we don't pass them off to +loadURL:inNewDocument:, which is intended for handling links not in the current document.
     if ([[NSUserDefaults standardUserDefaults] integerForKey:iManHandlePageLinks] == kiManHandleLinkInCurrentWindow) {
         iManPage *page = [iManPage pageWithURL:link];
 		if (page != nil) {
 			[self setPage:page];
-			return YES;
 		} else {
 			NSBeginAlertSheet(NSLocalizedString(@"Invalid link.", nil),
 							  NSLocalizedString(@"OK", nil),
@@ -623,7 +623,6 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 							  nil, NULL, NULL, NULL,
 							  NSLocalizedString(@"The link \"%@\" is invalid and cannot be opened.", nil),
 							  link);
-			return NO;
 		}
     } else {
 		iManDocument *doc = [[iManDocument alloc] init];
@@ -634,7 +633,6 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 			iManPage *page = [iManPage pageWithURL:link];
 			if (page != nil) {
 				[doc setPage:page];
-				return YES;
 			} else {
 				NSBeginAlertSheet(NSLocalizedString(@"Invalid link.", nil),
 								  NSLocalizedString(@"OK", nil),
@@ -643,14 +641,13 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 								  nil, NULL, NULL, NULL,
 								  NSLocalizedString(@"The link \"%@\" is invalid and cannot be opened.", nil),
 								  link);
-				return NO;
 			}
 		}
 		[doc release];
-		return YES;
 	}
 
-    return NO;
+	// Always return YES to keep the link from being passed off to the application-wide URL handler, which causes duplicate alert sheets and all manner of chaos.
+    return YES;
 }
 
 #pragma mark -
