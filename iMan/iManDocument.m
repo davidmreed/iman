@@ -347,13 +347,35 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 
 - (void)pageLoadDidFail:(NSNotification *)notification
 {
+	NSError *error = [[notification userInfo] objectForKey:iManErrorKey];
+	NSString *message;
+	
+	if ([[error domain] isEqualToString:iManEngineErrorDomain]) {
+		switch ([error code]) {
+			case iManToolNotConfiguredError:
+				message = NSLocalizedString(@"Paths are not configured correctly for one or more command-line tools. Please correct these settings in iMan Preferences.", nil);
+				break;
+			case iManResolveFailedError:
+				message = NSLocalizedString(@"The requested man page could not be found.", nil);
+				break;
+			case iManRenderFailedError:
+				message = [NSString stringWithFormat:NSLocalizedString(@"The requested man page could not be rendered. The error returned was \"%@\"", nil), [[[error userInfo] objectForKey:NSUnderlyingErrorKey] localizedDescription]];
+				break;
+			case iManInternalInconsistencyError:
+			default:
+				message = NSLocalizedString(@"An unknown internal error has occurred.", nil);
+				break;
+		}
+	} else {
+		message = [NSString stringWithFormat:NSLocalizedString(@"The requested man page could not be rendered. The error returned was \"%@\"", nil), [[[error userInfo] objectForKey:NSUnderlyingErrorKey] localizedDescription]];
+	}
+	
 	NSBeginInformationalAlertSheet(NSLocalizedString(@"Access failed.", nil),
 								   NSLocalizedString(@"OK", nil),
 								   nil, nil,
 								   [self windowForSheet],
 								   nil, NULL, NULL, NULL,
-								   NSLocalizedString(@"The requested man page could not be loaded. The error returned was \"%@\".", nil),
-								  [[[notification userInfo] objectForKey:iManErrorKey] localizedDescription]);
+								   message);
 	[self endAsyncLoad];
 	[_historyUndoManager disableUndoRegistration];
 	[self setPage:nil];

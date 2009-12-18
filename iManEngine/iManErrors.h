@@ -14,5 +14,7 @@ extern NSString *const iManEngineErrorDomain;
 enum {
 	iManToolNotConfiguredError = 1,
 	iManInternalInconsistencyError,
-	iManIndexLockedError
+	iManIndexLockedError,
+	iManResolveFailedError,
+	iManRenderFailedError
 };

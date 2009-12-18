@@ -42,6 +42,7 @@ static NSOperationQueue *_iManPageRenderingQueue;
 
 + pageWithURL:(NSURL *)url
 {
+	// FIXME: this is bizarrely failing on any link containing an 's'.
 	// grohtml style: man://groff/1. Regex: \/{1,2}([^\/\s]+)\/(\d+[a-zA-Z]*)\/? 
 	NSString *grohtmlStyleURL = @"\\/{1,2}([^\\/\\s]+)\\/(\\d+[a-zA-Z]*)\\/?";
 	// The old iMan style: man:groff(1). Regex: \/{0,2}(\S+)\((\d+[a-zA-Z]*)\)

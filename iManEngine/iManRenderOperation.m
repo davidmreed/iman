@@ -59,10 +59,11 @@
 	if (_pendingResolution) {
 		iManResolveOperation *resolveOperation = [[self dependencies] lastObject];
 		
-		if ([resolveOperation path] != nil)
+		if ([resolveOperation path] != nil) {
 			_path = [[resolveOperation path] copy];
-		else
-			_error = [[resolveOperation error] retain];
+		} else {
+			_error = [[NSError alloc] initWithDomain:iManEngineErrorDomain code:iManResolveFailedError userInfo:[NSDictionary dictionaryWithObject:[resolveOperation error] forKey:NSUnderlyingErrorKey]];
+		}
 	}
 
 	if (_path != nil) {
@@ -77,7 +78,8 @@
 				_page = [formattedPage retain];
 		}
 		
-		_error = [taskError retain]; // if no error occurred, no-op; _error must be nil, operation is run-once.
+		if (_page == nil)
+			_error = [[NSError alloc] initWithDomain:iManEngineErrorDomain code:iManRenderFailedError userInfo:[NSDictionary dictionaryWithObject:taskError forKey:NSUnderlyingErrorKey]];
 	} else {
 		_page = nil;
 		if (_error == nil) // i.e., if we have not inherited an error from the resolve operation -- we then have an internal inconsistency error.
