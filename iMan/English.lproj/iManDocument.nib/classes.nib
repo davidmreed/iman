@@ -11,6 +11,8 @@
 				<string>id</string>
 				<key>changeExportFormat</key>
 				<string>id</string>
+				<key>clearHistory</key>
+				<string>id</string>
 				<key>export</key>
 				<string>id</string>
 				<key>forward</key>
