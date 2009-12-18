@@ -250,13 +250,13 @@
     }
 	
     // Now, use RegexKitLite to find anything that looks like a page reference and add a link.
-    // Pattern for link matching: \S+\(\d[a-z]*\)
+    // Pattern for link matching: ([^[:space:](]+)\((\d+[a-zA-Z]*)\)
     
 	{
         NSEnumerator *results;
 		NSString *searchText = [str string];
 		NSValue *match;
-		NSString *regex = @"(\\S+)\\((\\d[a-zA-Z]*)\\)";
+		NSString *regex = @"([^[:space:](]+)\\((\\d+[a-zA-Z]*)\\)";
 		
         results = [searchText matchEnumeratorWithRegex:regex options:RKLNoOptions | RKLMultiline];
 		

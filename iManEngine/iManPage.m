@@ -42,13 +42,12 @@ static NSOperationQueue *_iManPageRenderingQueue;
 
 + pageWithURL:(NSURL *)url
 {
-	// FIXME: this is bizarrely failing on any link containing an 's'.
-	// grohtml style: man://groff/1. Regex: \/{1,2}([^\/\s]+)\/(\d+[a-zA-Z]*)\/? 
-	NSString *grohtmlStyleURL = @"\\/{1,2}([^\\/\\s]+)\\/(\\d+[a-zA-Z]*)\\/?";
-	// The old iMan style: man:groff(1). Regex: \/{0,2}(\S+)\((\d+[a-zA-Z]*)\)
-	NSString *iManStyleURL = @"\\/{0,2}(\\S+)\\((\\d+[a-zA-Z]*)\\)";
-	// x-man-page: style: x-man-page://1/groff. Regex: \/{1,2}(\d+[a-zA-Z]*)\/([^\/\s]+)\/?
-	NSString *xmanpageStyleURL = @"\\/{1,2}(\\d+[a-zA-Z]*)\\/([^\\/\\s]+)\\/?";
+	// grohtml style: man://groff/1. Regex: \/{0,2}([^[:space:]/]+)\/(\d+[a-zA-Z]*)\/? 
+	NSString *grohtmlStyleURL = @"\\/{0,2}([^[:space:]/]+)\\/(\\d+[a-zA-Z]*)\\/?";
+	// The old iMan style: man:groff(1). Regex: ([^[:space:](]+)\((\d+[a-zA-Z]*)\)
+	NSString *iManStyleURL = @"([^[:space:](]+)\\((\\d+[a-zA-Z]*)\\)";
+	// x-man-page: style: x-man-page://1/groff. Regex: \/{0,2}(\d+[a-zA-Z]*)\/([^[:space:]/]+)\/?
+	NSString *xmanpageStyleURL = @"\\/{0,2}(\\d+[a-zA-Z]*)\\/([^[:space:]/]+)\\/?";
 	NSString *name = nil, *section = nil;
 	NSString *manpage = [[url resourceSpecifier] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 		
