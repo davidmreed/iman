@@ -56,13 +56,11 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 
 	
 	if (page == nil) {
-		NSBeginAlertSheet(NSLocalizedString(@"Invalid link.", nil),
-						  NSLocalizedString(@"OK", nil),
-						  nil, nil,
-						  nil,
-						  nil, NULL, NULL, NULL,
-						  NSLocalizedString(@"The link \"%@\" is invalid and cannot be opened.", nil),
-						  url);
+		NSRunAlertPanel(NSLocalizedString(@"Invalid link.", nil),
+						NSLocalizedString(@"The link \"%@\" is invalid and cannot be opened.", nil),
+						NSLocalizedString(@"OK", nil),
+						nil, nil,
+						url);
 		return;
 	}
 	
