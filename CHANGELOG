@@ -1,10 +1,13 @@
 * 0.3
+	Complete overhaul of threading architecture.
+	Reimplementation of apropos update (makewhatis) system.
+	Extensive bugfixes and user-interface polish.
+	
+* 0.2 (unreleased) 
 	Replaced AGRegex (old, decrepit) with RegexKitLite.
 	Recompiled on 10.5 as Universal Binary.
 	Fixed some errors in thread handling; deleted some locks and replaced with @synchronized.
 	Many minor bugfixes.
-	
-* 0.2
 	Extensive rewrite of application and engine.
 	Added Reload function.
 	Added system service to load pages from selected title(section) string.
