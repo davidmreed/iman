@@ -13,7 +13,7 @@ Currently, iMan consists of the following classes:
 	The "viewing window" class, iManDocument handles loading and display of man pages. It also provides the +loadURL:inNewDocument: method used by URL handlers and services.
 
 	* iManSearchDocument
-	The "search window" class. iManSearchDocument is really conceptually closer to an NSWindowController than an NSDocument, but for the time being it is a non-loadable, non-savable document class. It basically implements an interface for iManSearchEngine and nothing more.
+	The "search window" class. iManSearchDocument is really conceptually closer to an NSWindowController than an NSDocument, but for the time being it is a non-loadable, non-savable document class.
 
 	* iManPreferencesController
 	A fairly straightforward preference window controller. The font and style handling code is complex for a reason: font/styles are saved as archived NSDictionaries that can be applied directly to styled text, hence some manipulation must be done for each style change.
@@ -21,22 +21,18 @@ Currently, iMan consists of the following classes:
 	* iManURLHandler
 	This class is invoked to handle clicks on URLs of scheme "man:" and "x-man-page:" (see iMan.scriptTerminology). It calls through to +[iManDocument loadURL:inNewDocument:] passing the current external link preference for inNewDocument.
 		
-iManEngine.framework holds the following classes:
+iManEngine.framework holds (among others) the following classes:
 	* iManPage
-	This class represents a single page. It abstracts away all the work of resolving and rendering pages, which is done asynchronously in a dedicated thread.
+	This class represents a single page. It abstracts away all the work of resolving and rendering pages, which is done asynchronously via iManResolveOperation and iManRenderOperation.
 	* iManSearch
-	As iManPage is to rendering manpages, iManSearch is to searching them. It provides an API that supports future expansion (like SearchKit indexing/searching), though currently it provides only apropos/whatis searches.
+	As iManPage is to rendering manpages, iManSearch is to searching them. It provides an API that supports future expansion (like SearchKit indexing/searching), though currently it provides only apropos/whatis searches. Its work is also done asynchronously via iManSearchOperation.
 	* iManIndex
-	iManIndex represents one of the theoretically more than one indexes used by iManSearch (right now, there is only the singleton iManAproposIndex).
+	iManIndex represents one of the theoretically more than one indexes used by iManSearch (right now, there is only the singleton iManAproposIndex). It also handles the low-level business of updating indices via iManMakewhatisOperation.
 	* iManEnginePreferences
 	This class manages manpaths and tool paths. Called by both UI and engine. It uses locks for thread safety.
-	* NSTask+iManExtensions
-	This is a simple category to launch a task synchronously and get its output. It is private to iManEngine.
 
-iMan also uses some "external" code. The packages prefixed "DMR" are portions of my code-snippet library. RegexKitLite, by John Englehart, can be found at http://regexkit.sourceforge.net/. A modified version of Mr. Englehart's supplied example RKLMatchEnumerator.m is included with iMan.
+iMan also requires one external library, RegexKitLite, by John Englehart, which can be found at http://regexkit.sourceforge.net/. A modified version of Mr. Englehart's supplied example RKLMatchEnumerator.m is included with iMan.
 
-If you have obtained the iMan sources via Subversion, these should all be pulled in via svn:externals definitions. Current versions are included in iMan source snapshots.
-
-The source code is fairly lightly commented. Documentation for iManEngine is included in HeaderDoc comments. If you have questions (or patches, or bugs, or improvements, or...), please send me an email.
+The source code is fairly lightly commented. (Better documentation is on the to-do list). Documentation for iManEngine is included in HeaderDoc comments. If you have questions (or patches, or bugs, or improvements, or...), please send me an email.
 
 -- David Reed <david@ktema.org>
