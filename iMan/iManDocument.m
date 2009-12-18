@@ -491,6 +491,16 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 #pragma mark -
 #pragma mark NSDocument Overrides
 
+- (NSURL *)fileURL
+{
+	// Override NSDocument method to return a correct file URL for the current page, regardless of whether it was loaded directly or searched.
+	
+	if ([[self page] path] != nil)
+		return [NSURL fileURLWithPath:[[self page] path]];
+	
+	return nil;
+}
+
 - (void)windowControllerDidLoadNib:(NSWindowController *)windowController;
 {
     NSWindow *window = [windowController window];
