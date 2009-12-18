@@ -552,6 +552,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
     if ((action == @selector(printDocument:)) ||
 		(action == @selector(reload:)) ||
         (action == @selector(export:)) ||
+		(action == @selector(toggleFindDrawer:)) ||
 		(action == @selector(performSearch:)))
         return (tabIndex == kiManPageTabIndex);
     // Check undo manager for these.
@@ -696,8 +697,8 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
     } else if ([itemIdentifier isEqualToString:iManToolbarItemToggleFind]) {
         [item setImage:[NSImage imageNamed:@"iManSearchIcon"]];
         [item setLabel:NSLocalizedString(@"Search", nil)];
-        [item setTarget:findDrawer];
-        [item setAction:@selector(toggle:)];
+        [item setTarget:self];
+        [item setAction:@selector(toggleFindDrawer:)];
     } else if ([itemIdentifier isEqualToString:iManToolbarItemReload]) {
 		[item setImage:[NSImage imageNamed:iManToolbarItemReload]];
 		[item setLabel:NSLocalizedString(@"Reload", nil)];
