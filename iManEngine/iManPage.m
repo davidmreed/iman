@@ -42,12 +42,12 @@ static NSOperationQueue *_iManPageRenderingQueue;
 
 + pageWithURL:(NSURL *)url
 {
-	// grohtml style: man://groff/1. Regex: \/{0,2}([^[:space:]/]+)\/(\d+[a-zA-Z]*)\/? 
-	NSString *grohtmlStyleURL = @"\\/{0,2}([^[:space:]/]+)\\/(\\d+[a-zA-Z]*)\\/?";
-	// The old iMan style: man:groff(1). Regex: ([^[:space:](]+)\((\d+[a-zA-Z]*)\)
-	NSString *iManStyleURL = @"([^[:space:](]+)\\((\\d+[a-zA-Z]*)\\)";
-	// x-man-page: style: x-man-page://1/groff. Regex: \/{0,2}(\d+[a-zA-Z]*)\/([^[:space:]/]+)\/?
-	NSString *xmanpageStyleURL = @"\\/{0,2}(\\d+[a-zA-Z]*)\\/([^[:space:]/]+)\\/?";
+	// grohtml style: man://groff/1. Regex: \/{0,2}([^[:space:]/]+)\/([0-9a-zA-Z]+)\/? 
+	NSString *grohtmlStyleURL = @"\\/{0,2}([^[:space:]/]+)\\/([0-9a-zA-Z]+)\\/?";
+	// The old iMan style: man:groff(1). Regex: ([^[:space:](]+)\(([0-9a-zA-Z]+)\)
+	NSString *iManStyleURL = @"([^[:space:](]+)\\(([0-9a-zA-Z]+)\\)";
+	// x-man-page: style: x-man-page://1/groff. Regex: \/{0,2}([0-9a-zA-Z]+)\/([^[:space:]/]+)\/?
+	NSString *xmanpageStyleURL = @"\\/{0,2}([0-9a-zA-Z]+)\\/([^[:space:]/]+)\\/?";
 	NSString *name = nil, *section = nil;
 	NSString *manpage = [[url resourceSpecifier] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 		
