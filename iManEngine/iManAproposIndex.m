@@ -11,11 +11,13 @@
 #import "iManMakewhatisOperation.h"
 #import "iManErrors.h"
 
+// FIXME: the way this is currently implemented will demand an update each time an application with a different MANPATH attempts to search.
+
 @implementation iManAproposIndex
 
 - (NSString *)name
 {
-	return NSLocalizedStringFromTableInBundle(@"Apropos Index (whatis.db)", @"IndexNames.strings", [NSBundle bundleForClass:[self class]], nil);
+	return NSLocalizedStringFromTableInBundle(@"Apropos Index (whatis.db)", @"IndexNames", [NSBundle bundleForClass:[self class]], nil);
 }
 
 - (NSString *)identifier

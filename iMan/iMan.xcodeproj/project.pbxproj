@@ -714,6 +714,7 @@
 		119D4D220A9914D900D25E74 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_MODEL_TUNING = G5;
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/../Externals",
@@ -741,6 +742,7 @@
 		119D4D240A9914D900D25E74 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/../Externals",
 					"${SRCROOT}/..",

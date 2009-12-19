@@ -41,7 +41,7 @@ NSOperationQueue *_iManSearchQueue;
 
 + (NSString *)localizedNameForSearchType:(NSString *)searchType
 {
-	return NSLocalizedStringFromTableInBundle(searchType, @"SearchTypes.strings", [NSBundle bundleForClass:self], nil);
+	return NSLocalizedStringFromTableInBundle(searchType, @"SearchTypes", [NSBundle bundleForClass:self], nil);
 }
 
 + (iManIndex *)indexForSearchType:(NSString *)searchType
