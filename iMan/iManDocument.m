@@ -13,6 +13,8 @@
 #import "RegexKitLite/RegexKitLite.h"
 #import "RegexKitLiteSupport/RKLMatchEnumerator.h"
 
+// FIXME: items in Recent Documents menu are problematic and if one selects a .gz manpage it throws up an error.
+
 // Indices of tab view panes.
 enum {
     kiManPageTabIndex,
@@ -690,7 +692,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
     NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
 
     if ([itemIdentifier isEqualToString:iManToolbarItemSection]) {
-        NSRect rect = NSMakeRect(0, 0, 32, 22);
+        NSRect rect = NSMakeRect(0, 0, 48, 22);
         
         [item setLabel:NSLocalizedString(@"Section", nil)];
         [item setTag:32];
