@@ -1,8 +1,8 @@
 //
-// iMan.m
-// iMan
-// Copyright (c) 2004 by David Reed, distributed under the BSD License.
-// see iman-macosx.sourceforge.net for details.
+//  iMan.m
+//  iMan
+//  Copyright (c) 2004-2009 by David Reed, distributed under the BSD License.
+//  see iman-macosx.sourceforge.net for details.
 //
 
 #import "iMan.h"

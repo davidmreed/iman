@@ -1,8 +1,8 @@
 //
-// iManAproposIndex.m
-// iMan
-// Copyright (c) 2006 by David Reed, distributed under the BSD License.
-// see iman-macosx.sourceforge.net for details.
+//  iManAproposIndex.m
+//  iManEngine
+//  Copyright (c) 2006-2009 by David Reed, distributed under the BSD License.
+//  see iman-macosx.sourceforge.net for details.
 //
 
 #import "iManAproposIndex.h"

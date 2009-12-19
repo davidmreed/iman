@@ -1,9 +1,8 @@
 //
 //  iManSearchOperation.m
 //  iManEngine
-//
-//  Created by David Reed on 11/20/09.
-//  Copyright 2009 David Reed. All rights reserved.
+//  Copyright (c) 2009 by David Reed, distributed under the BSD License.
+//  see iman-macosx.sourceforge.net for details.
 //
 
 #import "iManSearchOperation.h"

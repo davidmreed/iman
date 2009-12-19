@@ -1,8 +1,8 @@
 //
-// iManPreferencesController.m
-// iMan
-// Copyright (c) 2004 by David Reed, distributed under the BSD License.
-// see iman-macosx.sourceforge.net for details.
+//  iManPreferencesController.m
+//  iMan
+//  Copyright (c) 2004-2009 by David Reed, distributed under the BSD License.
+//  see iman-macosx.sourceforge.net for details.
 //
 
 #import "iManPreferencesController.h"
@@ -363,6 +363,8 @@
 
 #pragma mark -
 #pragma mark Table View (manpath and tool path) Delegate
+
+// FIXME: there is quite a lag on first selecting the Manpath tab.
 
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
