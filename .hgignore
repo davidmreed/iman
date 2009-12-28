@@ -1,0 +1,7 @@
+syntax: glob
+
+Sparkle.framework
+RegexKitLite
+.DS_Store
+*.pbxuser
+*.mode1v3
