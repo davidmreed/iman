@@ -14,12 +14,14 @@
     iManPreferencesController *_preferencesController;
 }
 
++ (void)loadURLInNewDocument:(NSURL *)url;
++ (void)loadExternalURL:(NSURL *)url;
+
 - (void)loadManpage:(NSPasteboard *)pboard userData:(NSString *)userData error:(NSString **)error;
 
 - (IBAction)updateIndex:(id)sender;
 - (IBAction)emptyPageCache:(id)sender;
 - (IBAction)showPreferences:(id)sender;
 - (IBAction)showHelp:(id)sender;
-- (IBAction)newSearchWindow:(id)sender;
 
 @end

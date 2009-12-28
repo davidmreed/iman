@@ -6,10 +6,12 @@
 //
 
 #import "iManDocument.h"
-#import "iManConstants.h"
-#import "NSUserDefaults+DMRArchiving.h"
 #import <iManEngine/iManEngine.h>
 #import <unistd.h>
+#import "iMan.h"
+#import "iManConstants.h"
+#import "iManIndexingWindowController.h"
+#import "NSUserDefaults+DMRArchiving.h"
 #import "RegexKitLite/RegexKitLite.h"
 #import "RegexKitLiteSupport/RKLMatchEnumerator.h"
 
@@ -19,7 +21,8 @@
 enum {
     kiManPageTabIndex,
     kiManNoPageTabIndex,
-    kiManLoadingTabIndex
+    kiManLoadingTabIndex,
+	kiManSearchResultsTabIndex
 };
 
 // Tags of search field menu items.
@@ -38,71 +41,176 @@ static NSString *const iManToolbarItemBack = @"iManToolbarItemBack";
 static NSString *const iManToolbarItemForward = @"iManToolbarItemForward";
 static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 
-@interface iManDocument (Private)
-
-- (void)beginAsyncLoad;
-- (void)endAsyncLoad;
-- (void)updateInterface;
-
-@end
+static NSString *const iManFindResultRange = @"range";
+static NSString *const iManFindResultDisplayString = @"string";
 
 @implementation iManDocument
 
 #pragma mark -
-#pragma mark Class convenience method
+#pragma mark NSDocument Overrides
 
-+ (void)loadURL:(NSURL *)url inNewDocument:(BOOL)inNewDocument
+- init
 {
-	iManDocument *docToLoad = nil;
-	iManPage *page = [iManPage pageWithURL:url];
+	self = [super init];
+	
+	if (self != nil) {
+		_documentState = iManDocumentStateNone;
+		_historyUndoManager = [[NSUndoManager alloc] init];
+	}
+	
+	return self;
+}
 
+- (NSURL *)fileURL
+{
+	// Override NSDocument method to return a correct file URL for the current page, regardless of whether it was loaded directly or searched.
+	if ([[self page] path] != nil) 		
+		return [NSURL fileURLWithPath:[[self page] path]];
 	
-	if (page == nil) {
-		NSRunAlertPanel(NSLocalizedString(@"Invalid link.", nil),
-						NSLocalizedString(@"The link \"%@\" is invalid and cannot be opened.", nil),
-						NSLocalizedString(@"OK", nil),
-						nil, nil,
-						url);
-		return;
-	}
+	return nil;
+}
+
+- (void)windowControllerDidLoadNib:(NSWindowController *)windowController;
+{
+    NSScrollView *scrollView = (NSScrollView *)[[manpageView superview] superview];
+    NSTextContainer *textContainer = [manpageView textContainer];
 	
-    if (!inNewDocument) { // open in current doc if possible.
-        NSEnumerator *enumerator = [[NSApp orderedDocuments] objectEnumerator];
-        id obj;
+    [super windowControllerDidLoadNib:windowController];
+	
+    // Set the scroll view, text container, and text view up to behave properly.
+    // This is largely derived from Apple's TextSizingExample code.
+    // Note: 1.0e7 is the "LargeNumberForText" used there, it should not be changed.
+	// FIXME: is this necessary these days?
+    [scrollView setHasVerticalScroller:YES];
+    [scrollView setHasHorizontalScroller:YES];
+    [[scrollView contentView] setAutoresizesSubviews:YES];
+	
+    [textContainer setWidthTracksTextView:NO];
+    [textContainer setHeightTracksTextView:NO];
+    [textContainer setContainerSize:NSMakeSize(1.0e7, 1.0e7)];
+	
+    [manpageView setMinSize:[scrollView contentSize]];
+    [manpageView setMaxSize:NSMakeSize(1.0e7, 1.0e7)];
+    [manpageView setHorizontallyResizable:YES];
+    [manpageView setVerticallyResizable:YES];
+    [manpageView setAutoresizingMask:NSViewNotSizable];
+	
+	// Setup the search menu for in-page searches.
+	{
+		NSMenu *searchFieldMenu = [[[searchField cell] searchMenuTemplate] copy];
 		
-        while ((obj = [enumerator nextObject]) != nil) {
-            if ([obj isKindOfClass:[iManDocument class]]) {
-				docToLoad = obj;
-				break;
-			}
-		}
+		shouldMatchCase = shouldUseRegexps = YES;
+		[[searchFieldMenu itemWithTag:kiManMatchCaseMenuItemTag] setState:shouldMatchCase];
+		[[searchFieldMenu itemWithTag:kiManUseRegularExpressionsMenuItemTag] setState:shouldUseRegexps];
+		[[searchField cell] setSearchMenuTemplate:searchFieldMenu];
+		[searchFieldMenu release];
 	}
 	
-    // Otherwise (and fall through if no doc is found), load up a new window.
-    if (docToLoad == nil) {
-		docToLoad = [[iManDocument alloc] init];
-		[[NSDocumentController sharedDocumentController] addDocument:docToLoad];
-		[docToLoad makeWindowControllers];
-		[docToLoad showWindows];
-		[docToLoad release];
+	// Setup the search field menu. 
+	for (id anObject in [iManSearch searchTypes]) {
+		NSMenuItem *menuItem;
+		
+		[addressFieldSearchMenu addItemWithTitle:[iManSearch localizedNameForSearchType:anObject]
+										  action:@selector(setAddressFieldSearchType:)
+								   keyEquivalent:@""];
+		menuItem = [[addressFieldSearchMenu itemArray] lastObject]; 
+		[menuItem setRepresentedObject:anObject];
+		[menuItem setTarget:self];
 	}
 	
-	[[[[docToLoad windowControllers] lastObject] window] makeKeyAndOrderFront:nil];
-	[docToLoad setPage:page];
-}	
+	// Setup the search results view.
+	[aproposResultsView setDoubleAction:@selector(openPage:)];
+	[aproposResultsView setAutoresizesOutlineColumn:NO];
+		
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(displayFontDidChange:)
+                                                 name:iManFontChangedNotification
+                                               object:nil];
+	
+	[self synchronizeUIWithDocumentState];
+}
+
+- (NSString *)windowNibName
+{
+    return @"iManDocument";
+}
+
+- (BOOL)readFromFile:(NSString *)fileName ofType:(NSString *)type
+{
+    [self setPage:[iManPage pageWithPath:fileName]];
+	
+    return (page_ != nil);
+}
+
+- (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem
+{
+	BOOL ret = YES;
+	SEL action = [anItem action];
+	int tabIndex = [tabView indexOfTabViewItem:[tabView selectedTabViewItem]];
+	
+    // Only allow printing/exporting/searching if a man page is being displayed.
+    if ((action == @selector(printDocument:)) ||
+		(action == @selector(reload:)) ||
+        (action == @selector(export:)) ||
+		(action == @selector(toggleFindDrawer:)) ||
+		(action == @selector(performSearch:)))
+        return (tabIndex == kiManPageTabIndex);
+    // Check undo manager for these.
+    if (action == @selector(back:))
+        return ([_historyUndoManager canUndo] && (tabIndex != kiManLoadingTabIndex));
+    if (action == @selector(forward:))
+        return ([_historyUndoManager canRedo] && (tabIndex != kiManLoadingTabIndex));
+    // Make sure, if we are loading, that another load request doesn't happen, nor should the window close.
+    if ((action == @selector(loadRequestedPage:)) ||
+		(action == @selector(reload:)) ||
+		(action == @selector(back:)) ||
+		(action == @selector(forward:)) ||
+		(action == @selector(performClose:)))
+        return (tabIndex != kiManLoadingTabIndex);
+	
+    return ret;
+}
+
+- (NSString *)displayName
+{
+    // Construct a string of the form "iMan: page(section)". 
+	
+	if ([self page] != nil) {
+		if ([[self page] isLoading])
+			return NSLocalizedString(@"iMan: Loading", nil);
+		
+        if (([[self page] pageSection] != nil) && ([[[self page] pageSection] length] > 0)) {
+            return [NSString stringWithFormat:NSLocalizedString(@"iMan: %@(%@)", nil),
+					[[self page] pageName],
+					[[self page] pageSection]];
+        } else {
+            return [NSString stringWithFormat:NSLocalizedString(@"iMan: %@", nil), [[self page] pageName]];
+        }
+	}    
+	
+    return NSLocalizedString(@"iMan", nil);
+}
+
+- (void)printShowingPrintPanel:(BOOL)flag
+{
+    NSPrintInfo *printInfo = [self printInfo];
+	
+    // Need to set NSFitPagination so that the page is scaled horizontally to fit
+    // otherwise it is annoyingly clipped at right.
+    [printInfo setHorizontalPagination:NSFitPagination];
+    [self runModalPrintOperation:[NSPrintOperation printOperationWithView:manpageView
+                                                                printInfo:printInfo]
+                        delegate:nil
+                  didRunSelector:NULL
+                     contextInfo:NULL];
+}
 
 #pragma mark -
-#pragma mark Actions & Notifications
-
+#pragma mark IBActions
 
 - (IBAction)toggleFindDrawer:(id)sender
 {
 	[findDrawer toggle:sender];
-}
-
-- (void)drawerDidOpen:(NSNotification *)notification
-{
-	[searchField becomeFirstResponder];
 }
 
 - (IBAction)export:(id)sender
@@ -127,10 +235,165 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
     
 }
 
+- (IBAction)performSearch:(id)sender
+{
+	NSMutableArray *results;
+	
+	if (([self page] == nil) || (![[self page] isLoaded]))
+		return;
+
+	results = [[NSMutableArray alloc] init];
+
+    if (shouldUseRegexps) {
+        NSEnumerator *enumerator;
+        NSString *string = [[manpageView textStorage] string];
+		NSValue *match;
+		
+        enumerator = [string matchEnumeratorWithRegex:[searchField stringValue] options: (shouldMatchCase ? RKLNoOptions : RKLNoOptions | RKLCaseless)];
+
+        while ((match = [enumerator nextObject]) != nil) {  
+			[results addObject:[NSDictionary dictionaryWithObjectsAndKeys:match, iManFindResultRange, [self findResultFromRange:[match rangeValue]], iManFindResultDisplayString, nil]];
+            
+        }
+    } else {
+        CFArrayRef ranges;
+        CFIndex index;
+        NSString *string = [[manpageView textStorage] string];
+
+        ranges = CFStringCreateArrayWithFindResults(kCFAllocatorDefault,
+													(CFStringRef)string,
+													(CFStringRef)[searchField stringValue],
+													CFRangeMake(0, [string length]),
+													shouldMatchCase ? 0 : kCFCompareCaseInsensitive);
+
+        if (ranges != NULL) {
+            for (index = 0; index < CFArrayGetCount(ranges); index++) {
+                const CFRange *rangePtr;
+                NSRange range;
+
+                rangePtr = CFArrayGetValueAtIndex(ranges, index);
+                range = NSMakeRange(rangePtr->location, rangePtr->length);
+				[results addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSValue valueWithRange:range], iManFindResultRange, [self findResultFromRange:range], iManFindResultDisplayString, nil]];
+            }
+        }
+    }
+    
+	[self setFindResults:results];
+	[results release];
+}
+
+- (IBAction)back:(id)sender
+{
+    [[self historyUndoManager] undo];
+}
+
+- (IBAction)forward:(id)sender
+{
+    [[self historyUndoManager] redo];
+}
+
+- (IBAction)clearHistory:(id)sender
+{
+	[[self historyUndoManager] removeAllActions];
+	[[[[self windowControllers] lastObject] toolbar] validateVisibleItems];
+}
+
+- (IBAction)loadRequestedPage:(id)sender
+{
+	// Determine what the user has requested.
+	// 1) if the input looks like a URL (i.e., begins with man:, apropos:, or whatis:), treat it as appropriate.
+	// 2) if a search option is selected, treat the entire input as the search term for apropos or whatis, which may be a regular expression.
+	// 3) if the input looks like a page name and section, or a bare page name, attempt to locate that page.
+	// FIXME: implement #2.
+	NSMutableString *input = [[[sender stringValue] mutableCopy] autorelease];
+	
+	// Trim whitespace
+	CFStringTrimWhitespace((CFMutableStringRef)input);
+	if ([input hasPrefix:@"man:"]) {
+		// Treat input as man: URL.
+		[self loadPageWithURL:[NSURL URLWithString:input]];
+	} else if ([input hasPrefix:@"apropos:"]) {
+		// Treat rest of input as apropos search term.
+		[input deleteCharactersInRange:NSMakeRange(0, [@"apropos" length])];
+		[self performSearchForTerm:input type:iManSearchTypeApropos];
+	} else if ([input hasPrefix:@"whatis:"]) {
+		// Treat rest of input as whatis search term.		
+		[input deleteCharactersInRange:NSMakeRange(0, [@"whatis" length])];
+		[self performSearchForTerm:input type:iManSearchTypeWhatis];
+	} else if ([input isMatchedByRegex:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)"]) {
+		// Treat input as "groff(1) (ignoring spaces).
+		[self loadPageWithName:[input stringByMatching:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)" capture:1]
+					   section:[input stringByMatching:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)" capture:2]];
+	} else if ([input isMatchedByRegex:@"(\\S+)\\s+([0-9n][a-zA-Z]*)"]) {
+		// Treat input as "groff 1"
+		[self loadPageWithName:[input stringByMatching:@"(\\S+)\\s+([0-9n][a-zA-Z]*)" capture:1]
+					   section:[input stringByMatching:@"(\\S+)\\s+([0-9n][a-zA-Z]*)" capture:2]];
+	} else if ([input isMatchedByRegex:@"([0-9n][a-zA-Z]*)\\s+(\\S+)"]) {
+		// Treat input as "1 groff"
+		[self loadPageWithName:[input stringByMatching:@"([0-9n][a-zA-Z]*)\\s+(\\S+)" capture:2]
+					   section:[input stringByMatching:@"([0-9n][a-zA-Z]*)\\s+(\\S+)" capture:1]];
+	} else {
+		// Treat the whole input as the page name.
+		[self loadPageWithName:input section:nil];
+	}
+}
+
+- (IBAction)reload:(id)sender
+{
+	[self setDocumentState:iManDocumentStateLoadingPage];
+	[self synchronizeUIWithDocumentState];
+	[[self page] reload];
+}
+
+#pragma mark -
+
+- (IBAction)openPage:(id)sender
+{
+    id item = [aproposResultsView itemAtRow:[aproposResultsView clickedRow]];
+	
+	// items which are NSArrays represent pages documenting more than one command. The first item in the array will bring up the page as well as any other.
+    if ([item isKindOfClass:[NSArray class]])
+        item = [item objectAtIndex:0];
+	
+	if ([[NSUserDefaults standardUserDefaults] integerForKey:iManHandleSearchResults] == kiManHandleLinkInNewWindow) 
+		[iMan loadURLInNewDocument:[NSURL URLWithString:[NSString stringWithFormat:@"man:%@", item]]];
+	else
+		[self loadPageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"man:%@", item]]];
+}
+
+#pragma mark -
+
+- (IBAction)setUseRegularExpressions:(id)sender
+{
+	NSMenu *searchFieldMenu = [[[searchField cell] searchMenuTemplate] copy];
+
+	shouldUseRegexps = ([sender state] == NSOnState) ? NO : YES;
+	[[searchFieldMenu itemWithTag:kiManUseRegularExpressionsMenuItemTag] setState:shouldUseRegexps];
+	[[searchField cell] setSearchMenuTemplate:searchFieldMenu];
+	[searchFieldMenu release];
+	[self performSearch:searchField];
+}
+
+- (IBAction)setCaseSensitive:(id)sender
+{
+	NSMenu *searchFieldMenu = [[[searchField cell] searchMenuTemplate] copy];
+	
+	shouldMatchCase = ([sender state] == NSOnState) ? NO : YES;
+	[[searchFieldMenu itemWithTag:kiManMatchCaseMenuItemTag] setState:shouldMatchCase];
+	[[searchField cell] setSearchMenuTemplate:searchFieldMenu];
+	[searchFieldMenu release];
+	[self performSearch:searchField];
+}
+
+#pragma mark -
+
 - (IBAction)changeExportFormat:(id)sender
 {
     [((NSSavePanel *)[formatMenu window]) setRequiredFileType:[[NSArray arrayWithObjects:@"rtf", @"txt", nil] objectAtIndex:[sender indexOfSelectedItem]]];
 }
+
+#pragma mark -
+#pragma mark Panel -didEnds 
 
 - (void)exportPanelDidEnd:(NSSavePanel *)savePanel returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
@@ -141,7 +404,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
             iManFormatRTF,
             iManFormatPlainText
         } format = [formatMenu indexOfSelectedItem];
-
+		
         switch (format) {
             case iManFormatRTF:
                 fileData = [[manpageView textStorage] RTFFromRange:NSMakeRange(0, [[manpageView textStorage] length]) documentAttributes:nil];
@@ -150,7 +413,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
                 fileData = [[[manpageView textStorage] string] dataUsingEncoding:NSASCIIStringEncoding];
 				break;
         }
-
+		
         if (fileData != nil) {
             [fileData writeToFile:[savePanel filename] atomically:YES];
         } else {
@@ -164,54 +427,313 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
     }
 }
 
-- (IBAction)performSearch:(id)sender
+- (void)shouldUpdateIndexPanelDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-	if (([self page] == nil) || (![[self page] isLoaded]))
-		return;
+	[sheet orderOut:self];
 	
-    [_lastFindResults release];
-    _lastFindResults = [[NSMutableArray alloc] init];
-    [_findResultRanges release];
-    _findResultRanges = [[NSMutableArray alloc] init];
-    
-    if (shouldUseRegexps) {
-        NSEnumerator *enumerator;
-        NSString *string = [[manpageView textStorage] string];
-		NSValue *match;
-
-        enumerator = [string matchEnumeratorWithRegex:[searchField stringValue] options: (shouldMatchCase ? RKLNoOptions : RKLNoOptions | RKLCaseless)];
-
-        while ((match = [enumerator nextObject]) != nil) {            
-            [_findResultRanges addObject:match];
-			[_lastFindResults addObject:[self findResultFromRange:[match rangeValue]]];
-            
-        }
-    } else {
-        CFArrayRef results;
-        CFIndex index;
-        NSString *string = [[manpageView textStorage] string];
-
-        results = CFStringCreateArrayWithFindResults(kCFAllocatorDefault,
-                                                     (CFStringRef)string,
-                                                     (CFStringRef)[searchField stringValue],
-                                                     CFRangeMake(0, [string length]),
-													 shouldMatchCase ? 0 : kCFCompareCaseInsensitive);
-
-        if (results != NULL) {
-            for (index = 0; index < CFArrayGetCount(results); index++) {
-                const CFRange *rangePtr;
-                NSRange range;
-
-                rangePtr = CFArrayGetValueAtIndex(results, index);
-                range = NSMakeRange(rangePtr->location, rangePtr->length);
-                [_findResultRanges addObject:[NSValue valueWithRange:range]];
-                [_lastFindResults addObject:[self findResultFromRange:range]];
-            }
-        }
-    }
-    
-    [findResults reloadData];
+	if (returnCode == NSOKButton) {
+		iManIndexingWindowController *indexingWindowController =  [[iManIndexingWindowController alloc] initWithSelectedIndexes:[NSArray arrayWithObject:[(NSString *)contextInfo autorelease]]];
+		int returnCode;
+		
+		returnCode = [indexingWindowController doRunModalUpdateWindow];
+		
+		if (returnCode == NSOKButton)
+			[self performSelector:@selector(loadRequestedPage:) withObject:self afterDelay:0.01];
+		
+		// Ignore cancel, ignore failure (indexing window will notify user of failure).
+		
+		[indexingWindowController release];
+	}
 }
+
+#pragma mark -
+#pragma mark UI Methods
+
+- (void)loadPageWithURL:(NSURL *)url
+{
+	iManPage *page = [iManPage pageWithURL:url];
+	
+	if (page != nil) {
+		[self setPage:page];
+		if (![page isLoaded]) {
+			[self setDocumentState:iManDocumentStateLoadingPage];
+			[self synchronizeUIWithDocumentState];
+			[page load];
+		} else {
+			[self setDocumentState:iManDocumentStateDisplayingPage];
+			[self synchronizeUIWithDocumentState];
+		}
+	} else {
+		NSBeginAlertSheet(NSLocalizedString(@"The requested page could not be loaded.", nil),
+						  NSLocalizedString(@"OK", nil),
+						  nil, nil, 
+						  [[[self windowControllers] lastObject] window], 
+						  nil, NULL, NULL, NULL, 
+						  NSLocalizedString(@"iMan cannot load the requested page. Please make sure the URL is valid.", nil));
+	}
+}
+
+- (void)loadPageWithName:(NSString *)pageName section:(NSString *)pageSection
+{
+	iManPage *page = [iManPage pageWithName:pageName inSection:pageSection];
+	
+	if (page != nil) {
+		[self setPage:page];
+		if (![page isLoaded]) {
+			[self setDocumentState:iManDocumentStateLoadingPage];
+			[self synchronizeUIWithDocumentState];
+			[page load];
+		} else {
+			[self setDocumentState:iManDocumentStateDisplayingPage];
+			[self synchronizeUIWithDocumentState];
+		}
+	} else {
+		NSBeginAlertSheet(NSLocalizedString(@"The requested page could not be loaded.", nil),
+						  NSLocalizedString(@"OK", nil),
+						  nil, nil, 
+						  [[[self windowControllers] lastObject] window], 
+						  nil, NULL, NULL, NULL, 
+						  NSLocalizedString(@"iMan cannot load the requested page because an unknown error occurred. Please make sure you requested a valid page name.", nil));
+	}
+}	
+
+- (void)performSearchForTerm:(NSString *)term type:(NSString *)type
+{
+	iManIndex *index = [iManSearch indexForSearchType:type];
+	
+	if ([index isValid]) {
+		iManSearch *search = [iManSearch searchWithTerm:term searchType:type];
+		if (_searchResults != nil) {
+			[_searchResults release];
+			_searchResults = nil;
+		}
+		[self setSearch:search];
+		[self setDocumentState:iManDocumentStateSearching];
+		[self synchronizeUIWithDocumentState];
+		
+		[search search];
+	} else {
+		NSBeginAlertSheet(NSLocalizedString(@"Index out of date.", nil), 
+						  NSLocalizedString(@"Update", nil),
+						  NSLocalizedString(@"Cancel", nil),
+						  nil,
+						  [[[self windowControllers] lastObject] window],
+						  self,
+						  @selector(shouldUpdateIndexPanelDidEnd:returnCode:contextInfo:),
+						  NULL,
+						  [type retain],
+						  NSLocalizedString(@"The index for the search type \"%@\" needs to be updated before it can be searched. Do you want to update the index now?", nil),
+						  [iManSearch localizedNameForSearchType:type]);
+	}
+}
+
+- (void)synchronizeUIWithDocumentState
+{
+	NSWindowController *windowController = [[self windowControllers] lastObject];
+	
+	switch ([self documentState]) {
+		case iManDocumentStateNone:
+			[tabView selectTabViewItemAtIndex:kiManNoPageTabIndex];
+			[addressSearchField setStringValue:@""];
+			break;
+		case iManDocumentStateDisplayingPage:
+			[tabView selectTabViewItemAtIndex:kiManPageTabIndex];
+			[[manpageView textStorage] setAttributedString:[[self page] pageWithStyle:[self displayStringOptions]]];
+			[manpageView moveToBeginningOfDocument:self];
+			[addressSearchField setStringValue:[NSString stringWithFormat:@"%@(%@)", [[self page] pageName], [[self page] pageSection]]];
+			[[windowController window] makeFirstResponder:manpageView];
+			// Our -displayName changes each time a new page is loaded.
+			[windowController synchronizeWindowTitleWithDocumentName];
+			[[[windowController window] toolbar] validateVisibleItems];			
+			break;
+		case iManDocumentStateLoadingPage:
+			[loadingMessageLabel setStringValue:NSLocalizedString(@"Loading...", nil)];
+			[tabView selectTabViewItemAtIndex:kiManLoadingTabIndex];
+			[progressIndicator startAnimation:self];
+			break;
+		case iManDocumentStateSearching:
+			[loadingMessageLabel setStringValue:NSLocalizedString(@"Searching...", nil)];
+			[tabView selectTabViewItemAtIndex:kiManLoadingTabIndex];
+			[progressIndicator startAnimation:self];
+			break;
+		case iManDocumentStateDisplayingSearch:
+			[tabView selectTabViewItemAtIndex:kiManSearchResultsTabIndex];
+			[aproposResultsView reloadData];
+			break;
+	}
+}
+
+#pragma mark -
+#pragma mark Notifications
+
+- (void)pageLoadDidComplete:(NSNotification *)notification
+{
+	[self setDocumentState:iManDocumentStateDisplayingPage];
+	[self synchronizeUIWithDocumentState];
+}
+
+- (void)pageLoadDidFail:(NSNotification *)notification
+{
+	NSError *error = [[notification userInfo] objectForKey:iManErrorKey];
+	NSString *message;
+	
+	if ([[error domain] isEqualToString:iManEngineErrorDomain]) {
+		switch ([error code]) {
+			case iManToolNotConfiguredError:
+				message = NSLocalizedString(@"Paths are not configured correctly for one or more command-line tools. Please correct these settings in iMan Preferences.", nil);
+				break;
+			case iManResolveFailedError:
+				message = NSLocalizedString(@"The requested man page could not be found.", nil);
+				break;
+			case iManRenderFailedError:
+				message = [NSString stringWithFormat:NSLocalizedString(@"The requested man page could not be rendered. The error returned was \"%@\"", nil), [[[error userInfo] objectForKey:NSUnderlyingErrorKey] localizedDescription]];
+				break;
+			case iManInternalInconsistencyError:
+			default:
+				message = NSLocalizedString(@"An unknown internal error has occurred.", nil);
+				break;
+		}
+	} else {
+		message = [NSString stringWithFormat:NSLocalizedString(@"The requested man page could not be rendered. The error returned was \"%@\"", nil), [[[error userInfo] objectForKey:NSUnderlyingErrorKey] localizedDescription]];
+	}
+	
+	NSBeginInformationalAlertSheet(NSLocalizedString(@"Access failed.", nil),
+								   NSLocalizedString(@"OK", nil),
+								   nil, nil,
+								   [self windowForSheet],
+								   nil, NULL, NULL, NULL,
+								   message);
+	[_historyUndoManager disableUndoRegistration];
+	[self setPage:nil];
+	[self back:nil];
+	[_historyUndoManager enableUndoRegistration];
+	[self setDocumentState:iManDocumentStateNone];
+	[self synchronizeUIWithDocumentState];
+}
+
+- (void)searchDidComplete:(NSNotification *)notification
+{
+	[_searchResults release];
+	_searchResults = [[[[[self search] results] allKeys] sortedArrayUsingSelector:@selector(iManResultSort:)] retain];
+	
+	[self setDocumentState:iManDocumentStateDisplayingSearch];
+	[self synchronizeUIWithDocumentState];
+    [aproposResultsView reloadData];
+}
+
+- (void)searchDidFail:(NSNotification *)notification
+{
+	NSBeginInformationalAlertSheet(NSLocalizedString(@"Search Failed", nil),
+								   NSLocalizedString(@"OK", nil),
+								   nil,
+								   nil,
+								   [self windowForSheet],
+								   nil,
+								   NULL,
+								   NULL,
+								   NULL,
+								   @"%@", // Yes, this is intentional. 
+								   [[notification userInfo] objectForKey:iManSearchError]);
+	[self setDocumentState:iManDocumentStateNone];
+	[self synchronizeUIWithDocumentState];
+}	
+
+
+// FIXME: make sure if -close is called all our tasks get cancelled.
+
+- (void)displayFontDidChange:(NSNotification *)notification
+{
+    if ([self page] != nil)
+        [[manpageView textStorage] setAttributedString:[[self page] pageWithStyle:[self displayStringOptions]]];
+}
+
+- (void)drawerDidOpen:(NSNotification *)notification
+{
+	[searchField becomeFirstResponder];
+}
+
+#pragma mark -
+#pragma mark Accessors
+
+- (iManPage *)page
+{
+	return page_;
+}
+
+- (void)setPage:(iManPage *)page
+{
+    if (page_ != nil) {
+        [[_historyUndoManager prepareWithInvocationTarget:self] setPage:page_];
+    }
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:iManPageLoadDidCompleteNotification object:page_];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:iManPageLoadDidFailNotification object:page_];
+
+	[page retain];
+	[page_ release];
+	page_ = page;
+	
+	if (page_ != nil) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pageLoadDidComplete:) name:iManPageLoadDidCompleteNotification object:page_];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pageLoadDidFail:) name:iManPageLoadDidFailNotification object:page_];
+		
+		if (_lastFindResults != nil) {
+			[_lastFindResults release];
+			_lastFindResults = nil;
+			[_findResultRanges release];
+			_findResultRanges = nil;
+			[findResultsView reloadData];
+		}
+    }
+}
+
+- (iManSearch *)search
+{
+	return search_;
+}
+
+- (void)setSearch:(iManSearch *)search
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:iManSearchDidCompleteNotification object:search_];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:iManSearchDidFailNotification object:search_];
+	
+	[search retain];
+	[search_ release];
+	search_ = search;
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(searchDidComplete:) name:iManSearchDidCompleteNotification object:search_];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(searchDidFail:) name:iManSearchDidFailNotification object:search_];	
+}
+
+- (NSArray *)findResults
+{
+	return _findResultRanges;
+}
+- (void)setFindResults:(NSArray *)findResults
+{
+	if (findResults != _findResultRanges) {
+		[_findResultRanges release];
+		_findResultRanges = [findResults copy];
+	}
+}
+
+- (iManDocumentState)documentState
+{
+	return _documentState;
+}
+
+- (void)setDocumentState:(iManDocumentState)documentState
+{
+	_documentState = documentState;
+}
+
+- (NSUndoManager *)historyUndoManager
+{
+	return _historyUndoManager;
+}
+
+#pragma mark -
+#pragma mark Display Handlers
 
 - (NSAttributedString *)findResultFromRange:(NSRange)range
 {
@@ -224,11 +746,11 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
     
     if (greyEllipses == nil)
         greyEllipses = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"...", nil)
-                                                   attributes:[NSDictionary dictionaryWithObject:[NSColor disabledControlTextColor] forKey:NSForegroundColorAttributeName]];
+													   attributes:[NSDictionary dictionaryWithObject:[NSColor disabledControlTextColor] forKey:NSForegroundColorAttributeName]];
     
     resLength = range.length;
     length = [[[manpageView textStorage] string] length];
-
+	
     if (range.location < marginSize) {
         leftMargin = range.location;
         range.length += range.location;
@@ -238,12 +760,12 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
         range.length += marginSize;
         range.location -= marginSize;
     }
-
+	
     rightMargin = MIN(marginSize, length - NSMaxRange(range));
     range.length += rightMargin;
-
+	
     ret = [[[manpageView textStorage] attributedSubstringFromRange:range] mutableCopy];
-
+	
 	// Highlight the find result in red.
 	[ret addAttribute:NSForegroundColorAttributeName
 				value:[NSColor redColor]
@@ -281,362 +803,19 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 			range = CFRangeMake(result.location + 1, [ret length] - (result.location + 1));
 		}
 	}
-		
-		
+	
+	
     return [ret autorelease];
-}
-
-- (IBAction)back:(id)sender
-{
-    [[self historyUndoManager] undo];
-}
-
-- (IBAction)forward:(id)sender
-{
-    [[self historyUndoManager] redo];
-}
-
-- (IBAction)clearHistory:(id)sender
-{
-	[[self historyUndoManager] removeAllActions];
-	[[[[self windowControllers] lastObject] toolbar] validateVisibleItems];
-}
-
-- (IBAction)refresh:(id)sender
-{
-	[self setPage:[iManPage pageWithName:[(NSTextField *)[pageItem view] stringValue]
-							   inSection:[(NSTextField *)[sectionItem view] stringValue]]];
-}
-
-- (IBAction)reload:(id)sender
-{
-	// This and the above method are somewhat confusingly named.
-	// Refresh actually goes to the entered page, while reload clears cache and rerenders the current page.
-	[self beginAsyncLoad];
-	[[self page] reload];
-}
-
-- (IBAction)setUseRegularExpressions:(id)sender
-{
-	NSMenu *searchFieldMenu = [[[searchField cell] searchMenuTemplate] copy];
-
-	shouldUseRegexps = ([sender state] == NSOnState) ? NO : YES;
-	[[searchFieldMenu itemWithTag:kiManUseRegularExpressionsMenuItemTag] setState:shouldUseRegexps];
-	[[searchField cell] setSearchMenuTemplate:searchFieldMenu];
-	[searchFieldMenu release];
-	[self performSearch:searchField];
-}
-
-- (IBAction)setCaseSensitive:(id)sender
-{
-	NSMenu *searchFieldMenu = [[[searchField cell] searchMenuTemplate] copy];
-	
-	shouldMatchCase = ([sender state] == NSOnState) ? NO : YES;
-	[[searchFieldMenu itemWithTag:kiManMatchCaseMenuItemTag] setState:shouldMatchCase];
-	[[searchField cell] setSearchMenuTemplate:searchFieldMenu];
-	[searchFieldMenu release];
-	[self performSearch:searchField];
-}
-
-#pragma mark -
-#pragma mark UI Methods
-
-- (void)pageLoadDidComplete:(NSNotification *)notification
-{
-	[self endAsyncLoad];
-	[self updateInterface];
-}
-
-- (void)pageLoadDidFail:(NSNotification *)notification
-{
-	NSError *error = [[notification userInfo] objectForKey:iManErrorKey];
-	NSString *message;
-	
-	if ([[error domain] isEqualToString:iManEngineErrorDomain]) {
-		switch ([error code]) {
-			case iManToolNotConfiguredError:
-				message = NSLocalizedString(@"Paths are not configured correctly for one or more command-line tools. Please correct these settings in iMan Preferences.", nil);
-				break;
-			case iManResolveFailedError:
-				message = NSLocalizedString(@"The requested man page could not be found.", nil);
-				break;
-			case iManRenderFailedError:
-				message = [NSString stringWithFormat:NSLocalizedString(@"The requested man page could not be rendered. The error returned was \"%@\"", nil), [[[error userInfo] objectForKey:NSUnderlyingErrorKey] localizedDescription]];
-				break;
-			case iManInternalInconsistencyError:
-			default:
-				message = NSLocalizedString(@"An unknown internal error has occurred.", nil);
-				break;
-		}
-	} else {
-		message = [NSString stringWithFormat:NSLocalizedString(@"The requested man page could not be rendered. The error returned was \"%@\"", nil), [[[error userInfo] objectForKey:NSUnderlyingErrorKey] localizedDescription]];
-	}
-	
-	NSBeginInformationalAlertSheet(NSLocalizedString(@"Access failed.", nil),
-								   NSLocalizedString(@"OK", nil),
-								   nil, nil,
-								   [self windowForSheet],
-								   nil, NULL, NULL, NULL,
-								   message);
-	[self endAsyncLoad];
-	[_historyUndoManager disableUndoRegistration];
-	[self setPage:nil];
-	[self back:nil];
-	[_historyUndoManager enableUndoRegistration];
-}
-
-- (void)beginAsyncLoad
-{
-	[tabView selectTabViewItemAtIndex:kiManLoadingTabIndex];
-	[progressIndicator startAnimation:self];
-	[[[[[self windowControllers] lastObject] window] standardWindowButton:NSWindowCloseButton] setEnabled:NO];	
-}
-
-- (void)endAsyncLoad
-{
-	[[[[[self windowControllers] lastObject] window] standardWindowButton:NSWindowCloseButton] setEnabled:YES];
-	[tabView selectTabViewItemAtIndex:kiManPageTabIndex];
-	
-	[progressIndicator stopAnimation:self]; 
-}
-
-- (void)updateInterface
-{
-	[tabView selectTabViewItemAtIndex:kiManPageTabIndex];
-	[[manpageView textStorage] setAttributedString:[[self page] pageWithStyle:[self displayStringOptions]]];
-	
-	[(NSTextField *)[pageItem view] setStringValue:[[self page] pageName]];
-	[(NSTextField *)[sectionItem view] setStringValue:[[self page] pageSection]];
-	
-	[manpageView moveToBeginningOfDocument:self];
-	[[[[self windowControllers] lastObject] window] makeFirstResponder:manpageView];
-	
-	// Our -displayName changes each time a new page is loaded.
-	[[[self windowControllers] lastObject] synchronizeWindowTitleWithDocumentName];
-	[[[[[self windowControllers] lastObject] window] toolbar] validateVisibleItems];
-}	
-
-#pragma mark -
-#pragma mark Accessors
-
-- (iManPage *)page
-{
-	return page_;
-}
-
-- (void)setPage:(iManPage *)page
-{
-    if (page_ != nil) {
-        [[_historyUndoManager prepareWithInvocationTarget:self] setPage:page_];
-    }
-
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:iManPageLoadDidCompleteNotification object:page_];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:iManPageLoadDidFailNotification object:page_];
-
-	[page retain];
-	[page_ release];
-	page_ = page;
-	
-	if (page_ != nil) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pageLoadDidComplete:) name:iManPageLoadDidCompleteNotification object:page_];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pageLoadDidFail:) name:iManPageLoadDidFailNotification object:page_];
-
-		if (![page_ isLoaded]) {
-			[self beginAsyncLoad];
-			[page_ load];
-		} else {
-			[self updateInterface];
-		}
-		
-		[(NSTextField *)[pageItem view] setStringValue:[page_ pageName]];
-        if ([page_ pageSection])
-			[(NSTextField *)[sectionItem view] setStringValue:[page_ pageSection]];
-		
-		if (_lastFindResults != nil) {
-			[_lastFindResults release];
-			_lastFindResults = nil;
-			[_findResultRanges release];
-			_findResultRanges = nil;
-			[findResults reloadData];
-		}
-    } else {
-		[tabView selectTabViewItemAtIndex:kiManNoPageTabIndex];
-	}
-	
-    [[[self windowControllers] lastObject] synchronizeWindowTitleWithDocumentName];
-}
-
-- (NSUndoManager *)historyUndoManager
-{
-	return _historyUndoManager;
-}
-
-#pragma mark -
-#pragma mark Font and Style Methods
-
-- (void)displayFontDidChange:(NSNotification *)notification
-{
-    if ([self page] != nil)
-        [[manpageView textStorage] setAttributedString:[[self page] pageWithStyle:[self displayStringOptions]]];
 }
 
 - (NSDictionary *)displayStringOptions
 {
 	return [NSDictionary dictionaryWithObjectsAndKeys:
-		[NSDictionary dictionaryWithObject:[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManPageFont] forKey:NSFontAttributeName], iManPageDefaultStyle,
-		[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManBoldStyle], iManPageBoldStyle,
-		[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManEmphasizedStyle], iManPageUnderlineStyle,
-		[[NSUserDefaults standardUserDefaults] objectForKey:iManShowPageLinks], iManPageUnderlineLinks,
-		nil];
-}
-
-#pragma mark -
-#pragma mark NSDocument Overrides
-
-- (NSURL *)fileURL
-{
-	// Override NSDocument method to return a correct file URL for the current page, regardless of whether it was loaded directly or searched.
-	
-	if ([[self page] path] != nil)
-		return [NSURL fileURLWithPath:[[self page] path]];
-	
-	return nil;
-}
-
-- (void)windowControllerDidLoadNib:(NSWindowController *)windowController;
-{
-    NSWindow *window = [windowController window];
-    NSScrollView *scrollView = (NSScrollView *)[[manpageView superview] superview];
-    NSTextContainer *textContainer = [manpageView textContainer];
-    NSToolbar *toolbar;
-
-    [super windowControllerDidLoadNib:windowController];
-
-    // Initialize our toolbar.
-    toolbar = [[NSToolbar alloc] initWithIdentifier:iManDocumentToolbarIdentifier];
-    [toolbar setDelegate:self];
-    [toolbar setDisplayMode:NSToolbarDisplayModeIconAndLabel];
-    [window setToolbar:toolbar];
-    [toolbar release];
-
-    // Set the scroll view, text container, and text view up to behave properly.
-    // This is largely derived from Apple's TextSizingExample code.
-    // Note: 1.0e7 is the "LargeNumberForText" used there, it should not be changed.
-    [scrollView setHasVerticalScroller:YES];
-    [scrollView setHasHorizontalScroller:YES];
-    [[scrollView contentView] setAutoresizesSubviews:YES];
-
-    [textContainer setWidthTracksTextView:NO];
-    [textContainer setHeightTracksTextView:NO];
-    [textContainer setContainerSize:NSMakeSize(1.0e7, 1.0e7)];
-
-    [manpageView setMinSize:[scrollView contentSize]];
-    [manpageView setMaxSize:NSMakeSize(1.0e7, 1.0e7)];
-    [manpageView setHorizontallyResizable:YES];
-    [manpageView setVerticallyResizable:YES];
-    [manpageView setAutoresizingMask:NSViewNotSizable];
-	
-    // Initialize the undo manager we use for history (back/forward) handling.
-    _historyUndoManager = [[NSUndoManager alloc] init];
-
-	[tabView selectTabViewItemAtIndex:kiManNoPageTabIndex];
-	
-	// Setup the search menu.
-	{
-		NSMenu *searchFieldMenu = [[[searchField cell] searchMenuTemplate] copy];
-		
-		shouldMatchCase = shouldUseRegexps = YES;
-		[[searchFieldMenu itemWithTag:kiManMatchCaseMenuItemTag] setState:shouldMatchCase];
-		[[searchFieldMenu itemWithTag:kiManUseRegularExpressionsMenuItemTag] setState:shouldUseRegexps];
-		[[searchField cell] setSearchMenuTemplate:searchFieldMenu];
-		[searchFieldMenu release];
-	}
-	
-	// Update the UI
-    [self setPage:[self page]];
-	
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(displayFontDidChange:)
-                                                 name:iManFontChangedNotification
-                                               object:nil];
-	
-    if (pageItem != nil)
-        [window makeFirstResponder:[pageItem view]];
-}
-
-- (NSString *)windowNibName
-{
-    return @"iManDocument";
-}
-
-- (BOOL)readFromFile:(NSString *)fileName ofType:(NSString *)type
-{
-    [self setPage:[iManPage pageWithPath:fileName]];
-
-    return (page_ != nil);
-}
-
-- (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem
-{
-	BOOL ret = YES;
-	SEL action = [anItem action];
-	int tabIndex = [tabView indexOfTabViewItem:[tabView selectedTabViewItem]];
-	
-    // Only allow printing/exporting/searching if a man page is being displayed.
-    if ((action == @selector(printDocument:)) ||
-		(action == @selector(reload:)) ||
-        (action == @selector(export:)) ||
-		(action == @selector(toggleFindDrawer:)) ||
-		(action == @selector(performSearch:)))
-        return (tabIndex == kiManPageTabIndex);
-    // Check undo manager for these.
-    if (action == @selector(back:))
-        return ([_historyUndoManager canUndo] && (tabIndex != kiManLoadingTabIndex));
-    if (action == @selector(forward:))
-        return ([_historyUndoManager canRedo] && (tabIndex != kiManLoadingTabIndex));
-    // Make sure, if we are loading, that another load request doesn't happen, nor should the window close.
-    if ((action == @selector(refresh:)) ||
-		(action == @selector(reload:)) ||
-		(action == @selector(back:)) ||
-		(action == @selector(forward:)) ||
-		(action == @selector(performClose:)))
-        return (tabIndex != kiManLoadingTabIndex);
-	
-    return ret;
-}
-
-- (NSString *)displayName
-{
-    // Construct a string of the form "iMan: page(section)". 
-	
-	if ([self page] != nil) {
-		if ([[self page] isLoading])
-			return NSLocalizedString(@"iMan: Loading", nil);
-		
-        if (([[self page] pageSection] != nil) && ([[[self page] pageSection] length] > 0)) {
-            return [NSString stringWithFormat:NSLocalizedString(@"iMan: %@(%@)", nil),
-                [[self page] pageName],
-                [[self page] pageSection]];
-        } else {
-            return [NSString stringWithFormat:NSLocalizedString(@"iMan: %@", nil), [[self page] pageName]];
-        }
-	}    
-	
-    return NSLocalizedString(@"iMan", nil);
-}
-
-- (void)printShowingPrintPanel:(BOOL)flag
-{
-    NSPrintInfo *printInfo = [self printInfo];
-
-    // Need to set NSFitPagination so that the page is scaled horizontally to fit
-    // otherwise it is annoyingly clipped at right.
-    [printInfo setHorizontalPagination:NSFitPagination];
-    [self runModalPrintOperation:[NSPrintOperation printOperationWithView:manpageView
-                                                                printInfo:printInfo]
-                        delegate:nil
-                  didRunSelector:NULL
-                     contextInfo:NULL];
+			[NSDictionary dictionaryWithObject:[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManPageFont] forKey:NSFontAttributeName], iManPageDefaultStyle,
+			[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManBoldStyle], iManPageBoldStyle,
+			[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManEmphasizedStyle], iManPageUnderlineStyle,
+			[[NSUserDefaults standardUserDefaults] objectForKey:iManShowPageLinks], iManPageUnderlineLinks,
+			nil];
 }
 
 #pragma mark -
@@ -644,150 +823,78 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 
 - (BOOL)textView:(NSTextView *)textView clickedOnLink:(id)link atIndex:(unsigned)charIndex
 {
-	// This method handles "local" clicks on links; we don't pass them off to +loadURL:inNewDocument:, which is intended for handling links not in the current document.
     if ([[NSUserDefaults standardUserDefaults] integerForKey:iManHandlePageLinks] == kiManHandleLinkInCurrentWindow) {
-        iManPage *page = [iManPage pageWithURL:link];
-		if (page != nil) {
-			[self setPage:page];
-		} else {
-			NSBeginAlertSheet(NSLocalizedString(@"Invalid link.", nil),
-							  NSLocalizedString(@"OK", nil),
-							  nil, nil,
-							  [self windowForSheet],
-							  nil, NULL, NULL, NULL,
-							  NSLocalizedString(@"The link \"%@\" is invalid and cannot be opened.", nil),
-							  link);
-		}
-    } else {
-		iManDocument *doc = [[iManDocument alloc] init];
-		[[NSDocumentController sharedDocumentController] addDocument:doc];
-		[doc makeWindowControllers];
-		[doc showWindows];
-		{       
-			iManPage *page = [iManPage pageWithURL:link];
-			if (page != nil) {
-				[doc setPage:page];
-			} else {
-				NSBeginAlertSheet(NSLocalizedString(@"Invalid link.", nil),
-								  NSLocalizedString(@"OK", nil),
-								  nil, nil,
-								  [doc windowForSheet],
-								  nil, NULL, NULL, NULL,
-								  NSLocalizedString(@"The link \"%@\" is invalid and cannot be opened.", nil),
-								  link);
-			}
-		}
-		[doc release];
-	}
+		[self loadPageWithURL:link];
+		return YES;
+    }
 
-	// Always return YES to keep the link from being passed off to the application-wide URL handler, which causes duplicate alert sheets and all manner of chaos.
-    return YES;
+	// URLs will be passed off to the application-wide handler if appropriate, which will open in a new window.
+	return NO;
 }
 
 #pragma mark -
-#pragma mark NSToolbar Delegate
-
-- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
-{
-    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
-
-    if ([itemIdentifier isEqualToString:iManToolbarItemSection]) {
-        NSRect rect = NSMakeRect(0, 0, 48, 22);
-        
-        [item setLabel:NSLocalizedString(@"Section", nil)];
-        [item setTag:32];
-        [item setView:[[[NSTextField alloc] initWithFrame:rect] autorelease]];
-        [item setTarget:self];
-        [item setAction:@selector(refresh:)];
-        [item setMinSize:rect.size];
-        [item setMaxSize:rect.size];        
-
-        sectionItem = item;
-    } else if ([itemIdentifier isEqualToString:iManToolbarItemManpage]) {
-        NSRect rect = NSMakeRect(0, 0, 96, 22);
-        
-        [item setLabel:NSLocalizedString(@"Man Page", nil)];
-        [item setTag:0];
-        [item setView:[[[NSTextField alloc] initWithFrame:rect] autorelease]];
-        [item setTarget:self];
-        [item setAction:@selector(refresh:)];
-        [item setMinSize:rect.size];
-        [item setMaxSize:rect.size];
-        
-        pageItem = item;
-    } else if ([itemIdentifier isEqualToString:iManToolbarItemBack]) {
-        [item setImage:[NSImage imageNamed:iManToolbarItemBack]];
-        [item setLabel:NSLocalizedString(@"Back", nil)];
-        [item setTarget:self];
-        [item setAction:@selector(back:)];
-    } else if ([itemIdentifier isEqualToString:iManToolbarItemForward]) {
-        [item setImage:[NSImage imageNamed:iManToolbarItemForward]];
-        [item setLabel:NSLocalizedString(@"Forward", nil)];
-        [item setTarget:self];
-        [item setAction:@selector(forward:)];
-    } else if ([itemIdentifier isEqualToString:iManToolbarItemToggleFind]) {
-        [item setImage:[NSImage imageNamed:@"iManSearchIcon"]];
-        [item setLabel:NSLocalizedString(@"Search", nil)];
-        [item setTarget:self];
-        [item setAction:@selector(toggleFindDrawer:)];
-    } else if ([itemIdentifier isEqualToString:iManToolbarItemReload]) {
-		[item setImage:[NSImage imageNamed:iManToolbarItemReload]];
-		[item setLabel:NSLocalizedString(@"Reload", nil)];
-		[item setTarget:self];
-		[item setAction:@selector(reload:)];
-	}
-
-    return [item autorelease];
-}
-
-- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
-{
-    return [NSArray arrayWithObjects:
-        iManToolbarItemManpage,
-        iManToolbarItemSection,
-        NSToolbarSeparatorItemIdentifier,
-		iManToolbarItemReload,
-        iManToolbarItemBack,
-        iManToolbarItemForward,
-        NSToolbarFlexibleSpaceItemIdentifier,
-        iManToolbarItemToggleFind,
-        NSToolbarPrintItemIdentifier,
-        nil];
-}
-
-- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
-{
-    // Our toolbar is not modifiable.
-    return [self toolbarDefaultItemIdentifiers:toolbar];
-}
-
-#pragma mark -
-#pragma mark Find Results Table Data Source/Delegate
-
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
-{
-    return ((_lastFindResults == nil) ? 0 : [_lastFindResults count]);
-}
-
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
-{
-    return [_lastFindResults objectAtIndex:row];
-}
+#pragma mark Find Results Table Delegate
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
-    if ([findResults selectedRow] != -1) {
-        NSRange range = [[_findResultRanges objectAtIndex:[findResults selectedRow]] rangeValue];
+    if ([findResultsView selectedRow] != -1) {
+        NSRange range = [[[[self findResults] objectAtIndex:[findResultsView selectedRow]] objectForKey:iManFindResultRange] rangeValue];
         [manpageView setSelectedRange:range];
         [manpageView scrollRangeToVisible:range];
     }
 }
 
-- (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(int)row
+#pragma mark -
+#pragma mark Results Outline View Data Source
+
+- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
-	return NO;
+    if (item == nil) 
+        return [_searchResults objectAtIndex:index];
+	
+    return [item objectAtIndex:index];
 }
-    
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
+{
+    return [item isKindOfClass:[NSArray class]];
+}
+
+- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+{
+    if (item == nil) {
+		if (_searchResults != nil)
+			return [_searchResults count];
+		else
+			return 0;
+	}
+	
+    return [(NSArray *)item count];
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
+{    
+    if ([[tableColumn identifier] isEqualToString:@"Page"]) {
+        if ([item isKindOfClass:[NSArray class]]) { // if it is a multiple-page entry
+            return [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"%@ (%d pages)", nil), [(NSArray *)item objectAtIndex:0], [(NSArray *)item count]]
+                                                    attributes:[NSDictionary dictionaryWithObject:[NSColor disabledControlTextColor] forKey:NSForegroundColorAttributeName]] autorelease];
+        } else {
+            return item;
+        }
+    } else {
+        id ret = [[[self search] results] objectForKey:item];
+		
+        return (ret == nil) ? @"" : ret;
+    }
+	
+    return @"";
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView shouldEditTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+    return NO;
+}
+
 #pragma mark -
 #pragma mark Cleanup
 

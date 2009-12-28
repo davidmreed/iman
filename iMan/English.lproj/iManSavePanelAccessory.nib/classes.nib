@@ -17,7 +17,7 @@
 				<string>id</string>
 				<key>forward</key>
 				<string>id</string>
-				<key>refresh</key>
+				<key>loadRequestedPage</key>
 				<string>id</string>
 				<key>toggleFindDrawer</key>
 				<string>id</string>
@@ -32,7 +32,7 @@
 				<string>NSView</string>
 				<key>findDrawer</key>
 				<string>NSDrawer</string>
-				<key>findResults</key>
+				<key>findResultsView</key>
 				<string>NSTableView</string>
 				<key>formatMenu</key>
 				<string>NSPopUpButton</string>

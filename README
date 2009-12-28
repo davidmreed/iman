@@ -10,7 +10,7 @@ Currently, iMan consists of the following classes:
 	The delegate of NSApplication, handles various minor tasks and service invocations. Also responsible for re-indexing and update checking.
 
 	* iManDocument
-	The "viewing window" class, iManDocument handles loading and display of man pages. It also provides the +loadURL:inNewDocument: method used by URL handlers and services.
+	The "viewing window" class, iManDocument handles loading and display of man pages. It also provides the +loadExternalURL: method used by URL handlers and services.
 
 	* iManSearchDocument
 	The "search window" class. iManSearchDocument is really conceptually closer to an NSWindowController than an NSDocument, but for the time being it is a non-loadable, non-savable document class.
@@ -19,7 +19,7 @@ Currently, iMan consists of the following classes:
 	A fairly straightforward preference window controller. The font and style handling code is complex for a reason: font/styles are saved as archived NSDictionaries that can be applied directly to styled text, hence some manipulation must be done for each style change.
 
 	* iManURLHandler
-	This class is invoked to handle clicks on URLs of scheme "man:" and "x-man-page:" (see iMan.scriptTerminology). It calls through to +[iManDocument loadURL:inNewDocument:] passing the current external link preference for inNewDocument.
+	This class is invoked to handle clicks on URLs of scheme "man:" and "x-man-page:" (see iMan.scriptTerminology). It calls through to +[iMan loadExternalURL:].
 		
 iManEngine.framework holds (among others) the following classes:
 	* iManPage

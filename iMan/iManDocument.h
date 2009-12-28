@@ -7,35 +7,68 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class iManPage;
+@class iManPage, iManSearch;
+
+typedef enum { 
+	iManDocumentStateNone, 
+	iManDocumentStateDisplayingPage, 
+	iManDocumentStateDisplayingSearch, 
+	iManDocumentStateLoadingPage, 
+	iManDocumentStateSearching 
+} iManDocumentState;
 
 @interface iManDocument : NSDocument
 {
-    IBOutlet NSTextView *manpageView;
+	// Parts of the main document view.
     IBOutlet NSTabView *tabView;
+    IBOutlet NSTextView *manpageView;
+	IBOutlet NSOutlineView *aproposResultsView;
+	IBOutlet NSTextField *loadingMessageLabel;
+	IBOutlet NSSearchField *addressSearchField;
+	IBOutlet NSMenu *addressFieldSearchMenu;
 
+	// Parts of the export-page save panel accessory.
     IBOutlet NSView *accessoryView;
     IBOutlet NSPopUpButton *formatMenu;
     IBOutlet NSProgressIndicator *progressIndicator;
 
+	// In-page search drawer.
     IBOutlet NSDrawer *findDrawer;
     IBOutlet NSSearchField *searchField;
-    IBOutlet NSTableView *findResults;
+    IBOutlet NSTableView *findResultsView;
 
+	// Page and navigation machinery.
     NSUndoManager *_historyUndoManager;
-    
 	iManPage *page_;
-    NSToolbarItem *sectionItem, *pageItem;
 
+	// apropos/whatis search machinery.
+	iManSearch *search_;
+    NSArray *_searchResults;
+	
+	// In-page search machinery.
     NSMutableArray *_lastFindResults;
     NSMutableArray *_findResultRanges;
 	BOOL shouldMatchCase, shouldUseRegexps;
+	
+	// Current document state.
+	iManDocumentState _documentState;
 }
-
-+ (void)loadURL:(NSURL *)url inNewDocument:(BOOL)inNewDocument;
 
 - (iManPage *)page;
 - (void)setPage:(iManPage *)page;
+- (iManSearch *)search;
+- (void)setSearch:(iManSearch *)search;
+
+- (NSArray *)findResults;
+- (void)setFindResults:(NSArray *)findResults;
+
+- (iManDocumentState)documentState;
+- (void)setDocumentState:(iManDocumentState)documentState;
+
+- (void)performSearchForTerm:(NSString *)term type:(NSString *)type;
+- (void)loadPageWithName:(NSString *)pageName section:(NSString *)pageSection;
+- (void)loadPageWithURL:(NSURL *)url;
+- (void)synchronizeUIWithDocumentState;
 
 - (NSUndoManager *)historyUndoManager;
 
@@ -46,10 +79,10 @@
 - (IBAction)toggleFindDrawer:(id)sender;
 - (IBAction)back:(id)sender;
 - (IBAction)forward:(id)sender;
-- (IBAction)refresh:(id)sender;
+- (IBAction)loadRequestedPage:(id)sender;
 - (IBAction)clearHistory:(id)sender;
-- (IBAction)performSearch:(id)sender;
 
+- (IBAction)performSearch:(id)sender;
 - (IBAction)setUseRegularExpressions:(id)sender;
 - (IBAction)setCaseSensitive:(id)sender;
 

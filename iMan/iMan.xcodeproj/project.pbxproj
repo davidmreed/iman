@@ -11,7 +11,6 @@
 		1117ECC109D1D20A00A5820F /* iMan.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 1117ECBF09D1D20A00A5820F /* iMan.scriptSuite */; };
 		116DE5F90742E456006D5514 /* iManPathEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 116DE5F70742E456006D5514 /* iManPathEditor.nib */; };
 		1174307F06AF416800CE425B /* iManURLHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1174307706AF416800CE425B /* iManURLHandler.m */; };
-		1174308006AF416800CE425B /* iManSearchDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 1174307806AF416800CE425B /* iManSearchDocument.m */; };
 		1174308106AF416800CE425B /* iManPreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1174307906AF416800CE425B /* iManPreferencesController.m */; };
 		1174308206AF416800CE425B /* iManDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 1174307A06AF416800CE425B /* iManDocument.m */; };
 		1174308306AF416800CE425B /* iManConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 1174307B06AF416800CE425B /* iManConstants.m */; };
@@ -25,7 +24,6 @@
 		1174312906AF430B00CE425B /* iMan.1 in Resources */ = {isa = PBXBuildFile; fileRef = 1174311306AF430B00CE425B /* iMan.1 */; };
 		1174312A06AF430B00CE425B /* iMan.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1174311506AF430B00CE425B /* iMan.icns */; };
 		1174312B06AF430B00CE425B /* iManPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1174311706AF430B00CE425B /* iManPreferences.nib */; };
-		1174312C06AF430B00CE425B /* iManSearchDocument.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1174311906AF430B00CE425B /* iManSearchDocument.nib */; };
 		1174312D06AF430B00CE425B /* iManSearchIcon.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 1174311B06AF430B00CE425B /* iManSearchIcon.tiff */; };
 		1174312E06AF430B00CE425B /* iManDocument.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1174311D06AF430B00CE425B /* iManDocument.nib */; };
 		1174312F06AF430B00CE425B /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1174311F06AF430B00CE425B /* MainMenu.nib */; };
@@ -87,14 +85,12 @@
 		1149AE3F074141A3002E3044 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		116DE5F80742E456006D5514 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/iManPathEditor.nib; sourceTree = "<group>"; };
 		1171C45007186C3D0052DACF /* CHANGELOG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG; sourceTree = "<group>"; };
-		1174301B06AF406300CE425B /* iManSearchDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManSearchDocument.h; sourceTree = SOURCE_ROOT; };
 		1174301C06AF406300CE425B /* iMan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iMan.h; sourceTree = SOURCE_ROOT; };
 		1174301E06AF406300CE425B /* iManConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManConstants.h; sourceTree = SOURCE_ROOT; };
 		1174302006AF406300CE425B /* iManPreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManPreferencesController.h; sourceTree = SOURCE_ROOT; };
 		1174302B06AF407C00CE425B /* iManURLHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManURLHandler.h; sourceTree = SOURCE_ROOT; };
 		1174302C06AF407C00CE425B /* iManDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManDocument.h; sourceTree = SOURCE_ROOT; };
 		1174307706AF416800CE425B /* iManURLHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManURLHandler.m; sourceTree = SOURCE_ROOT; };
-		1174307806AF416800CE425B /* iManSearchDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManSearchDocument.m; sourceTree = SOURCE_ROOT; };
 		1174307906AF416800CE425B /* iManPreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManPreferencesController.m; sourceTree = SOURCE_ROOT; };
 		1174307A06AF416800CE425B /* iManDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManDocument.m; sourceTree = SOURCE_ROOT; };
 		1174307B06AF416800CE425B /* iManConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManConstants.m; sourceTree = SOURCE_ROOT; };
@@ -108,7 +104,6 @@
 		1174311406AF430B00CE425B /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; name = English; path = English.lproj/iMan.1; sourceTree = "<group>"; };
 		1174311606AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = English; path = English.lproj/iMan.icns; sourceTree = "<group>"; };
 		1174311806AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/iManPreferences.nib; sourceTree = "<group>"; };
-		1174311A06AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/iManSearchDocument.nib; sourceTree = "<group>"; };
 		1174311C06AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = English; path = English.lproj/iManSearchIcon.tiff; sourceTree = "<group>"; };
 		1174311E06AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/iManDocument.nib; sourceTree = "<group>"; };
 		1174312006AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
@@ -172,7 +167,6 @@
 				11B7680B0719C3BB00C503A1 /* iManIndexPanel.nib */,
 				1174311F06AF430B00CE425B /* MainMenu.nib */,
 				1174311D06AF430B00CE425B /* iManDocument.nib */,
-				1174311906AF430B00CE425B /* iManSearchDocument.nib */,
 				1174311706AF430B00CE425B /* iManPreferences.nib */,
 				116DE5F70742E456006D5514 /* iManPathEditor.nib */,
 				1174310706AF430B00CE425B /* iManSavePanelAccessory.nib */,
@@ -251,14 +245,12 @@
 				1174302C06AF407C00CE425B /* iManDocument.h */,
 				11046A4309FAC93A00C397CE /* iManIndexingWindowController.h */,
 				1174302006AF406300CE425B /* iManPreferencesController.h */,
-				1174301B06AF406300CE425B /* iManSearchDocument.h */,
 				1174302B06AF407C00CE425B /* iManURLHandler.h */,
 				1174307C06AF416800CE425B /* iMan.m */,
 				1174307A06AF416800CE425B /* iManDocument.m */,
 				1174307B06AF416800CE425B /* iManConstants.m */,
 				11046A4409FAC93A00C397CE /* iManIndexingWindowController.m */,
 				1174307906AF416800CE425B /* iManPreferencesController.m */,
-				1174307806AF416800CE425B /* iManSearchDocument.m */,
 				1174307706AF416800CE425B /* iManURLHandler.m */,
 			);
 			name = Classes;
@@ -403,7 +395,6 @@
 				1174312906AF430B00CE425B /* iMan.1 in Resources */,
 				1174312A06AF430B00CE425B /* iMan.icns in Resources */,
 				1174312B06AF430B00CE425B /* iManPreferences.nib in Resources */,
-				1174312C06AF430B00CE425B /* iManSearchDocument.nib in Resources */,
 				1174312D06AF430B00CE425B /* iManSearchIcon.tiff in Resources */,
 				1174312E06AF430B00CE425B /* iManDocument.nib in Resources */,
 				1174312F06AF430B00CE425B /* MainMenu.nib in Resources */,
@@ -441,7 +432,6 @@
 			files = (
 				8D15AC320486D014006FF6A4 /* main.m in Sources */,
 				1174307F06AF416800CE425B /* iManURLHandler.m in Sources */,
-				1174308006AF416800CE425B /* iManSearchDocument.m in Sources */,
 				1174308106AF416800CE425B /* iManPreferencesController.m in Sources */,
 				1174308206AF416800CE425B /* iManDocument.m in Sources */,
 				1174308306AF416800CE425B /* iManConstants.m in Sources */,
@@ -560,14 +550,6 @@
 			name = iManPreferences.nib;
 			sourceTree = SOURCE_ROOT;
 		};
-		1174311906AF430B00CE425B /* iManSearchDocument.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1174311A06AF430B00CE425B /* English */,
-			);
-			name = iManSearchDocument.nib;
-			sourceTree = SOURCE_ROOT;
-		};
 		1174311B06AF430B00CE425B /* iManSearchIcon.tiff */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -683,10 +665,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					/Users/parmadil/Projects/Source/iMan,
-					"\"$(SRCROOT)/../Externals/Sparkle\"",
-				);
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;

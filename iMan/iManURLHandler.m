@@ -6,16 +6,14 @@
 //
 
 #import "iManURLHandler.h"
-#import "iManDocument.h"
+#import "iMan.h"
 #import "iManConstants.h"
 
 @implementation iManURLHandler
 
 - performDefaultImplementation
 {
-	[iManDocument loadURL:[NSURL URLWithString:[self directParameter]]
-			inNewDocument:([[NSUserDefaults standardUserDefaults] integerForKey:iManHandleExternalLinks] == kiManHandleLinkInNewWindow)];
-	    
+	[iMan loadExternalURL:[NSURL URLWithString:[self directParameter]]];	    
     return nil;
 }
 
