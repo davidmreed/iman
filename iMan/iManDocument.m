@@ -347,7 +347,7 @@ static NSString *const iManFindResultDisplayString = @"string";
 
 #pragma mark -
 
-- (IBAction)openPage:(id)sender
+- (IBAction)openSearchResultPage:(id)sender
 {
     id item = [aproposResultsView itemAtRow:[aproposResultsView clickedRow]];
 	
@@ -432,6 +432,7 @@ static NSString *const iManFindResultDisplayString = @"string";
 	[sheet orderOut:self];
 	
 	if (returnCode == NSOKButton) {
+		// FIXME: The GUI behaves oddly now for some reason -- the new view doesn't swap in before the window resizes, and I had to click the button twice. 
 		iManIndexingWindowController *indexingWindowController =  [[iManIndexingWindowController alloc] initWithSelectedIndexes:[NSArray arrayWithObject:[(NSString *)contextInfo autorelease]]];
 		int returnCode;
 		
@@ -615,10 +616,8 @@ static NSString *const iManFindResultDisplayString = @"string";
 {
 	[_searchResults release];
 	_searchResults = [[[[[self search] results] allKeys] sortedArrayUsingSelector:@selector(iManResultSort:)] retain];
-	
 	[self setDocumentState:iManDocumentStateDisplayingSearch];
 	[self synchronizeUIWithDocumentState];
-    [aproposResultsView reloadData];
 }
 
 - (void)searchDidFail:(NSNotification *)notification

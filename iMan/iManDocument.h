@@ -80,6 +80,7 @@ typedef enum {
 - (IBAction)back:(id)sender;
 - (IBAction)forward:(id)sender;
 - (IBAction)loadRequestedPage:(id)sender;
+- (IBAction)openSearchResultPage:(id)sender;
 - (IBAction)clearHistory:(id)sender;
 
 - (IBAction)performSearch:(id)sender;

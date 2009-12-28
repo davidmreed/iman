@@ -36,6 +36,8 @@
 		635B7A870F1698CA0043FFEF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7A830F1698CA0043FFEF /* RegexKitLite.m */; };
 		635B7A890F1698CA0043FFEF /* RKLMatchEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7A850F1698CA0043FFEF /* RKLMatchEnumerator.m */; };
 		635B7AE70F16A19A0043FFEF /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 635B7AE60F16A19A0043FFEF /* libicucore.dylib */; };
+		638587E910E873F8001B5E18 /* iManAproposResultsSorting.h in Headers */ = {isa = PBXBuildFile; fileRef = 638587E710E873F8001B5E18 /* iManAproposResultsSorting.h */; };
+		638587EA10E873F8001B5E18 /* iManAproposResultsSorting.m in Sources */ = {isa = PBXBuildFile; fileRef = 638587E810E873F8001B5E18 /* iManAproposResultsSorting.m */; };
 		63CEBADE0F1B0227001180EC /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CEBADD0F1B0227001180EC /* Sparkle.framework */; };
 		63CEBAF50F1B0397001180EC /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 63CEBAF40F1B0397001180EC /* dsa_pub.pem */; };
 		63FCFBF50F1BB7D1004B3D5F /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63CEBADD0F1B0227001180EC /* Sparkle.framework */; };
@@ -121,6 +123,8 @@
 		635B7A840F1698CA0043FFEF /* RKLMatchEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKLMatchEnumerator.h; sourceTree = "<group>"; };
 		635B7A850F1698CA0043FFEF /* RKLMatchEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RKLMatchEnumerator.m; sourceTree = "<group>"; };
 		635B7AE60F16A19A0043FFEF /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
+		638587E710E873F8001B5E18 /* iManAproposResultsSorting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManAproposResultsSorting.h; sourceTree = "<group>"; };
+		638587E810E873F8001B5E18 /* iManAproposResultsSorting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManAproposResultsSorting.m; sourceTree = "<group>"; };
 		63CEBADD0F1B0227001180EC /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Sparkle.framework; sourceTree = SOURCE_ROOT; };
 		63CEBAF40F1B0397001180EC /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -240,6 +244,8 @@
 		2A37F4ABFDCFA73011CA2CEA /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				638587E710E873F8001B5E18 /* iManAproposResultsSorting.h */,
+				638587E810E873F8001B5E18 /* iManAproposResultsSorting.m */,
 				1174301C06AF406300CE425B /* iMan.h */,
 				1174301E06AF406300CE425B /* iManConstants.h */,
 				1174302C06AF407C00CE425B /* iManDocument.h */,
@@ -319,6 +325,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				638587E910E873F8001B5E18 /* iManAproposResultsSorting.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -440,6 +447,7 @@
 				635B7A870F1698CA0043FFEF /* RegexKitLite.m in Sources */,
 				635B7A890F1698CA0043FFEF /* RKLMatchEnumerator.m in Sources */,
 				6302D5D310B83AF1000051DB /* NSUserDefaults+DMRArchiving.m in Sources */,
+				638587EA10E873F8001B5E18 /* iManAproposResultsSorting.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
