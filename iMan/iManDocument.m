@@ -534,13 +534,13 @@ static NSString *const iManFindResultDisplayString = @"string";
 	switch ([self documentState]) {
 		case iManDocumentStateNone:
 			[tabView selectTabViewItemAtIndex:kiManNoPageTabIndex];
-			[addressSearchField setStringValue:@""];
+			[addressSearchFieldCell setStringValue:@""];
 			break;
 		case iManDocumentStateDisplayingPage:
 			[tabView selectTabViewItemAtIndex:kiManPageTabIndex];
 			[[manpageView textStorage] setAttributedString:[[self page] pageWithStyle:[self displayStringOptions]]];
 			[manpageView moveToBeginningOfDocument:self];
-			[addressSearchField setStringValue:[NSString stringWithFormat:@"%@(%@)", [[self page] pageName], [[self page] pageSection]]];
+			[addressSearchFieldCell setStringValue:[NSString stringWithFormat:@"%@(%@)", [[self page] pageName], [[self page] pageSection]]];
 			[[windowController window] makeFirstResponder:manpageView];
 			// Our -displayName changes each time a new page is loaded.
 			[windowController synchronizeWindowTitleWithDocumentName];

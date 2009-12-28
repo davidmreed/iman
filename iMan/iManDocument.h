@@ -24,7 +24,7 @@ typedef enum {
     IBOutlet NSTextView *manpageView;
 	IBOutlet NSOutlineView *aproposResultsView;
 	IBOutlet NSTextField *loadingMessageLabel;
-	IBOutlet NSSearchField *addressSearchField;
+	IBOutlet NSSearchFieldCell *addressSearchFieldCell;
 	IBOutlet NSMenu *addressFieldSearchMenu;
 
 	// Parts of the export-page save panel accessory.
