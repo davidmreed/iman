@@ -1,0 +1,6 @@
+/* Localized versions of Info.plist keys */
+
+CFBundleName = "iManEngine";
+CFBundleShortVersionString = "0.3";
+CFBundleGetInfoString = "iManEngine v0.3, Copyright 2009 David Reed.";
+NSHumanReadableCopyright = "Copyright 2009 David Reed.";

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>back</key>
+				<string>id</string>
+				<key>changeExportFormat</key>
+				<string>id</string>
+				<key>doSearch</key>
+				<string>id</string>
+				<key>export</key>
+				<string>id</string>
+				<key>forward</key>
+				<string>id</string>
+				<key>loadRequestedPage</key>
+				<string>id</string>
+				<key>toggleFindDrawer</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>iManDocument</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>accessoryView</key>
+				<string>NSView</string>
+				<key>findDrawer</key>
+				<string>NSDrawer</string>
+				<key>findResultsView</key>
+				<string>NSTableView</string>
+				<key>formatMenu</key>
+				<string>NSPopUpButton</string>
+				<key>manpageView</key>
+				<string>NSTextView</string>
+				<key>progressIndicator</key>
+				<string>NSProgressIndicator</string>
+				<key>searchField</key>
+				<string>NSSearchField</string>
+				<key>tabView</key>
+				<string>NSTabView</string>
+				<key>useRegexps</key>
+				<string>NSButton</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSDocument</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>

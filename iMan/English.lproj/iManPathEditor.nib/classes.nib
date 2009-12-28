@@ -1,0 +1,19 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {pathEditCancel = id; pathEditOK = id; }; 
+            CLASS = iManPreferencesWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                pathEditError = NSTextField; 
+                pathEditField = NSTextField; 
+                pathEditOKButton = NSButton; 
+                pathEditPanel = NSPanel; 
+                pathEditTitle = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}

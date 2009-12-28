@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AppleEventCode</key>
+	<string>iMan</string>
+	<key>Classes</key>
+	<dict>
+		<key>iManApp</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>capp</string>
+			<key>Superclass</key>
+			<string>NSCoreSuite.NSApplication</string>
+			<key>SupportedCommands</key>
+			<dict>
+				<key>NSCoreSuite.Open</key>
+				<string>handleOpenAppleEvent:</string>
+				<key>iMan.GetURL</key>
+				<string>getURL:</string>
+			</dict>
+		</dict>
+	</dict>
+	<key>Commands</key>
+	<dict>
+		<key>GetURL</key>
+		<dict>
+			<key>AppleEventClassCode</key>
+			<string>GURL</string>
+			<key>AppleEventCode</key>
+			<string>GURL</string>
+			<key>CommandClass</key>
+			<string>iManURLHandler</string>
+			<key>Type</key>
+			<string></string>
+		</dict>
+	</dict>
+	<key>Name</key>
+	<string>iMan</string>
+</dict>
+</plist>
