@@ -1,0 +1,9 @@
+TODO
+
+* iMan should have an option to choose from all found manpages. However, this makes lookups significantly slower. Perhaps iMan should handle scanning the directory tree itself? This would basically involve making iMan a groff front end that replicates the whole man(1) program.
+* Handle manpages in multiple languages/locales and change from ASCII to UTF-8 output (Fink installs some localized manpages in /sw/share/man). This will make parsing grotty(1) output more complicated.
+* Improve iMan's AppleScript support.
+* Limit font selection to fixed-width fonts. Hampered by apparent AppKit bugs.
+* SearchKit full-text searches.
+* Include complete HeaderDoc help for iManEngine.
+* Write a better manual and use Apple Help.
