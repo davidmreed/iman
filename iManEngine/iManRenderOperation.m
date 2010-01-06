@@ -201,6 +201,7 @@
     NSDictionary *boldDictionary;
     NSDictionary *normalDictionary;
     const unsigned char *bytes = [data bytes];
+	char cString[2] = "\0\0";
     unsigned length = [data length];
     unsigned index;
 	
@@ -232,18 +233,21 @@
         if (*(bytes + index + 1) == 0x08) { // backspace
             if ((index + 1) < length) {
                 if (*(bytes + index) == '_') { // underline
+					cString[0] = *(char *)(bytes + index + 2);
                     [str appendAttributedString:
-					 [[[NSAttributedString alloc] initWithString:[NSString stringWithCString:(char *)(bytes + index + 2) length:1] attributes:underlineDictionary] autorelease]];
+					 [[[NSAttributedString alloc] initWithString:[NSString stringWithCString:cString encoding:[NSString defaultCStringEncoding]] attributes:underlineDictionary] autorelease]];
                 } else {
+					cString[0] = *(char *)(bytes + index);
                     [str appendAttributedString:
-					 [[[NSAttributedString alloc] initWithString:[NSString stringWithCString:(char *)(bytes + index) length:1] attributes:boldDictionary] autorelease]];
+					 [[[NSAttributedString alloc] initWithString:[NSString stringWithCString:cString encoding:[NSString defaultCStringEncoding]] attributes:boldDictionary] autorelease]];
                 }
 				
                 index += 2;
             }
         } else {
+			cString[0] = *(char *)(bytes + index);
             [str appendAttributedString:
-			 [[[NSAttributedString alloc] initWithString:[NSString stringWithCString:(char *)(bytes + index) length:1]
+			 [[[NSAttributedString alloc] initWithString:[NSString stringWithCString:cString encoding:[NSString defaultCStringEncoding]]
 											  attributes:normalDictionary] autorelease]];
         }
     }

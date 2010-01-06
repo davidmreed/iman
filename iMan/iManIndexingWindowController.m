@@ -137,12 +137,12 @@ NSString *const iManIndexingCompletedNotification = @"iManIndexingCompletedNotif
 	[[self window] orderOut:self];
 }
 
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	return [[iManIndex availableIndexes] count];
 }
 
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
 	if ([[tableColumn identifier] isEqualToString:@"checkboxes"])
 		return [NSNumber numberWithInt:([selectedIndexes_ containsObject:[[iManIndex availableIndexes] objectAtIndex:row]] ? NSOnState : NSOffState)];
@@ -152,7 +152,7 @@ NSString *const iManIndexingCompletedNotification = @"iManIndexingCompletedNotif
 	return nil;
 }
 
-- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
+- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
 	if ([[tableColumn identifier] isEqualToString:@"checkboxes"]) {
 		if ([object intValue] == NSOnState)
@@ -162,7 +162,7 @@ NSString *const iManIndexingCompletedNotification = @"iManIndexingCompletedNotif
 	}
 }
 
-- (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(int)row
+- (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
 	return ([[tableColumn identifier] isEqualToString:@"checkboxes"]);
 }

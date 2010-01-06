@@ -34,7 +34,7 @@
     NSData *data;
 	NSString *argument;
 	unsigned index;
-	char tempDir[] = "/tmp/imanXXXXXXXX";
+	char *tempDir = "/tmp/imanXXXXXXXX";
 	NSString *tempLink;
 	NSError *taskError;
 	
@@ -45,12 +45,12 @@
 	}	
 	
 	// We'll create a temporary directory with a symlink inside that points to our Application Support index folder. This obviates the need to workaround shell scripts breaking because of the space in "Application Support", or international characters which might or might not exist in the path to that folder.
-	if (mkdtemp(&tempDir) == NULL) {
+	if (mkdtemp(tempDir) == NULL) {
 		_error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
 		[pool release];
 		return;
 	}
-	tempLink = [[NSString stringWithCString:tempDir] stringByAppendingPathComponent:@"man"];
+	tempLink = [[NSString stringWithCString:tempDir encoding:[NSString defaultCStringEncoding]] stringByAppendingPathComponent:@"man"];
 	if (![[NSFileManager defaultManager] createSymbolicLinkAtPath:tempLink 
 											  withDestinationPath:[aproposIndex indexPath]
 															error:&taskError]) {
@@ -80,7 +80,7 @@
 					
 		_results = [[NSMutableDictionary alloc] init];
 		// Split the output into lines.
-		lines = [[[NSString stringWithCString:[data bytes] length:[data length]] componentsSeparatedByString:@"\n"] objectEnumerator];
+		lines = [[[[[NSString alloc] initWithBytes:[data bytes] length:[data length] encoding:[NSString defaultCStringEncoding]] autorelease] componentsSeparatedByString:@"\n"] objectEnumerator];
 		while ((line = [lines nextObject]) != nil) {
 			// The format of each line is always pageName(n)[, pageName2(n), ...] - description.
 			// Let's parse it.

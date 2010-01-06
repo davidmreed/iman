@@ -293,7 +293,8 @@ static NSOperationQueue *_iManPageRenderingQueue;
 	// This method called on main thread when KVO notification tells us (on *worker* thread, because that's where the KVO notification is posted) that the operation is finished.
 	[page_ release];
 	[path_ release];
-	page_ = path_ = nil;
+	page_ = nil;
+	path_ = nil;
 	loading_ = NO;
 	
 	if ([operation page] != nil) {

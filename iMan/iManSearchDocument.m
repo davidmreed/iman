@@ -188,7 +188,7 @@ enum {
 #pragma mark -
 #pragma mark Results Outline View Data Source
 
-- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
 {
     if (item == nil) 
         return [sortedResults objectAtIndex:index];
@@ -201,7 +201,7 @@ enum {
     return [item isKindOfClass:[NSArray class]];
 }
 
-- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
 {
     if (item == nil) {
 		if (sortedResults != nil)

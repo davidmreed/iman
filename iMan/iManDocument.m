@@ -642,7 +642,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 #pragma mark -
 #pragma mark NSTextView Delegate Link Handling
 
-- (BOOL)textView:(NSTextView *)textView clickedOnLink:(id)link atIndex:(unsigned)charIndex
+- (BOOL)textView:(NSTextView *)textView clickedOnLink:(id)link atIndex:(NSUInteger)charIndex
 {
 	// This method handles "local" clicks on links; we don't pass them off to +loadURL:inNewDocument:, which is intended for handling links not in the current document.
     if ([[NSUserDefaults standardUserDefaults] integerForKey:iManHandlePageLinks] == kiManHandleLinkInCurrentWindow) {
@@ -764,12 +764,12 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 #pragma mark -
 #pragma mark Find Results Table Data Source/Delegate
 
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
     return ((_lastFindResults == nil) ? 0 : [_lastFindResults count]);
 }
 
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
     return [_lastFindResults objectAtIndex:row];
 }
@@ -783,7 +783,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
     }
 }
 
-- (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(int)row
+- (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
 	return NO;
 }

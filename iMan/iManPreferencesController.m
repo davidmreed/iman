@@ -268,7 +268,7 @@
 	   modalForWindow:[self window]
 		modalDelegate:self
 	   didEndSelector:@selector(editManpathDidEnd:returnCode:contextInfo:)
-		  contextInfo:(void *)[sender clickedRow]];
+		  contextInfo:(void *)[[NSNumber alloc] initWithInt:[sender clickedRow]]];
 }	
 
 - (void)addManpathDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -287,11 +287,12 @@
 	
 	if (returnCode == NSOKButton) {
 		NSMutableArray *array = [[[iManEnginePreferences sharedInstance] manpaths] mutableCopy];
-		[array replaceObjectAtIndex:(int)contextInfo withObject:[pathEditField stringValue]];
+		[array replaceObjectAtIndex:[(NSNumber *)contextInfo intValue] withObject:[pathEditField stringValue]];
 		[[iManEnginePreferences sharedInstance] setManpaths:array];
 		[array release];
 		[manpathList reloadData];
 	}
+	[(NSNumber *)contextInfo release];
 }
 
 #pragma mark -
@@ -366,7 +367,7 @@
 
 // FIXME: there is quite a lag on first selecting the Manpath tab.
 
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	if (tableView == pathTable)
 		return [[[iManEnginePreferences sharedInstance] tools] count];
@@ -374,7 +375,7 @@
 	return [[[iManEnginePreferences sharedInstance] manpaths] count];
 }
 
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
 	iManEnginePreferences *prefs = [iManEnginePreferences sharedInstance];
 	
@@ -418,7 +419,7 @@
 	}
 }*/
 
-- (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(int)row
+- (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
 //	if (tableView == pathTable)
 //		return [[tableColumn identifier] isEqualToString:@"Path"];

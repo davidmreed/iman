@@ -76,7 +76,9 @@
     // the data returned has a newline at the end, so if we got some data,
     // convert it to an NSString, omitting the newline, and make sure it's an OK path.
     if (ret != nil) {
-		_path = [[[NSString stringWithCString:[ret bytes] length:([ret length] - 1)] stringByStandardizingPath] retain];
+		NSString *string = [[[NSString alloc] initWithBytes:[ret bytes] length:[ret length] - 1 encoding:[NSString defaultCStringEncoding]] autorelease];
+		string = [string stringByStandardizingPath];
+		_path = [string retain];
 	} else {
 		_error = [taskError retain];
 	}
