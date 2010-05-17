@@ -23,6 +23,8 @@
 
 @end
 
+//static unichar _readUnicharFromUTF8String(const unsigned char *bytes, const unsigned char *max, unsigned char **final);
+
 
 @implementation iManRenderOperation
 
@@ -95,7 +97,7 @@
 	
 	return [NSTask invokeTool:@"groff"
 					arguments:[NSArray arrayWithObjects:
-							   @"-Tascii", // ASCII output, UTF-8 doesn't work right now
+							   @"-Tutf8", // UTF-8 grotty(1) output
 							   @"-P", // -P sends next argument to postprocessor
 							   @"-c", // tells grotty to use old-style format codes
 							   @"-S", // safe mode (on by default, just to be sure)
@@ -136,7 +138,7 @@
 	}
 	
 	[task setArguments:[NSArray arrayWithObjects:
-						@"-Tascii",		// ASCII output, UTF-8 doesn't work right now
+						@"-Tutf8",		// UTF-8 grotty(1) output.
 						@"-P",			// -P sends next argument to postprocessor
 						@"-c",			// tells grotty to use old-style format codes
 						@"-S",			// safe mode (on by default, just to be sure)
@@ -190,94 +192,143 @@
 	return data;
 }
 
+// This collection is quasi-macros makes the implementation of _attributedStringFromData: a lot less mind-boggling.
+// Note that each checks whether the style tag it is examining *can* occur in the given space, and as such is safe to call without doing pointer arithmetic first.
+
+static inline BOOL _hasStyle(unichar *buf, unichar *end)
+{
+	return (((buf + 2) < end) && (*(buf + 1) == 0x08));
+}
+
+static inline BOOL _hasBoldMarker(unichar *buf, unichar *end)
+{
+	return (((buf + 2) < end) && (*(buf + 1) == 0x08) && (*(buf + 2) == *buf));
+}
+
+static inline BOOL _hasAdditionalBoldMarker(unichar *buf, unichar *end)
+{
+	return (((buf + 1) < end) && (*buf == 0x08));
+}
+
+static inline BOOL _hasUnderlineMarker(unichar *buf, unichar *end) 
+{
+	return (((buf + 2) < end) && (*buf == '_') && (*(buf + 1) == 0x08) && (*(buf + 2) != '_'));
+}
+
+// FIXME: Underlined underscores look just like bolded ones. Do we need to care enough to heuristically guess which it should be?
+
 - (NSAttributedString *)_attributedStringFromData:(NSData *)data error:(NSError **)error
 {
-    // This function converts the output of grotty(1) from old-style formatted ASCII
+	// This function converts the output of grotty(1) from old-style formatted ASCII
     // to an NSAttributedString, replacing the crude format codes with attributes.
 	// The string returned is cacheable, no preference specific formatting. It must be
-	// fed through displayStringFromAttributedString: to add font/style info.
-    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] init];
-    NSDictionary *underlineDictionary;
-    NSDictionary *boldDictionary;
-    NSDictionary *normalDictionary;
-    const unsigned char *bytes = [data bytes];
-	char cString[2] = "\0\0";
-    unsigned length = [data length];
-    unsigned index;
+	// fed through -[iManPage pageWithStyle:] to add font/style info.
+    NSMutableAttributedString *formattedString = [[NSMutableAttributedString alloc] init];
+	NSString *string;
+    NSDictionary *normalDictionary, *underlineDictionary, *boldDictionary, *boldUnderlineDictionary;
+	unichar *buffer, *position, *end, thisStyleRun[128];
+	NSUInteger positionInStyleRun = 0;
+	unichar thisCharacter;
+	enum {
+		kNormalFont, kBoldFont = 0x01, kUnderlinedFont = 0x02, kBoldUnderlinedFont = kBoldFont | kUnderlinedFont
+	} currentFont, thisCharacterFont;
 	
-    // Cache style dictionaries for speed.
-    underlineDictionary = [NSDictionary dictionaryWithObject:iManPageUnderlineStyle
-													  forKey:iManPageStyleAttributeName];
-    boldDictionary = [NSDictionary dictionaryWithObject:iManPageBoldStyle 
-												 forKey:iManPageStyleAttributeName];
+    // Cache style dictionaries.
+    underlineDictionary = [NSDictionary dictionaryWithObject:iManPageUnderlineStyle forKey:iManPageStyleAttributeName];
+    boldDictionary = [NSDictionary dictionaryWithObject:iManPageBoldStyle forKey:iManPageStyleAttributeName];
+	boldUnderlineDictionary = [NSDictionary dictionaryWithObject:iManPageBoldUnderlineStyle forKey:iManPageStyleAttributeName];
     normalDictionary = [NSDictionary dictionary];
 	
-    // Iterate over the input data character by character. If we encounter a backspace
-    // (0x08), this indicates a format code. The sequence 'c 0x08 c' means a bold 'c',
-    // '_ 0x08 c' means an underlined 'c'.
-    // Basically we just scan through looking for a backspace. When we find one, append the
-    // following character to the string with the appropriate style, then skip two characters
-    // (the backspace and the next one). Otherwise, just append the character.
-    
-    // Note that sometimes grotty uses extra overstriking (apparently to mean "more bold").
-    // This will be marked by the sequence "x 0x08 x 0x08 x 0x08 x".
-    // We already parse the first x 0x08 x, so when we hit an unexpected 0x08, we just
-    // drop it and the next character.
-    
-    for (index = 0; index < length; index++) {
-        if (*(bytes + index) == 0x08)  { // drop extra overstriking
-            index++; // inc to skip this and the next one.
-            continue;
-        }
-        
-        if (*(bytes + index + 1) == 0x08) { // backspace
-            if ((index + 1) < length) {
-                if (*(bytes + index) == '_') { // underline
-					cString[0] = *(char *)(bytes + index + 2);
-                    [str appendAttributedString:
-					 [[[NSAttributedString alloc] initWithString:[NSString stringWithCString:cString encoding:[NSString defaultCStringEncoding]] attributes:underlineDictionary] autorelease]];
-                } else {
-					cString[0] = *(char *)(bytes + index);
-                    [str appendAttributedString:
-					 [[[NSAttributedString alloc] initWithString:[NSString stringWithCString:cString encoding:[NSString defaultCStringEncoding]] attributes:boldDictionary] autorelease]];
-                }
-				
-                index += 2;
-            }
-        } else {
-			cString[0] = *(char *)(bytes + index);
-            [str appendAttributedString:
-			 [[[NSAttributedString alloc] initWithString:[NSString stringWithCString:cString encoding:[NSString defaultCStringEncoding]]
-											  attributes:normalDictionary] autorelease]];
-        }
-    }
+	// The input data should just be UTF-8 with some backspace (0x08) characters thrown in. Get NSString to parse it for us.
+	string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	if (string == nil) return nil;
+
+	// Parsing requires so much lookahead that it is hard to do without a simple buffer. Get the data back out of our NSString in UTF-16 form. FIXME: this is a silly way to do encoding conversion.
+	buffer = malloc(sizeof(unichar) * [string length]);
+	[string getCharacters:buffer range:NSMakeRange(0, [string length])];
+	end = buffer + [string length];
+	position = buffer;
+	[string release];
 	
+	currentFont = kNormalFont;
+	
+	while (position < end) {
+		thisCharacterFont = kNormalFont;
+		
+		if (_hasStyle(position, end)) { 
+			// This character has a style applied to it.
+			if (_hasUnderlineMarker(position, end)) {
+				// Underline (represented by _ 0x08 c)
+				thisCharacter = *(position + 2);
+				thisCharacterFont |= kUnderlinedFont;
+				position += 3;
+			} else if (_hasBoldMarker(position, end)) {
+				// c 0x08 c
+				thisCharacter = *position;
+				thisCharacterFont |= kBoldFont;
+				position += 3;
+			}
+			// Process any additional boldface markers. (as c 0x08 c 0x08 c or _ 0x08 c 0x08 c).
+			while (_hasAdditionalBoldMarker(position, end)) {
+				thisCharacterFont |= kBoldFont;
+				position += 2;
+			}
+		} else {
+			thisCharacter = *position;
+			position++;
+		}
+		
+		if ((thisCharacterFont != currentFont) || (positionInStyleRun == 127) || (position == end)) {
+			// The buffer is full, or the character is the start of a new style run, or we're done and need to clear this style run.
+			// Add the buffer to the page we're building and start a new one.
+			NSDictionary *attributes;
+			
+			if (currentFont == kNormalFont) {
+				attributes = normalDictionary;
+			} else if (currentFont == kBoldFont) {
+				attributes = boldDictionary;
+			} else if (currentFont == kUnderlinedFont) {
+				attributes = underlineDictionary;
+			} else if (currentFont == kBoldUnderlinedFont) {
+				attributes = boldUnderlineDictionary;
+			}
+			[formattedString appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithCharacters:thisStyleRun length:positionInStyleRun] attributes:attributes] autorelease]];
+			
+			// Add this character as the first character of the new style run.
+			positionInStyleRun = 1;
+			thisStyleRun[0] = thisCharacter;
+			currentFont = thisCharacterFont;
+		} else {
+			// This character matches our current style run and fits in the buffer.
+			thisStyleRun[positionInStyleRun] = thisCharacter;
+			positionInStyleRun++;
+		}
+	}
+	
+	// We have converted the whole page into an attributed string.
     // Now, use RegexKitLite to find anything that looks like a page reference and add a link.
     // Pattern for link matching: ([^[:space:](]+)\(([0-9n][a-zA-Z]*)\)
     
 	{
         NSEnumerator *results;
-		NSString *searchText = [str string];
+		NSString *searchText = [formattedString string];
 		NSValue *match;
 		NSString *regex = @"([^[:space:](]+)\\(([0-9n][a-zA-Z]*)\\)";
 		
         results = [searchText matchEnumeratorWithRegex:regex options:RKLNoOptions | RKLMultiline];
 		
 		
-		while ((match = [results nextObject]) != nil) {
-            NSRange range = [match rangeValue];
+		for (match in results) {
+			NSRange range = [match rangeValue];
 			NSString *matchString = [searchText substringWithRange:range];
 			NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"man://%@/%@", [matchString stringByMatching:regex capture:1], [matchString stringByMatching:regex capture:2]]];
 			
 			if (url != nil)
-				[str addAttribute:iManPageLinkAttributeName
-							value:url
-							range:range];
+				[formattedString addAttribute:iManPageLinkAttributeName value:url range:range];
         }
     }
 	
-	if (error != nil) *error = nil; // Currently formatting errors are just ignored.
-    return [str autorelease];
+    return [formattedString autorelease];
 }
 
 - (NSString *)path
@@ -304,4 +355,4 @@
 	[super dealloc];
 }
 
-@end
+@end	

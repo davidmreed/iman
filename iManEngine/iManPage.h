@@ -50,6 +50,7 @@ extern NSString *const iManPageLinkAttributeName;
 
 extern NSString *const iManPageUnderlineStyle;
 extern NSString *const iManPageBoldStyle;
+extern NSString *const iManPageBoldUnderlineStyle;
 extern NSString *const iManPageDefaultStyle;
 
 extern NSString *const iManPageUnderlineLinks;
