@@ -192,10 +192,14 @@ static NSOperationQueue *_iManPageRenderingQueue;
 		NSDictionary *attributes = [ret attributesAtIndex:index effectiveRange:&range];
 		
 		if ((obj = [attributes objectForKey:iManPageStyleAttributeName]) != nil) {
-			if ([obj isEqualToString:iManPageBoldStyle])
+			if ([obj isEqualToString:iManPageBoldStyle]) {
 				[ret addAttributes:boldDictionary range:range];
-			else if ([obj isEqualToString:iManPageUnderlineStyle])
+			} else if ([obj isEqualToString:iManPageUnderlineStyle]) {
 				[ret addAttributes:underlinedDictionary range:range];
+			} else if ([obj isEqualToString:iManPageBoldUnderlineStyle]) {
+				[ret addAttributes:underlinedDictionary range:range];
+				[ret addAttributes:boldDictionary range:range];
+			}
 		} else {
 			[ret addAttributes:normalDictionary range:range];
 		}
@@ -205,7 +209,7 @@ static NSOperationQueue *_iManPageRenderingQueue;
 			[ret addAttribute:NSLinkAttributeName value:obj range:range];
 		}
 		
-		index = NSMaxRange(range) + 1;
+		index = NSMaxRange(range);
 	}
 	
 	return [ret autorelease];
@@ -361,5 +365,6 @@ NSString *const iManPageLinkAttributeName = @"iManPageLinkAttributeName";
 
 NSString *const iManPageUnderlineStyle = @"iManPageUnderlineStyle";
 NSString *const iManPageBoldStyle = @"iManPageBoldStyle";
+NSString *const iManPageBoldUnderlineStyle = @"iManPageBoldUnderlineStyle";
 NSString *const iManPageDefaultStyle = @"iManPageDefaultStyle";
 NSString *const iManPageUnderlineLinks = @"iManPageUnderlineLinks";
