@@ -97,7 +97,36 @@
 		[[[NSDocumentController sharedDocumentController] documents] makeObjectsPerformSelector:@selector(clearHistory:) withObject:self];
 	}
 }
-						
+
+- (IBAction)installCommandLineTool:(id)sender
+{
+	// NOTE: this code derived from Smultron's SMLAuthenticationController.m
+	// Copyright 2004-2009 Peter Borg; http://smultron.sourceforge.net
+	NSString *toolPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"iman"];
+	NSData *toolContents = [[NSData alloc] initWithContentsOfFile:toolPath];	
+	NSTask *task = [[NSTask alloc] init];
+    NSPipe *pipe = [[NSPipe alloc] init];
+    NSFileHandle *writeHandle = [pipe fileHandleForWriting];
+	NSInteger status;
+
+    [task setLaunchPath:@"/usr/libexec/authopen"];
+    [task setArguments:[NSArray arrayWithObjects:@"-c", @"-m", @"0755", @"-w", @"/usr/bin/iman", nil]];
+    [task setStandardInput:pipe];
+	
+	[task launch];
+	
+	[writeHandle writeData:toolContents];
+	[writeHandle closeFile];	
+	[task waitUntilExit];
+	status = [task terminationStatus];
+		
+	if (status != EXIT_SUCCESS)
+		NSRunAlertPanel(NSLocalizedString(@"Unable to install command-line tool.", nil), NSLocalizedString(@"iMan was unable to install its command-line tool for unknown reasons.", nil), NSLocalizedString(@"OK", nil), nil, nil);
+	
+	[pipe release];
+	[task release];
+	[toolContents release];
+}
 
 - (IBAction)showPreferences:(id)sender
 {

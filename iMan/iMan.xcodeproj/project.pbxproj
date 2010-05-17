@@ -35,6 +35,7 @@
 		11A1B38B0A9CB69E00115362 /* iManEngine.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 119D4DE70A99475E00D25E74 /* iManEngine.framework */; };
 		11B7680D0719C3BB00C503A1 /* iManIndexPanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11B7680B0719C3BB00C503A1 /* iManIndexPanel.nib */; };
 		6302D5D310B83AF1000051DB /* NSUserDefaults+DMRArchiving.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302D5D110B83AF1000051DB /* NSUserDefaults+DMRArchiving.m */; };
+		6343C1CD11A1E2B40018D313 /* iman in Resources */ = {isa = PBXBuildFile; fileRef = 6343C1CC11A1E2B40018D313 /* iman */; };
 		635B7A870F1698CA0043FFEF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7A830F1698CA0043FFEF /* RegexKitLite.m */; };
 		635B7A890F1698CA0043FFEF /* RKLMatchEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7A850F1698CA0043FFEF /* RKLMatchEnumerator.m */; };
 		635B7AE70F16A19A0043FFEF /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 635B7AE60F16A19A0043FFEF /* libicucore.dylib */; };
@@ -121,6 +122,7 @@
 		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		6302D5D010B83AF1000051DB /* NSUserDefaults+DMRArchiving.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSUserDefaults+DMRArchiving.h"; path = "Snippets/NSUserDefaults+DMRArchiving.h"; sourceTree = "<group>"; };
 		6302D5D110B83AF1000051DB /* NSUserDefaults+DMRArchiving.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSUserDefaults+DMRArchiving.m"; path = "Snippets/NSUserDefaults+DMRArchiving.m"; sourceTree = "<group>"; };
+		6343C1CC11A1E2B40018D313 /* iman */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = iman; sourceTree = "<group>"; };
 		635B7A820F1698CA0043FFEF /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		635B7A830F1698CA0043FFEF /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		635B7A840F1698CA0043FFEF /* RKLMatchEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKLMatchEnumerator.h; sourceTree = "<group>"; };
@@ -280,6 +282,7 @@
 			isa = PBXGroup;
 			children = (
 				63CEBAF40F1B0397001180EC /* dsa_pub.pem */,
+				6343C1CC11A1E2B40018D313 /* iman */,
 				8D15AC360486D014006FF6A4 /* Info.plist */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
 				1174310B06AF430B00CE425B /* Localizable.strings */,
@@ -413,6 +416,7 @@
 				116DE5F90742E456006D5514 /* iManPathEditor.nib in Resources */,
 				1117ECC109D1D20A00A5820F /* iMan.scriptSuite in Resources */,
 				63CEBAF50F1B0397001180EC /* dsa_pub.pem in Resources */,
+				6343C1CD11A1E2B40018D313 /* iman in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -714,7 +718,6 @@
 		119D4D220A9914D900D25E74 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_MODEL_TUNING = G5;
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/../Externals",
