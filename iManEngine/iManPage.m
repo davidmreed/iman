@@ -42,15 +42,19 @@ static NSOperationQueue *_iManPageRenderingQueue;
 
 + pageWithURL:(NSURL *)url
 {
+	// FIXME: are these section regexes appropriate? what about TCL? 
 	// grohtml style: man://groff/1. Regex: \/{0,2}([^[:space:]/]+)\/([0-9n][a-zA-Z]*)\/? 
 	NSString *grohtmlStyleURL = @"\\/{0,2}([^[:space:]/]+)\\/([0-9n][a-zA-Z]*)\\/?";
 	// The old iMan style: man:groff(1). Regex: ([^[:space:](]+)\(([0-9n][a-zA-Z]*)\)
 	NSString *iManStyleURL = @"([^[:space:](]+)\\(([0-9a-zA-Z]+)\\)";
 	// x-man-page: style: x-man-page://1/groff. Regex: \/{0,2}([0-9n][a-zA-Z]*)\/([^[:space:]/]+)\/?
 	NSString *xmanpageStyleURL = @"\\/{0,2}([0-9n][a-zA-Z]*)\\/([^[:space:]/]+)\\/?";
+	// grohtml style without section, which may come in (for instance) from our command line tool.
+	NSString *grohtmlStyleURLNoSection = @"\\/{0,2}([^[:space:]/]+)\\/?";
+
 	NSString *name = nil, *section = nil;
 	NSString *manpage = [[url resourceSpecifier] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-		
+	
 	if ([manpage isMatchedByRegex:grohtmlStyleURL]) {
 		// It's a URL of the format man://groff/1 (as used by grohtml(1))
 		name = [manpage stringByMatching:grohtmlStyleURL capture:1];
@@ -63,6 +67,9 @@ static NSOperationQueue *_iManPageRenderingQueue;
 		// It's a URL of the format (x-man-page:)//1/groff
 		name = [manpage stringByMatching:xmanpageStyleURL capture:2];
 		section = [manpage stringByMatching:xmanpageStyleURL capture:1];
+	} else if ([manpage isMatchedByRegex:grohtmlStyleURLNoSection]) {
+		// It's a URL of the format man://groff
+		name = [manpage stringByMatching:grohtmlStyleURLNoSection capture:1];
 	}
 	
 	if ((name != nil) && ([name length] > 0))

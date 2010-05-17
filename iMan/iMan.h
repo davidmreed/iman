@@ -21,5 +21,6 @@
 - (IBAction)showPreferences:(id)sender;
 - (IBAction)showHelp:(id)sender;
 - (IBAction)newSearchWindow:(id)sender;
+- (IBAction)installCommandLineTool:(id)sender;
 
 @end
