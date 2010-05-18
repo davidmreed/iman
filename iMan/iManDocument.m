@@ -482,10 +482,44 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 
 - (NSDictionary *)displayStringOptions
 {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSFontManager *fm = [NSFontManager sharedFontManager];
+	NSMutableDictionary *defaultStyle, *boldStyle, *italicStyle, *boldItalicStyle;
+	NSFont *font = [defaults archivedObjectForKey:iManDefaultStyle];
+	
+	defaultStyle = [NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName];
+	boldStyle = [[defaultStyle mutableCopy] autorelease];
+	italicStyle = [[defaultStyle mutableCopy] autorelease];
+	
+	if ([defaults boolForKey:iManBoldStyleMakeBold])
+		[boldStyle setObject:[fm convertFont:[boldStyle objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask] forKey:NSFontAttributeName];
+	if ([defaults boolForKey:iManBoldStyleMakeItalic])
+		[boldStyle setObject:[fm convertFont:[boldStyle objectForKey:NSFontAttributeName] toHaveTrait:NSItalicFontMask] forKey:NSFontAttributeName];
+	if ([defaults boolForKey:iManBoldStyleMakeUnderline]) 
+		[boldStyle setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
+	[boldStyle setObject:[defaults archivedObjectForKey:iManBoldStyleColor] forKey:NSForegroundColorAttributeName];
+
+	boldItalicStyle = [[boldStyle mutableCopy] autorelease];
+	
+	if ([defaults boolForKey:iManUnderlineStyleMakeBold]) {
+		[italicStyle setObject:[fm convertFont:[italicStyle objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask] forKey:NSFontAttributeName];
+		[boldItalicStyle setObject:[fm convertFont:[boldItalicStyle objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask] forKey:NSFontAttributeName];
+	}
+	if ([defaults boolForKey:iManUnderlineStyleMakeItalic]) {
+		[italicStyle setObject:[fm convertFont:[italicStyle objectForKey:NSFontAttributeName] toHaveTrait:NSItalicFontMask] forKey:NSFontAttributeName];
+		[boldItalicStyle setObject:[fm convertFont:[boldItalicStyle objectForKey:NSFontAttributeName] toHaveTrait:NSItalicFontMask] forKey:NSFontAttributeName];
+	}
+	if ([defaults boolForKey:iManUnderlineStyleMakeUnderline]) {
+		[italicStyle setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
+		[boldItalicStyle setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
+	}
+	[italicStyle setObject:[defaults archivedObjectForKey:iManUnderlineStyleColor] forKey:NSForegroundColorAttributeName];
+
 	return [NSDictionary dictionaryWithObjectsAndKeys:
-		[NSDictionary dictionaryWithObject:[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManPageFont] forKey:NSFontAttributeName], iManPageDefaultStyle,
-		[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManBoldStyle], iManPageBoldStyle,
-		[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManEmphasizedStyle], iManPageUnderlineStyle,
+		defaultStyle, iManPageDefaultStyle,
+		boldStyle, iManPageBoldStyle,
+		italicStyle, iManPageUnderlineStyle,
+		boldItalicStyle, iManPageBoldUnderlineStyle,
 		[[NSUserDefaults standardUserDefaults] objectForKey:iManShowPageLinks], iManPageUnderlineLinks,
 		nil];
 }
@@ -557,7 +591,7 @@ static NSString *const iManToolbarItemToggleFind = @"iManToolbarItemToggleFind";
 	
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(displayFontDidChange:)
-                                                 name:iManFontChangedNotification
+                                                 name:iManStyleChangedNotification
                                                object:nil];
 	
     if (pageItem != nil)

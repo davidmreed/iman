@@ -20,26 +20,18 @@
 
 + (void)initialize
 {
-    NSDictionary *boldStyle;
-    NSDictionary *emStyle;
-
-    boldStyle = [NSDictionary dictionaryWithObjectsAndKeys:[[NSFontManager sharedFontManager] convertFont:[NSFont userFixedPitchFontOfSize:11.0] toHaveTrait:NSBoldFontMask], NSFontAttributeName,
-        [NSColor blackColor], NSForegroundColorAttributeName,
-        [NSNumber numberWithInt:NSNoUnderlineStyle], NSUnderlineStyleAttributeName,
-        nil];
-
-    emStyle = [NSDictionary dictionaryWithObjectsAndKeys:
-        [NSFont userFixedPitchFontOfSize:11.0], NSFontAttributeName,
-        [NSColor blackColor], NSForegroundColorAttributeName,
-        [NSNumber numberWithInt:NSSingleUnderlineStyle], NSUnderlineStyleAttributeName,
-        nil];
-    
     [[NSUserDefaults standardUserDefaults] registerDefaults:
         [NSDictionary dictionaryWithObjectsAndKeys:
-            [NSArchiver archivedDataWithRootObject:[NSFont userFixedPitchFontOfSize:11.0]], iManPageFont,
-            [NSArchiver archivedDataWithRootObject:boldStyle], iManBoldStyle,
-            [NSArchiver archivedDataWithRootObject:emStyle], iManEmphasizedStyle,
-            [NSNumber numberWithBool:YES], iManShowPageLinks,
+		 [NSArchiver archivedDataWithRootObject:[NSFont userFixedPitchFontOfSize:11.0]], iManDefaultStyle,
+		 [NSNumber numberWithBool:YES], iManBoldStyleMakeBold,
+		 [NSNumber numberWithBool:NO], iManBoldStyleMakeItalic,
+		 [NSNumber numberWithBool:NO], iManBoldStyleMakeUnderline,
+		 [NSArchiver archivedDataWithRootObject:[NSColor blackColor]], iManBoldStyleColor,
+		 [NSNumber numberWithBool:NO], iManUnderlineStyleMakeBold,
+		 [NSNumber numberWithBool:NO], iManUnderlineStyleMakeItalic,
+		 [NSNumber numberWithBool:YES], iManUnderlineStyleMakeUnderline,
+		 [NSArchiver archivedDataWithRootObject:[NSColor blackColor]], iManUnderlineStyleColor,
+		 [NSNumber numberWithBool:YES], iManShowPageLinks,
             [NSNumber numberWithInt:kiManHandleLinkInCurrentWindow], iManHandlePageLinks,
             [NSNumber numberWithInt:kiManHandleLinkInNewWindow], iManHandleExternalLinks,
             [NSNumber numberWithInt:kiManHandleLinkInNewWindow], iManHandleSearchResults,

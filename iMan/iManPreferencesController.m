@@ -24,30 +24,19 @@
 - (void)awakeFromNib
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSUserDefaultsController *controller = [NSUserDefaultsController sharedUserDefaultsController];
     NSFont *font;
-    NSDictionary *style;
 
     // Set up the font field.
-    font = [defaults archivedObjectForKey:iManPageFont];
+    font = [defaults archivedObjectForKey:iManDefaultStyle];
     [pageFont setFont:font];
     [pageFont setStringValue:[NSString stringWithFormat:@"%@ %.0f", [font displayName], [font pointSize]]];
 
     // Set up the Bold Style box.
-    style = [defaults archivedObjectForKey:iManBoldStyle];
-
-    [boldStyleBold setState:(([[NSFontManager sharedFontManager] traitsOfFont:[style objectForKey:NSFontAttributeName]] & NSBoldFontMask) ? NSOnState : NSOffState)];
-    [boldStyleItalic setState:([[NSFontManager sharedFontManager] traitsOfFont:[style objectForKey:NSFontAttributeName]] & NSItalicFontMask)];
-
-    [boldStyleUnderline setState:([[style objectForKey:NSUnderlineStyleAttributeName] intValue] & NSSingleUnderlineStyle)];
-    [boldStyleColor setColor:[style objectForKey:NSForegroundColorAttributeName]];
+    [boldStyleColor setColor:[defaults archivedObjectForKey:iManBoldStyleColor]];
 
     // Set up the underlined/emphasized style box.
-    style = [defaults archivedObjectForKey:iManEmphasizedStyle];
-
-    [emStyleBold setState:([[NSFontManager sharedFontManager] traitsOfFont:[style objectForKey:NSFontAttributeName]] & NSBoldFontMask)];
-    [emStyleItalic setState:([[NSFontManager sharedFontManager] traitsOfFont:[style objectForKey:NSFontAttributeName]] & NSItalicFontMask)];
-    [emStyleUnderline setState:([[style objectForKey:NSUnderlineStyleAttributeName] intValue] & NSSingleUnderlineStyle)];
-    [emStyleColor setColor:[style objectForKey:NSForegroundColorAttributeName]];
+    [emStyleColor setColor:[defaults archivedObjectForKey:iManUnderlineStyleColor]];
 
     // Set up the link handling pane.
     [showPageLinks setState:[defaults boolForKey:iManShowPageLinks]];
@@ -59,6 +48,14 @@
 	// Set the double action for the manpath editor.
 	[manpathList setDoubleAction:@selector(editManpath:)];
 	[pathTable setDoubleAction:@selector(editPath:)];
+	
+	// Observe our own preference keys so we can post the notification that tells all the documents to update their formatting.
+	[controller addObserver:self forKeyPath:@"values.iManBoldStyleMakeBold" options:0 context:NULL];
+	[controller addObserver:self forKeyPath:@"values.iManBoldStyleMakeItalic" options:0 context:NULL];
+	[controller addObserver:self forKeyPath:@"values.iManBoldStyleMakeUnderline" options:0 context:NULL];
+	[controller addObserver:self forKeyPath:@"values.iManUnderlineStyleMakeBold" options:0 context:NULL];
+	[controller addObserver:self forKeyPath:@"values.iManUnderlineStyleMakeItalic" options:0 context:NULL];
+	[controller addObserver:self forKeyPath:@"values.iManUnderlineStyleMakeUnderline" options:0 context:NULL];
 }
 
 #pragma mark -
@@ -66,130 +63,43 @@
 
 - (IBAction)changeBoldStyleColor:(id)sender
 {
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManBoldStyle]];
-
-    [dictionary setObject:[sender color] forKey:NSForegroundColorAttributeName];
-
-    [[NSUserDefaults standardUserDefaults] setArchivedObject:dictionary forKey:iManBoldStyle];
+    [[NSUserDefaults standardUserDefaults] setArchivedObject:[sender color] forKey:iManBoldStyleColor];
     
     [self _notifyDocuments];
 }
 
-- (IBAction)changeBoldStyleTrait:(id)sender
-{
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManBoldStyle]];
-    NSFont *font;
-
-    font = [dictionary objectForKey:NSFontAttributeName];
-
-    if ([sender state] == NSOnState)
-        [dictionary setObject:[[NSFontManager sharedFontManager] convertFont:font toHaveTrait:[sender tag]] forKey:NSFontAttributeName];
-    else
-        [dictionary setObject:[[NSFontManager sharedFontManager] convertFont:font toNotHaveTrait:[sender tag]] forKey:NSFontAttributeName];
-
-    [[NSUserDefaults standardUserDefaults] setArchivedObject:dictionary forKey:iManBoldStyle];
-    
-    [self _notifyDocuments];
-}
-
-- (IBAction)changeBoldStyleUnderline:(id)sender
-{
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManBoldStyle]];
-
-    if ([sender state] == NSOnState)
-        [dictionary setObject:[NSNumber numberWithInt:NSSingleUnderlineStyle] forKey:NSUnderlineStyleAttributeName];
-    else
-        [dictionary removeObjectForKey:NSUnderlineStyleAttributeName];
-
-    [[NSUserDefaults standardUserDefaults] setArchivedObject:dictionary forKey:iManBoldStyle];
-    [self _notifyDocuments];
-}
 
 - (IBAction)changeEmStyleColor:(id)sender
 {
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManEmphasizedStyle]];
-
-    [dictionary setObject:[sender color] forKey:NSForegroundColorAttributeName];
-
-    [[NSUserDefaults standardUserDefaults] setArchivedObject:dictionary forKey:iManEmphasizedStyle];
-    
-    [self _notifyDocuments];
-}
-
-- (IBAction)changeEmStyleTrait:(id)sender
-{
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManEmphasizedStyle]];
-    NSFont *font;
-
-    font = [dictionary objectForKey:NSFontAttributeName];
-
-    if ([sender state] == NSOnState)
-        [dictionary setObject:[[NSFontManager sharedFontManager] convertFont:font toHaveTrait:[sender tag]] forKey:NSFontAttributeName];
-    else
-        [dictionary setObject:[[NSFontManager sharedFontManager] convertFont:font toNotHaveTrait:[sender tag]] forKey:NSFontAttributeName];
-
-    [[NSUserDefaults standardUserDefaults] setArchivedObject:dictionary forKey:iManEmphasizedStyle];
-    
-    [self _notifyDocuments];
-}
-
-- (IBAction)changeEmStyleUnderline:(id)sender
-{
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManEmphasizedStyle]];
-
-    if ([sender state] == NSOnState)
-        [dictionary setObject:[NSNumber numberWithInt:NSSingleUnderlineStyle] forKey:NSUnderlineStyleAttributeName];
-    else
-        [dictionary removeObjectForKey:NSUnderlineStyleAttributeName];
-
-    [[NSUserDefaults standardUserDefaults] setArchivedObject:dictionary forKey:iManEmphasizedStyle];
+    [[NSUserDefaults standardUserDefaults] setArchivedObject:[sender color] forKey:iManUnderlineStyleColor];
     
     [self _notifyDocuments];
 }
 
 - (IBAction)selectFont:(id)sender
 {
-    [[NSFontPanel sharedFontPanel] setPanelFont:[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManPageFont] isMultiple:NO];
+    [[NSFontPanel sharedFontPanel] setPanelFont:[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManDefaultStyle] isMultiple:NO];
     [[NSFontManager sharedFontManager] orderFrontFontPanel:self];
 }
 
 - (void)changeFont:(id)sender
 {
-    NSFont *font = [[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManPageFont];
+    NSFont *font = [[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManDefaultStyle];
 
     font = [sender convertFont:font];
 
-    [[NSUserDefaults standardUserDefaults] setArchivedObject:font
-                                                      forKey:iManPageFont];
-
-    { // Fix the bold style dictionary (applied directly to bold text).
-        NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManBoldStyle]];
-        NSFont *newFont = font;
-
-        newFont = [[NSFontManager sharedFontManager] convertFont:newFont toHaveTrait:(([boldStyleBold state] == NSOnState) ? NSBoldFontMask : NSUnboldFontMask)];
-        newFont = [[NSFontManager sharedFontManager] convertFont:newFont toHaveTrait:(([boldStyleItalic state] == NSOnState) ? NSItalicFontMask : NSUnitalicFontMask)];
-
-        [dictionary setObject:newFont forKey:NSFontAttributeName];
-
-        [[NSUserDefaults standardUserDefaults] setArchivedObject:dictionary forKey:iManBoldStyle];
-    }
-
-    { // do the same for emphasis dictionary.
-        NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] archivedObjectForKey:iManEmphasizedStyle]];
-        NSFont *newFont = font;
-
-        newFont = [[NSFontManager sharedFontManager] convertFont:newFont toHaveTrait:(([emStyleBold state] == NSOnState) ? NSBoldFontMask : NSUnboldFontMask)];
-        newFont = [[NSFontManager sharedFontManager] convertFont:newFont toHaveTrait:(([emStyleItalic state] == NSOnState) ? NSItalicFontMask : NSUnitalicFontMask)];
-
-        [dictionary setObject:newFont forKey:NSFontAttributeName];
-
-        [[NSUserDefaults standardUserDefaults] setArchivedObject:dictionary forKey:iManEmphasizedStyle];
-    }
+    [[NSUserDefaults standardUserDefaults] setArchivedObject:font forKey:iManDefaultStyle];
 
     [pageFont setFont:font];
     [pageFont setStringValue:[NSString stringWithFormat:@"%@ %.0f", [font displayName], [font pointSize]]];
     
     [self _notifyDocuments];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	// All this object is observing is our own preference keys so we can send this notification.
+	[self _notifyDocuments];
 }
 
 #pragma mark -
@@ -365,7 +275,7 @@
 #pragma mark -
 #pragma mark Table View (manpath and tool path) Delegate
 
-// FIXME: there is quite a lag on first selecting the Manpath tab.
+// FIXME: there is quite a lag on first selecting the Manpath tab. (iManEnginePreferences has to call man to get it the first time).
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
@@ -397,33 +307,8 @@
 	}
 }
 
-/*- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
-{
-	iManEnginePreferences *prefs = [iManEnginePreferences sharedInstance];
-
-	if (tableView == pathTable) {
-		if ([[NSFileManager defaultManager] isExecutableFileAtPath:object] &&
-			[[[[NSFileManager defaultManager] fileAttributesAtPath:object traverseLink:YES] fileType] isEqualToString:NSFileTypeRegular]) {
-			[prefs setPath:object forTool:[[prefs tools] objectAtIndex:row]];
-		} else {
-			NSBeginAlertSheet(NSLocalizedString(@"Invalid path.", nil), 
-							  NSLocalizedString(@"OK", nil), 
-							  nil, nil, 
-							  [self window], 
-							  nil, NULL, NULL, NULL, 
-							  NSLocalizedString(@"%@ is not an executable file. Please enter the path to an executable file to use for the tool \"%@\".", nil), 
-							  object,
-							  [[prefs tools] objectAtIndex:row]);
-			[tableView reloadData];
-		}
-	}
-}*/
-
 - (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
-{
-//	if (tableView == pathTable)
-//		return [[tableColumn identifier] isEqualToString:@"Path"];
-	
+{	
 	return NO;
 }
 
@@ -438,8 +323,20 @@
 
 - (void)_notifyDocuments
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:iManFontChangedNotification
-                                                        object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:iManStyleChangedNotification object:nil];
+}
+
+- (void)dealloc
+{
+	NSUserDefaultsController *controller = [NSUserDefaultsController sharedUserDefaultsController];
+	[pathEditPanel release];
+	[controller removeObserver:self forKeyPath:@"values.iManBoldStyleMakeBold"];
+	[controller removeObserver:self forKeyPath:@"values.iManBoldStyleMakeItalic"];
+	[controller removeObserver:self forKeyPath:@"values.iManBoldStyleMakeUnderline"];
+	[controller removeObserver:self forKeyPath:@"values.iManUnderlineStyleMakeBold"];
+	[controller removeObserver:self forKeyPath:@"values.iManUnderlineStyleMakeItalic"];
+	[controller removeObserver:self forKeyPath:@"values.iManUnderlineStyleMakeUnderline"];
+	[super dealloc];
 }
 
 @end

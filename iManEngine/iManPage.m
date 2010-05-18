@@ -170,6 +170,7 @@ static NSOperationQueue *_iManPageRenderingQueue;
 	NSDictionary *normalDictionary;
 	NSDictionary *boldDictionary;
 	NSDictionary *underlinedDictionary;
+	NSDictionary *boldUnderlinedDictionary;
 	NSDictionary *linkDictionary;
 	id obj;
 	unsigned index = 0, length = [ret length];
@@ -188,6 +189,10 @@ static NSOperationQueue *_iManPageRenderingQueue;
 	if (underlinedDictionary == nil)
 		underlinedDictionary = [NSDictionary dictionary];
 	
+	boldUnderlinedDictionary = [style objectForKey:iManPageBoldUnderlineStyle];
+	if (boldUnderlinedDictionary == nil)
+		boldUnderlinedDictionary = [NSDictionary dictionary];
+	
 	if ([style objectForKey:iManPageUnderlineLinks] != nil)
 		showLinks = [[style objectForKey:iManPageUnderlineLinks] boolValue];
 	else
@@ -204,8 +209,7 @@ static NSOperationQueue *_iManPageRenderingQueue;
 			} else if ([obj isEqualToString:iManPageUnderlineStyle]) {
 				[ret addAttributes:underlinedDictionary range:range];
 			} else if ([obj isEqualToString:iManPageBoldUnderlineStyle]) {
-				[ret addAttributes:underlinedDictionary range:range];
-				[ret addAttributes:boldDictionary range:range];
+				[ret addAttributes:boldUnderlinedDictionary range:range];
 			}
 		} else {
 			[ret addAttributes:normalDictionary range:range];

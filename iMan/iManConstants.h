@@ -7,10 +7,18 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString *const iManPageFont;
-extern NSString *const iManFontChangedNotification;
-extern NSString *const iManEmphasizedStyle;
-extern NSString *const iManBoldStyle;
+extern NSString *const iManDefaultStyle;
+extern NSString *const iManStyleChangedNotification;
+
+extern NSString *const iManBoldStyleMakeBold;
+extern NSString *const iManBoldStyleMakeItalic;
+extern NSString *const iManBoldStyleMakeUnderline;
+extern NSString *const iManBoldStyleColor;
+
+extern NSString *const iManUnderlineStyleMakeBold;
+extern NSString *const iManUnderlineStyleMakeItalic;
+extern NSString *const iManUnderlineStyleMakeUnderline;
+extern NSString *const iManUnderlineStyleColor;
 
 extern NSString *const iManShowPageLinks;
 extern NSString *const iManHandlePageLinks;
