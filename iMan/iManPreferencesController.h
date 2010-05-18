@@ -9,14 +9,8 @@
 
 @interface iManPreferencesController : NSWindowController
 {
-    IBOutlet NSButton *boldStyleBold;
     IBOutlet NSColorWell *boldStyleColor;
-    IBOutlet NSButton *boldStyleItalic;
-    IBOutlet NSButton *boldStyleUnderline;
-    IBOutlet NSButton *emStyleBold;
     IBOutlet NSColorWell *emStyleColor;
-    IBOutlet NSButton *emStyleItalic;
-    IBOutlet NSButton *emStyleUnderline;
     IBOutlet NSTextField *pageFont;
     
 	IBOutlet NSTableView *pathTable;
@@ -39,11 +33,7 @@
 }
 
 - (IBAction)changeBoldStyleColor:(id)sender;
-- (IBAction)changeBoldStyleTrait:(id)sender;
-- (IBAction)changeBoldStyleUnderline:(id)sender;
 - (IBAction)changeEmStyleColor:(id)sender;
-- (IBAction)changeEmStyleTrait:(id)sender;
-- (IBAction)changeEmStyleUnderline:(id)sender;
 - (IBAction)selectFont:(id)sender;
 
 - (IBAction)showPageLinks:(id)sender;
