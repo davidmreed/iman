@@ -66,7 +66,7 @@ NSOperationQueue *_iManSearchQueue;
 	searchType_ = [searchType retain];
 	searching_ = NO;
 	resultsLock_ = [[NSLock alloc] init];
-	results_ = [[NSMutableDictionary alloc] init];
+	results_ = [[NSArray alloc] init];
 	
 	return self;
 }
@@ -93,7 +93,7 @@ NSOperationQueue *_iManSearchQueue;
 }
 
 
-- (NSDictionary *)results
+- (NSArray *)results
 {	
 	return results_;
 }
@@ -101,6 +101,7 @@ NSOperationQueue *_iManSearchQueue;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
 	if ([keyPath isEqualToString:@"isFinished"]) {
+		[self willChangeValueForKey:@"results"];
 		[results_ release];
 		results_ = nil;
 		searching_ = NO;
@@ -115,6 +116,7 @@ NSOperationQueue *_iManSearchQueue;
 																object:self
 															  userInfo:nil];
 		}
+		[self didChangeValueForKey:@"results"];
 	}
 }
 

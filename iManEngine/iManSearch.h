@@ -22,7 +22,7 @@
 @interface iManSearch : NSObject {
 	NSString *term_;
 	NSString *searchType_;
-	NSMutableDictionary *results_;
+	NSArray *results_;
 	BOOL searching_;
 	NSLock *resultsLock_;
 }
@@ -75,9 +75,9 @@
 /*!
  @method results
  @abstract Returns the results of the asynchronous search.
- @discussion The format of the results dictionary has keys which are either NSStrings (page names) or NSArrays (lists of page names). The associated keys are the page descriptions (NSStrings). No data on the location of the search term within the page is returned, as the currently supported search types do not provide this information.
+ @discussion Returns an array of iManSearchResult objects.
  */
-- (NSDictionary *)results;
+- (NSArray *)results;
 
 @end
 

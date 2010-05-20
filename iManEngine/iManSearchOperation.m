@@ -9,6 +9,7 @@
 #import "iManIndex.h"
 #import "iManIndex+Private.h"
 #import "iManSearch.h"
+#import "iManSearchResult.h"
 #import "iManErrors.h"
 #import "iManEnginePreferences.h"
 #import "NSTask+iManExtensions.h"
@@ -78,14 +79,13 @@
 		NSEnumerator *lines;
 		NSString *line;
 					
-		_results = [[NSMutableDictionary alloc] init];
+		_results = [[NSMutableArray alloc] init];
 		// Split the output into lines.
 		lines = [[[NSString stringWithCString:[data bytes] length:[data length]] componentsSeparatedByString:@"\n"] objectEnumerator];
 		while ((line = [lines nextObject]) != nil) {
 			// The format of each line is always pageName(n)[, pageName2(n), ...] - description.
 			// Let's parse it.
 			NSArray *array = [line componentsSeparatedByString:@" - "];
-			NSArray *pages;
 			NSMutableString *whichPage, *desc;
 			
 			if ([array count] == 2) {
@@ -94,16 +94,8 @@
 				desc = [[array objectAtIndex:1] mutableCopy];
 				CFStringTrimWhitespace((CFMutableStringRef)desc);
 				
-				// Check for multiple pages returned.
-				pages = [whichPage componentsSeparatedByString:@", "];
-				
-				// If multiple pages, use an array as the key and description as value.
-				// Otherwise, just use the page name as the key.
-				// Must remember to release the strings from -mutableCopy.
-				if ([pages count] > 1) 
-					[_results setObject:desc forKey:pages];
-				else
-					[_results setObject:desc forKey:whichPage];
+				// -componentsSeparatedByString returns the whole string if there are no separators.
+				[_results addObject:[iManSearchResult searchResultWithPageNames:[whichPage componentsSeparatedByString:@", "] description:desc]];
 				
 				[whichPage release];
 				[desc release];
@@ -116,7 +108,7 @@
 	[pool release];
 }
 
-- (NSDictionary *)results
+- (NSArray *)results
 {
 	return [[_results copy] autorelease];
 }
