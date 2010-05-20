@@ -33,6 +33,8 @@
 		635B7BB10F16A23A0043FFEF /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 635B7BB00F16A23A0043FFEF /* libicucore.dylib */; };
 		638AA93510DAD6E000A8BF2F /* iManMakewhatisOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 638AA93310DAD6E000A8BF2F /* iManMakewhatisOperation.h */; };
 		638AA93610DAD6E000A8BF2F /* iManMakewhatisOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 638AA93410DAD6E000A8BF2F /* iManMakewhatisOperation.m */; };
+		63C27DB611A5A7CD0073538B /* iManSearchResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C27DB411A5A7CD0073538B /* iManSearchResult.h */; };
+		63C27DB711A5A7CD0073538B /* iManSearchResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C27DB511A5A7CD0073538B /* iManSearchResult.m */; };
 		63D688AE10D9C72F008F63E6 /* iManErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 63D688AC10D9C72F008F63E6 /* iManErrors.h */; };
 		63D688AF10D9C72F008F63E6 /* iManErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D688AD10D9C72F008F63E6 /* iManErrors.m */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
@@ -74,6 +76,8 @@
 		635B7BB00F16A23A0043FFEF /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
 		638AA93310DAD6E000A8BF2F /* iManMakewhatisOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManMakewhatisOperation.h; sourceTree = "<group>"; };
 		638AA93410DAD6E000A8BF2F /* iManMakewhatisOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManMakewhatisOperation.m; sourceTree = "<group>"; };
+		63C27DB411A5A7CD0073538B /* iManSearchResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManSearchResult.h; sourceTree = "<group>"; };
+		63C27DB511A5A7CD0073538B /* iManSearchResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManSearchResult.m; sourceTree = "<group>"; };
 		63D688AC10D9C72F008F63E6 /* iManErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManErrors.h; sourceTree = "<group>"; };
 		63D688AD10D9C72F008F63E6 /* iManErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManErrors.m; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -154,6 +158,8 @@
 				6342BF6210B77136006995CA /* iManRenderOperation.m */,
 				11BABB0509D1DF2C00A3D6B1 /* iManSearch.h */,
 				11BABB0D09D1DF2C00A3D6B1 /* iManSearch.m */,
+				63C27DB411A5A7CD0073538B /* iManSearchResult.h */,
+				63C27DB511A5A7CD0073538B /* iManSearchResult.m */,
 			);
 			name = "Public Classes";
 			sourceTree = "<group>";
@@ -236,6 +242,7 @@
 				6342BFDE10B797AB006995CA /* iManSearchOperation.h in Headers */,
 				63D688AE10D9C72F008F63E6 /* iManErrors.h in Headers */,
 				638AA93510DAD6E000A8BF2F /* iManMakewhatisOperation.h in Headers */,
+				63C27DB611A5A7CD0073538B /* iManSearchResult.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,6 +317,7 @@
 				6342BFDF10B797AB006995CA /* iManSearchOperation.m in Sources */,
 				63D688AF10D9C72F008F63E6 /* iManErrors.m in Sources */,
 				638AA93610DAD6E000A8BF2F /* iManMakewhatisOperation.m in Sources */,
+				63C27DB711A5A7CD0073538B /* iManSearchResult.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
