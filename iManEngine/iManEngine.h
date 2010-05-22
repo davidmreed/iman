@@ -13,3 +13,4 @@
 #import <iManEngine/iManSearchOperation.h>
 #import <iManEngine/iManResolveOperation.h>
 #import <iManEngine/iManRenderOperation.h>
+#import <iManEngine/iManSearchResult.h>
