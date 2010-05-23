@@ -12,9 +12,7 @@
 typedef enum { 
 	iManDocumentStateNone, 
 	iManDocumentStateDisplayingPage, 
-	iManDocumentStateDisplayingSearch, 
-	iManDocumentStateLoadingPage, 
-	iManDocumentStateSearching 
+	iManDocumentStateLoadingPage
 } iManDocumentState;
 
 @interface iManDocument : NSDocument
@@ -22,10 +20,9 @@ typedef enum {
 	// Parts of the main document view.
     IBOutlet NSTabView *tabView;
     IBOutlet NSTextView *manpageView;
-	IBOutlet NSOutlineView *aproposResultsView;
 	IBOutlet NSTextField *loadingMessageLabel;
-	IBOutlet NSSearchFieldCell *addressSearchFieldCell;
-	IBOutlet NSMenu *addressFieldSearchMenu;
+	IBOutlet NSTextField *addressField;
+	IBOutlet NSMenu *aproposFieldMenu;
 
 	// Parts of the export-page save panel accessory.
     IBOutlet NSView *accessoryView;
@@ -34,8 +31,13 @@ typedef enum {
 
 	// In-page search drawer.
     IBOutlet NSDrawer *findDrawer;
-    IBOutlet NSSearchField *searchField;
+	IBOutlet NSSearchField *findDrawerSearchField;
     IBOutlet NSTableView *findResultsView;
+	
+	// Apropos search drawer.
+	IBOutlet NSDrawer *aproposDrawer;
+	IBOutlet NSTabView *aproposTabView;
+	IBOutlet NSTableView *aproposResultsView;
 
 	// Page and navigation machinery.
     NSUndoManager *_historyUndoManager;
@@ -46,9 +48,8 @@ typedef enum {
     NSArray *_searchResults;
 	
 	// In-page search machinery.
-    NSMutableArray *_lastFindResults;
-    NSMutableArray *_findResultRanges;
-	BOOL shouldMatchCase, shouldUseRegexps;
+    NSMutableArray *_findResults;
+	BOOL caseSensitive, useRegexps;
 	
 	// Current document state.
 	iManDocumentState _documentState;
@@ -68,6 +69,7 @@ typedef enum {
 - (void)performSearchForTerm:(NSString *)term type:(NSString *)type;
 - (void)loadPageWithName:(NSString *)pageName section:(NSString *)pageSection;
 - (void)loadPageWithURL:(NSURL *)url;
+- (void)loadPage:(iManPage *)page;
 - (void)synchronizeUIWithDocumentState;
 
 - (NSUndoManager *)historyUndoManager;
@@ -79,13 +81,17 @@ typedef enum {
 - (IBAction)toggleFindDrawer:(id)sender;
 - (IBAction)back:(id)sender;
 - (IBAction)forward:(id)sender;
+- (IBAction)reload:(id)sender;
 - (IBAction)loadRequestedPage:(id)sender;
+- (IBAction)performAproposSearch:(id)sender;
+- (IBAction)setAproposFieldSearchType:(id)sender;
 - (IBAction)openSearchResultPage:(id)sender;
 - (IBAction)clearHistory:(id)sender;
 
 - (IBAction)performSearch:(id)sender;
-- (IBAction)setUseRegularExpressions:(id)sender;
-- (IBAction)setCaseSensitive:(id)sender;
+
+@property BOOL useRegexps;
+@property BOOL caseSensitive;
 
 - (NSAttributedString *)findResultFromRange:(NSRange)range;
 
