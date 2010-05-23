@@ -7,7 +7,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class iManIndex;
+@class iManIndex, iManSearchOperation;
 
 /*!
  @class iManSearch
@@ -24,6 +24,7 @@
 	NSString *searchType_;
 	NSArray *results_;
 	BOOL searching_;
+	iManSearchOperation *operation_;
 	NSLock *resultsLock_;
 }
 
