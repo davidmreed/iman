@@ -39,7 +39,7 @@
 	NSString *tempLink;
 	NSError *taskError;
 	
-	if (![[aproposIndex lock] tryLock]) {
+	if (![[aproposIndex lock] tryReadLock]) {
 		_error = [[NSError alloc] initWithDomain:iManEngineErrorDomain code:iManIndexLockedError userInfo:nil];
 		[pool release];
 		return;
