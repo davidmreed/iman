@@ -7,9 +7,11 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class iManRWLock;
+
 @interface iManIndex : NSObject  
 {
-	NSDistributedLock *indexLock_;
+	iManRWLock *indexLock_;
 }
 
 + (NSArray *)availableIndexes;
