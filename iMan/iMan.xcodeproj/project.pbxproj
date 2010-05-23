@@ -36,7 +36,6 @@
 		635B7A870F1698CA0043FFEF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7A830F1698CA0043FFEF /* RegexKitLite.m */; };
 		635B7A890F1698CA0043FFEF /* RKLMatchEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7A850F1698CA0043FFEF /* RKLMatchEnumerator.m */; };
 		635B7AE70F16A19A0043FFEF /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 635B7AE60F16A19A0043FFEF /* libicucore.dylib */; };
-		6378734611A9753A00D34D02 /* iManSearchResult+Description.h in Headers */ = {isa = PBXBuildFile; fileRef = 6378734411A9753A00D34D02 /* iManSearchResult+Description.h */; };
 		6378734711A9753A00D34D02 /* iManSearchResult+Description.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378734511A9753A00D34D02 /* iManSearchResult+Description.m */; };
 		63CEBADE0F1B0227001180EC /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CEBADD0F1B0227001180EC /* Sparkle.framework */; };
 		63CEBAF50F1B0397001180EC /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 63CEBAF40F1B0397001180EC /* dsa_pub.pem */; };
@@ -325,7 +324,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6378734611A9753A00D34D02 /* iManSearchResult+Description.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
