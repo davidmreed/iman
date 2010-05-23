@@ -18,7 +18,6 @@ NSString *const iManSearchTypeWhatis = @"whatis";
 
 NSString *const iManSearchDidCompleteNotification = @"iManSearchDidCompleteNotification";
 NSString *const iManSearchDidFailNotification = @"iManSearchDidFailNotification";
-NSString *const iManSearchError = @"iManSearchError";
 
 NSOperationQueue *_iManSearchQueue;
 
