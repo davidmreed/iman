@@ -65,7 +65,7 @@ NSOperationQueue *_iManSearchQueue;
 	
 	term_ = [term retain];
 	searchType_ = [searchType retain];
-	searching_ = NO;
+	operation_ = nil;
 	resultsLock_ = [[NSLock alloc] init];
 	results_ = [[NSArray alloc] init];
 	
@@ -84,14 +84,17 @@ NSOperationQueue *_iManSearchQueue;
 
 - (void)search
 {
-	if (!searching_) {
+	if (![self isSearching]) {
 		operation_ = [[iManSearchOperation alloc] initWithTerm:[self term] searchType:[self searchType]];		
 		[operation_ addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
 		[_iManSearchQueue addOperation:operation_];
-		searching_ = YES;
 	}
 }
 
+- (BOOL)isSearching
+{
+	return (operation_ != nil);
+}
 
 - (NSArray *)results
 {	
@@ -111,7 +114,6 @@ NSOperationQueue *_iManSearchQueue;
 	[self willChangeValueForKey:@"results"];
 	[results_ release];
 	results_ = nil;
-	searching_ = NO;
 	
 	if ([operation results] != nil) {
 		results_ = [[operation results] retain];
@@ -123,12 +125,11 @@ NSOperationQueue *_iManSearchQueue;
 															object:self
 														  userInfo:[NSDictionary dictionaryWithObject:[operation error] forKey:iManErrorKey]];
 	}
-	[self didChangeValueForKey:@"results"];
-	
 	// Remove ourself as an observer and release our reference to the operation.
 	[operation_ removeObserver:self forKeyPath:@"isFinished"];
 	[operation_ release];
 	operation_ = nil;
+	[self didChangeValueForKey:@"results"];	
 }	
 
 - (void)dealloc

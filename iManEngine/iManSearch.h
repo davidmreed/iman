@@ -23,7 +23,6 @@
 	NSString *term_;
 	NSString *searchType_;
 	NSArray *results_;
-	BOOL searching_;
 	iManSearchOperation *operation_;
 	NSLock *resultsLock_;
 }
@@ -72,6 +71,12 @@
  @discussion This method will return immediately; you will be notified via notifications when the operation is complete. Once the iManSearchDidComplete notification is posted, results are available via -results.
  */
 - (void)search;
+
+/*!
+ @method isSearching
+ @abstract Returns YES if a search operation is ongoing.
+ */
+- (BOOL)isSearching;
 
 /*!
  @method results
