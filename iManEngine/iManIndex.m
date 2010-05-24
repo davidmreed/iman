@@ -9,6 +9,7 @@
 #import "iManIndex+Private.h"
 #import "iManAproposIndex.h"
 #import "iManEnginePreferences.h"
+#import "iManRWLock.h"
 
 @implementation iManIndex
 
