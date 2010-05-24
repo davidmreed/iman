@@ -7,7 +7,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class iManPage, iManSearch;
+@class iManPage, iManSearch, iManHistoryQueue;
 
 typedef enum { 
 	iManDocumentStateNone, 
@@ -40,7 +40,7 @@ typedef enum {
 	IBOutlet NSTableView *aproposResultsView;
 
 	// Page and navigation machinery.
-    NSUndoManager *_historyUndoManager;
+    iManHistoryQueue *_history;
 	iManPage *page_;
 
 	// apropos/whatis search machinery.
@@ -72,7 +72,7 @@ typedef enum {
 - (void)loadPage:(iManPage *)page;
 - (void)synchronizeUIWithDocumentState;
 
-- (NSUndoManager *)historyUndoManager;
+- (iManHistoryQueue *)history;
 
 - (IBAction)export:(id)sender;
 - (IBAction)changeExportFormat:(id)sender;

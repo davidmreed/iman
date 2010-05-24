@@ -11,6 +11,7 @@
 #import "iMan.h"
 #import "iManConstants.h"
 #import "iManIndexingWindowController.h"
+#import "iManHistoryQueue.h"
 #import "NSUserDefaults+DMRArchiving.h"
 #import "RegexKitLite/RegexKitLite.h"
 #import "RegexKitLiteSupport/RKLMatchEnumerator.h"
@@ -52,7 +53,7 @@ static NSString *const iManFindResultDisplayString = @"string";
 	
 	if (self != nil) {
 		_documentState = iManDocumentStateNone;
-		_historyUndoManager = [[NSUndoManager alloc] init];
+		_history = [[iManHistoryQueue alloc] init];
 	}
 	
 	return self;
@@ -134,51 +135,40 @@ static NSString *const iManFindResultDisplayString = @"string";
 
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem
 {
-	BOOL ret = YES;
 	SEL action = [anItem action];
-	// FIXME: clean up this function
     // Only allow printing/exporting/searching if a man page is being displayed.
     if ((action == @selector(printDocument:)) ||
 		(action == @selector(reload:)) ||
         (action == @selector(export:)) ||
 		(action == @selector(toggleFindDrawer:)) ||
 		(action == @selector(performSearch:)))
-        ret = ([self documentState] == iManDocumentStateDisplayingPage);
+        return ([self documentState] == iManDocumentStateDisplayingPage);
+
     // Check undo manager for these.
-    if (action == @selector(back:)) {
-        if (ret) ret = ([_historyUndoManager canUndo] && ([self documentState] != iManDocumentStateLoadingPage));
-	}
-    if (action == @selector(forward:)) {
-        if (ret) ret = ([_historyUndoManager canRedo] && ([self documentState] != iManDocumentStateLoadingPage));
-	}
+    if (action == @selector(back:))
+        return ([[self history] canGoBack] && ([self documentState] != iManDocumentStateLoadingPage));
+    if (action == @selector(forward:))
+        return ([[self history] canGoForward] && ([self documentState] != iManDocumentStateLoadingPage));
+	
     // Make sure, if we are loading, that another load request doesn't happen, nor should the window close.
     if ((action == @selector(loadRequestedPage:)) ||
 		(action == @selector(reload:)) ||
-		(action == @selector(back:)) ||
-		(action == @selector(forward:)) ||
 		(action == @selector(performClose:))) {
-		if (ret) ret = ([self documentState] != iManDocumentStateLoadingPage);
+		return ([self documentState] != iManDocumentStateLoadingPage);
 	}
 	
-    return ret;
+    return [super validateUserInterfaceItem:anItem];
 }
 
 - (NSString *)displayName
 {
     // Construct a string of the form "page(section)". 
-	
-	if ([self page] != nil) {
-		if ([[self page] isLoading])
-			return NSLocalizedString(@"Loading", nil);
-		
-        if (([[self page] pageSection] != nil) && ([[[self page] pageSection] length] > 0)) {
-            return [NSString stringWithFormat:NSLocalizedString(@"%@(%@)", nil),
-					[[self page] pageName],
-					[[self page] pageSection]];
-        } else {
-            return [NSString stringWithFormat:NSLocalizedString(@"%@", nil), [[self page] pageName]];
-        }
-	}    
+	// We rely on our state rather than the page object's -isLoading methods because there are some weird issues with those yielding incorrect values (race conditions based on when the notification is posted, I think).
+	if ([self documentState] == iManDocumentStateDisplayingPage) {
+		return [NSString stringWithFormat:NSLocalizedString(@"%@(%@)", nil), [[self page] pageName], [[self page] pageSection]];
+	} else if ([self documentState] == iManDocumentStateLoadingPage) {
+		return NSLocalizedString(@"Loading...", nil);
+	}
 	
     return NSLocalizedString(@"iMan", nil);
 }
@@ -276,20 +266,26 @@ static NSString *const iManFindResultDisplayString = @"string";
 
 - (IBAction)back:(id)sender
 {
-    [[self historyUndoManager] undo];
+	if ([self page] == nil) {
+		// We failed to load a page, sending us to the No Page tab. The history queue still has the last good page on the top, so we cannot go "back" -- we'll end up two pages ago. Just reset ourselves to the top of the queue.
+		[self setPage:[[[self history] history] objectAtIndex:[[self history] historyIndex]]];
+	} else {
+		[self setPage:[[self history] back]];
+	}
+	[self setDocumentState:iManDocumentStateDisplayingPage];
 	[self synchronizeUIWithDocumentState];
 }
 
 - (IBAction)forward:(id)sender
 {
-    [[self historyUndoManager] redo];
+	[self setPage:[[self history] forward]];
+	[self setDocumentState:iManDocumentStateDisplayingPage];
 	[self synchronizeUIWithDocumentState];
 }
 
 - (IBAction)clearHistory:(id)sender
 {
-	[[self historyUndoManager] removeAllActions];
-	// FIXME: necessary?
+	[[self history] clearHistory];
 	[[[[self windowControllers] lastObject] toolbar] validateVisibleItems];
 }
 
@@ -447,15 +443,13 @@ static NSString *const iManFindResultDisplayString = @"string";
 {
 	if (page != nil) {
 		if (page != [self page]) {
-			if ([self documentState] == iManDocumentStateDisplayingPage) {
-				[[[self historyUndoManager] prepareWithInvocationTarget:self] loadPage:[self page]];
-			}
 			[self setPage:page];
 			if (![page isLoaded]) {
 				[self setDocumentState:iManDocumentStateLoadingPage];
-				[self synchronizeUIWithDocumentState];
 				[page load];
+				[self synchronizeUIWithDocumentState];
 			} else {
+				[[self history] push:page];
 				[self setDocumentState:iManDocumentStateDisplayingPage];
 				[self synchronizeUIWithDocumentState];
 			}
@@ -515,8 +509,6 @@ static NSString *const iManFindResultDisplayString = @"string";
 			[[manpageView textStorage] setAttributedString:[[self page] pageWithStyle:[self displayStringOptions]]];
 			[manpageView moveToBeginningOfDocument:self];
 			[addressField setStringValue:[NSString stringWithFormat:@"%@(%@)", [[self page] pageName], [[self page] pageSection]]];
-			// Our -displayName changes each time a new page is loaded.
-			[windowController synchronizeWindowTitleWithDocumentName];
 			[[[windowController window] toolbar] validateVisibleItems];			
 			break;
 		case iManDocumentStateLoadingPage:
@@ -525,6 +517,8 @@ static NSString *const iManFindResultDisplayString = @"string";
 			[progressIndicator startAnimation:self];
 			break;
 	}
+	// Our -displayName changes each time a new page is loaded.
+	[windowController synchronizeWindowTitleWithDocumentName];
 }
 
 #pragma mark -
@@ -532,6 +526,11 @@ static NSString *const iManFindResultDisplayString = @"string";
 
 - (void)pageLoadDidComplete:(NSNotification *)notification
 {
+	// If this is not the current page (i.e., if we're not reloading), add this page to our history.
+	if (([[self history] historyIndex] == -1) || ([[[self history] history] objectAtIndex:[[self history] historyIndex]] != [self page]))
+		[[self history] push:[self page]];
+	
+	// Update our user interface.
 	[self setDocumentState:iManDocumentStateDisplayingPage];
 	[self synchronizeUIWithDocumentState];
 }
@@ -638,6 +637,7 @@ static NSString *const iManFindResultDisplayString = @"string";
 
 - (void)setPage:(iManPage *)page
 {
+	// FIXME: we really only need to be registered for these when an asynchronous load operation is going on.
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:iManPageLoadDidCompleteNotification object:page_];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:iManPageLoadDidFailNotification object:page_];
 
@@ -696,9 +696,9 @@ static NSString *const iManFindResultDisplayString = @"string";
 	_documentState = documentState;
 }
 
-- (NSUndoManager *)historyUndoManager
+- (iManHistoryQueue *)history
 {
-	return _historyUndoManager;
+	return _history;
 }
 
 #pragma mark -
@@ -819,7 +819,7 @@ static NSString *const iManFindResultDisplayString = @"string";
 - (void)dealloc
 {
     [accessoryView release]; // loaded from iManSavePanelAccessory.nib
-    [_historyUndoManager release];
+    [_history release];
     [_findResults release];
 	[page_ release];
     [super dealloc];
