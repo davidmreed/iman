@@ -22,7 +22,6 @@ typedef enum {
     IBOutlet NSTextView *manpageView;
 	IBOutlet NSTextField *loadingMessageLabel;
 	IBOutlet NSTextField *addressField;
-	IBOutlet NSMenu *aproposFieldMenu;
 
 	// Parts of the export-page save panel accessory.
     IBOutlet NSView *accessoryView;
@@ -32,12 +31,15 @@ typedef enum {
 	// In-page search drawer.
     IBOutlet NSDrawer *findDrawer;
 	IBOutlet NSSearchField *findDrawerSearchField;
+	IBOutlet NSMenu *findDrawerSearchFieldMenu;
     IBOutlet NSTableView *findResultsView;
 	
 	// Apropos search drawer.
 	IBOutlet NSDrawer *aproposDrawer;
+	IBOutlet NSSearchField *aproposField;
 	IBOutlet NSTabView *aproposTabView;
 	IBOutlet NSTableView *aproposResultsView;
+	IBOutlet NSMenu *aproposFieldMenu;
 
 	// Page and navigation machinery.
     iManHistoryQueue *_history;
@@ -45,6 +47,7 @@ typedef enum {
 
 	// apropos/whatis search machinery.
 	iManSearch *search_;
+	NSString *_savedSearchType;
     NSArray *_searchResults;
 	
 	// In-page search machinery.
@@ -89,6 +92,8 @@ typedef enum {
 - (IBAction)clearHistory:(id)sender;
 
 - (IBAction)performSearch:(id)sender;
+- (IBAction)takeUseRegexpsFrom:(id)sender;
+- (IBAction)takeCaseSensitiveFrom:(id)sender;
 
 @property BOOL useRegexps;
 @property BOOL caseSensitive;
