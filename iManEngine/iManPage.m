@@ -229,7 +229,7 @@ static NSOperationQueue *_iManPageRenderingQueue;
 {
 	// FIXME: make property KVO-compliant.
 
-	return (_renderOperation != nil);
+	return ((_renderOperation != nil) && [_renderOperation isExecuting]);
 }
 
 - (BOOL)isResolved
@@ -243,7 +243,7 @@ static NSOperationQueue *_iManPageRenderingQueue;
 {
 	// FIXME: make property KVO-compliant.
 
-	return (_resolveOperation != nil);
+	return ((_resolveOperation != nil) && [_resolveOperation isExecuting]);
 }
 
 // When a load or resolve request is made, we create a new NSOperation and observe changes in its "isFinished" property. 
