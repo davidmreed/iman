@@ -8,7 +8,6 @@
 
 #import "iManBrowser.h"
 
-
 @implementation iManBrowser
 
 - init

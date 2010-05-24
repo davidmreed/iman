@@ -7,12 +7,15 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class iManRenderOperation, iManResolveOperation;
+
 @interface iManPage : NSObject {
 	NSAttributedString *page_;
 	NSString *path_;
 	NSString *pageName_;
 	NSString *pageSection_;
-	BOOL resolving_, loading_;
+	iManRenderOperation *_renderOperation;
+	iManResolveOperation *_resolveOperation;
 }
 
 + (void)clearCache;

@@ -11,13 +11,13 @@
 @interface iManSearchOperation : NSOperation {
 	NSString *_term;
 	NSString *_searchType;
-	NSMutableDictionary *_results;
+	NSMutableArray *_results;
 	NSError *_error;
 }
 
 - initWithTerm:(NSString *)term searchType:(NSString *)searchType;
 
-- (NSDictionary *)results;
+- (NSArray *)results;
 - (NSError *)error;
 
 @end

@@ -7,7 +7,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class iManIndex;
+@class iManIndex, iManSearchOperation;
 
 /*!
  @class iManSearch
@@ -22,8 +22,8 @@
 @interface iManSearch : NSObject {
 	NSString *term_;
 	NSString *searchType_;
-	NSMutableDictionary *results_;
-	BOOL searching_;
+	NSArray *results_;
+	iManSearchOperation *operation_;
 	NSLock *resultsLock_;
 }
 
@@ -73,17 +73,22 @@
 - (void)search;
 
 /*!
+ @method isSearching
+ @abstract Returns YES if a search operation is ongoing.
+ */
+- (BOOL)isSearching;
+
+/*!
  @method results
  @abstract Returns the results of the asynchronous search.
- @discussion The format of the results dictionary has keys which are either NSStrings (page names) or NSArrays (lists of page names). The associated keys are the page descriptions (NSStrings). No data on the location of the search term within the page is returned, as the currently supported search types do not provide this information.
+ @discussion Returns an array of iManSearchResult objects.
  */
-- (NSDictionary *)results;
+- (NSArray *)results;
 
 @end
 
 extern NSString *const iManSearchDidCompleteNotification;
 extern NSString *const iManSearchDidFailNotification;
-extern NSString *const iManSearchError;
 
 extern NSString *const iManSearchTypeApropos;
 extern NSString *const iManSearchTypeWhatis;

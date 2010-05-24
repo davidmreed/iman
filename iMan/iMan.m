@@ -8,7 +8,6 @@
 #import "iMan.h"
 #import "iManConstants.h"
 #import "iManDocument.h"
-#import "iManSearchDocument.h"
 #import "iManPreferencesController.h"
 #import "iManIndexingWindowController.h"
 #import <iManEngine/iManEngine.h>
@@ -39,6 +38,34 @@
 }
 
 #pragma mark -
+#pragma mark Convenience URL loading method
+
++ (void)loadURLInNewDocument:(NSURL *)url
+{
+	iManDocument *docToLoad = [[iManDocument alloc] init];
+	[[NSDocumentController sharedDocumentController] addDocument:docToLoad];
+	[docToLoad makeWindowControllers];
+	[docToLoad showWindows];
+	[docToLoad release];
+	
+	[[[[docToLoad windowControllers] lastObject] window] makeKeyAndOrderFront:nil];
+	[docToLoad loadPageWithURL:url];
+}	
+
++ (void)loadExternalURL:(NSURL *)url
+{
+	NSDocumentController *documentController = [NSDocumentController sharedDocumentController];
+	
+	// open in current doc if possible.
+    if ([[NSUserDefaults standardUserDefaults] integerForKey:iManHandleExternalLinks] == kiManHandleLinkInCurrentWindow) {
+		[[[documentController currentDocument] windowControllers] makeObjectsPerformSelector:@selector(showWindow:)];
+		[[documentController currentDocument] loadPageWithURL:url];
+	} else {
+		[self loadURLInNewDocument:url];
+	}
+}	
+
+#pragma mark -
 #pragma mark NSApplication Delegate methods
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
@@ -62,7 +89,7 @@
 	
 	if (manpage != nil) {
 		[NSApp activateIgnoringOtherApps:YES];
-		[iManDocument loadURL:[NSURL URLWithString:[[NSString stringWithFormat:@"man:%@", manpage] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] inNewDocument:[[NSUserDefaults standardUserDefaults] boolForKey:iManHandleExternalLinks]];
+		[iMan loadExternalURL:[NSURL URLWithString:[[NSString stringWithFormat:@"man:%@", manpage] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 	}
 }
 
@@ -131,18 +158,6 @@
 - (IBAction)showHelp:(id)sender
 {
     [[NSDocumentController sharedDocumentController] openDocumentWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"iMan" ofType:@"1"] display:YES];
-}
-
-- (IBAction)newSearchWindow:(id)sender
-{
-    iManSearchDocument *doc;
-    
-    doc = [[iManSearchDocument alloc] init];
-    [[NSDocumentController sharedDocumentController] addDocument:doc];
-    [doc makeWindowControllers];
-    [doc showWindows];
-    
-    [doc release];
 }
 
 - (void)dealloc

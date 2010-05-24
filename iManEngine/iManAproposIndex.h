@@ -8,8 +8,11 @@
 #import <Cocoa/Cocoa.h>
 #import "iManIndex.h"
 
+@class iManMakewhatisOperation;
+
 @interface iManAproposIndex : iManIndex
 {
+	iManMakewhatisOperation *_operation;
 }
 
 @end
