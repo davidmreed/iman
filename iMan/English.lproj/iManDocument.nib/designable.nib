@@ -12,8 +12,8 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="5"/>
-			<integer value="327"/>
+			<integer value="221"/>
+			<integer value="69"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -88,7 +88,6 @@
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{0, 14}, {96, 22}}</string>
 									<reference key="NSSuperview"/>
-									<reference key="NSWindow"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSSearchFieldCell" key="NSCell" id="227273487">
 										<int key="NSCellFlags">343014976</int>
@@ -211,7 +210,6 @@
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{0, 14}, {96, 22}}</string>
 									<reference key="NSSuperview"/>
-									<reference key="NSWindow"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSTextFieldCell" key="NSCell" id="724788930">
 										<int key="NSCellFlags">-1804468671</int>
@@ -804,7 +802,7 @@
 				<nil key="NSDelegate"/>
 			</object>
 			<object class="NSCustomView" id="1006618259">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">256</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -906,7 +904,7 @@
 							<object class="NSScroller" id="591578883">
 								<reference key="NSNextResponder" ref="856246163"/>
 								<int key="NSvFlags">256</int>
-								<string key="NSFrame">{{174, 1}, {15, 283}}</string>
+								<string key="NSFrame">{{174, 1}, {15, 269}}</string>
 								<reference key="NSSuperview" ref="856246163"/>
 								<reference key="NSTarget" ref="856246163"/>
 								<string key="NSAction">_doScroller:</string>
@@ -995,6 +993,7 @@
 					</object>
 				</object>
 				<string key="NSFrameSize">{190, 327}</string>
+				<reference key="NSSuperview"/>
 				<string key="NSClassName">NSView</string>
 				<string key="NSExtension">NSResponder</string>
 			</object>
@@ -1017,10 +1016,10 @@
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<object class="NSMenuItem" id="555583009">
 						<reference key="NSMenu" ref="854954526"/>
+						<bool key="NSIsDisabled">YES</bool>
 						<string key="NSTitle">Use regular expressions</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
-						<int key="NSState">1</int>
 						<reference key="NSOnImage" ref="720056596"/>
 						<reference key="NSMixedImage" ref="660407706"/>
 						<int key="NSTag">11</int>
@@ -1030,7 +1029,6 @@
 						<string key="NSTitle">Case sensitive</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
-						<int key="NSState">1</int>
 						<reference key="NSOnImage" ref="720056596"/>
 						<reference key="NSMixedImage" ref="660407706"/>
 						<int key="NSTag">10</int>
@@ -1140,7 +1138,7 @@
 				</object>
 			</object>
 			<object class="NSCustomView" id="217651697">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">256</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1244,7 +1242,6 @@
 															</object>
 															<string key="NSFrame">{{1, 17}, {226, 263}}</string>
 															<reference key="NSSuperview" ref="1037259148"/>
-															<reference key="NSNextKeyView" ref="751711459"/>
 															<reference key="NSDocView" ref="751711459"/>
 															<reference key="NSBGColor" ref="1012074743"/>
 															<int key="NScvFlags">4</int>
@@ -1278,7 +1275,6 @@
 															</object>
 															<string key="NSFrame">{{1, 0}, {226, 17}}</string>
 															<reference key="NSSuperview" ref="1037259148"/>
-															<reference key="NSNextKeyView" ref="65120776"/>
 															<reference key="NSDocView" ref="65120776"/>
 															<reference key="NSBGColor" ref="1012074743"/>
 															<int key="NScvFlags">4</int>
@@ -1287,7 +1283,6 @@
 													</object>
 													<string key="NSFrameSize">{228, 281}</string>
 													<reference key="NSSuperview" ref="400128988"/>
-													<reference key="NSNextKeyView" ref="267474255"/>
 													<int key="NSsFlags">562</int>
 													<reference key="NSVScroller" ref="840974974"/>
 													<reference key="NSHScroller" ref="754665751"/>
@@ -1374,7 +1369,6 @@
 															</object>
 															<string key="NSFrame">{{1, 1}, {226, 124}}</string>
 															<reference key="NSSuperview" ref="907926745"/>
-															<reference key="NSNextKeyView" ref="759471605"/>
 															<reference key="NSDocView" ref="759471605"/>
 															<reference key="NSBGColor" ref="75937379"/>
 															<object class="NSCursor" key="NSCursor">
@@ -1407,7 +1401,6 @@
 													</object>
 													<string key="NSFrame">{{0, 290}, {228, 126}}</string>
 													<reference key="NSSuperview" ref="400128988"/>
-													<reference key="NSNextKeyView" ref="913386617"/>
 													<int key="NSsFlags">530</int>
 													<reference key="NSVScroller" ref="661987935"/>
 													<reference key="NSHScroller" ref="572666163"/>
@@ -1477,7 +1470,6 @@
 					</object>
 				</object>
 				<string key="NSFrameSize">{228, 416}</string>
-				<reference key="NSSuperview"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 			<object class="NSDrawer" id="608523978">
@@ -1589,14 +1581,6 @@
 						<reference key="destination" ref="140011258"/>
 					</object>
 					<int key="connectionID">111</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">searchMenuTemplate</string>
-						<reference key="source" ref="501405585"/>
-						<reference key="destination" ref="854954526"/>
-					</object>
-					<int key="connectionID">162</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -1764,52 +1748,12 @@
 					<int key="connectionID">349</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: useRegexps</string>
-						<reference key="source" ref="555583009"/>
-						<reference key="destination" ref="140011258"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="555583009"/>
-							<reference key="NSDestination" ref="140011258"/>
-							<string key="NSLabel">value: useRegexps</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">useRegexps</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">355</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: caseSensitive</string>
-						<reference key="source" ref="534787324"/>
-						<reference key="destination" ref="140011258"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="534787324"/>
-							<reference key="NSDestination" ref="140011258"/>
-							<string key="NSLabel">value: caseSensitive</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">caseSensitive</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">357</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">aproposFieldMenu</string>
 						<reference key="source" ref="140011258"/>
 						<reference key="destination" ref="740218271"/>
 					</object>
 					<int key="connectionID">359</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">searchMenuTemplate</string>
-						<reference key="source" ref="456057467"/>
-						<reference key="destination" ref="740218271"/>
-					</object>
-					<int key="connectionID">360</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -1902,6 +1846,38 @@
 						</object>
 					</object>
 					<int key="connectionID">388</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">findDrawerSearchFieldMenu</string>
+						<reference key="source" ref="140011258"/>
+						<reference key="destination" ref="854954526"/>
+					</object>
+					<int key="connectionID">389</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">takeUseRegexpsFrom:</string>
+						<reference key="source" ref="140011258"/>
+						<reference key="destination" ref="555583009"/>
+					</object>
+					<int key="connectionID">390</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">takeCaseSensitiveFrom:</string>
+						<reference key="source" ref="140011258"/>
+						<reference key="destination" ref="534787324"/>
+					</object>
+					<int key="connectionID">391</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">aproposField</string>
+						<reference key="source" ref="140011258"/>
+						<reference key="destination" ref="456057467"/>
+					</object>
+					<int key="connectionID">392</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2727,7 +2703,7 @@
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
-					<string>{{36, 767}, {616, 0}}</string>
+					<string>{{242, 524}, {616, 227}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2805,9 +2781,9 @@
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
-					<string>{{54, 147}, {580, 620}}</string>
+					<string>{{260, 131}, {580, 620}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{54, 147}, {580, 620}}</string>
+					<string>{{260, 131}, {580, 620}}</string>
 					<boolean value="YES"/>
 					<boolean value="YES"/>
 					<string>{345, 220}</string>
@@ -2850,7 +2826,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">388</int>
+			<int key="maxID">392</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2881,10 +2857,14 @@
 							<string>performSearch:</string>
 							<string>reload:</string>
 							<string>setAproposFieldSearchType:</string>
+							<string>takeCaseSensitiveFrom:</string>
+							<string>takeUseRegexpsFrom:</string>
 							<string>toggleFindDrawer:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -2906,11 +2886,13 @@
 							<string>accessoryView</string>
 							<string>addressField</string>
 							<string>aproposDrawer</string>
+							<string>aproposField</string>
 							<string>aproposFieldMenu</string>
 							<string>aproposResultsView</string>
 							<string>aproposTabView</string>
 							<string>findDrawer</string>
 							<string>findDrawerSearchField</string>
+							<string>findDrawerSearchFieldMenu</string>
 							<string>findResultsView</string>
 							<string>formatMenu</string>
 							<string>loadingMessageLabel</string>
@@ -2923,11 +2905,13 @@
 							<string>NSView</string>
 							<string>NSTextField</string>
 							<string>NSDrawer</string>
+							<string>NSSearchField</string>
 							<string>NSMenu</string>
 							<string>NSTableView</string>
 							<string>NSTabView</string>
 							<string>NSDrawer</string>
 							<string>NSSearchField</string>
+							<string>NSMenu</string>
 							<string>NSTableView</string>
 							<string>NSPopUpButton</string>
 							<string>NSTextField</string>

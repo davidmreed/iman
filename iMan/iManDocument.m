@@ -54,6 +54,8 @@ static NSString *const iManFindResultDisplayString = @"string";
 	if (self != nil) {
 		_documentState = iManDocumentStateNone;
 		_history = [[iManHistoryQueue alloc] init];
+		[self setCaseSensitive:NO];
+		[self setUseRegexps:NO];
 	}
 	
 	return self;
@@ -109,6 +111,13 @@ static NSString *const iManFindResultDisplayString = @"string";
 			[menuItem setState:NSOnState];
 		[menuItem setTarget:self];
 	}
+	_savedSearchType = [iManSearchTypeApropos retain];
+	[[aproposField cell] setSearchMenuTemplate:aproposFieldMenu];
+	
+	// Setup the in-page search field menu.
+	[[findDrawerSearchFieldMenu itemWithTag:kiManUseRegularExpressionsMenuItemTag] setState:[self useRegexps]];
+	[[findDrawerSearchFieldMenu itemWithTag:kiManMatchCaseMenuItemTag] setState:[self caseSensitive]];
+	[[findDrawerSearchField cell] setSearchMenuTemplate:findDrawerSearchFieldMenu];
 	
 	// Setup the search results view.
 	[aproposResultsView setDoubleAction:@selector(openSearchResultPage:)];
@@ -264,6 +273,20 @@ static NSString *const iManFindResultDisplayString = @"string";
 	[results release];
 }
 
+- (IBAction)takeUseRegexpsFrom:(id)sender;
+{
+	[self setUseRegexps:![sender state]];
+	[[findDrawerSearchFieldMenu itemWithTag:kiManUseRegularExpressionsMenuItemTag] setState:[self useRegexps]];
+	[[findDrawerSearchField cell] setSearchMenuTemplate:findDrawerSearchFieldMenu];
+}
+
+- (IBAction)takeCaseSensitiveFrom:(id)sender
+{
+	[self setCaseSensitive:![sender state]];
+	[[findDrawerSearchFieldMenu itemWithTag:kiManMatchCaseMenuItemTag] setState:[self caseSensitive]];
+	[[findDrawerSearchField cell] setSearchMenuTemplate:findDrawerSearchFieldMenu];
+}
+
 - (IBAction)back:(id)sender
 {
 	if ([self page] == nil) {
@@ -291,31 +314,25 @@ static NSString *const iManFindResultDisplayString = @"string";
 
 - (IBAction)performAproposSearch:(id)sender
 {
-	if (![[sender stringValue] length] == 0) {
-		// FIXME: this way of handling matters is awkward.
-		// FIXME: the checked item gets cleared after a search is performed.
-		NSString *searchType = iManSearchTypeApropos;
-		
-		for (NSMenuItem *menuItem in [aproposFieldMenu itemArray]) {
-			if (([menuItem action] == @selector(setAproposFieldSearchType:)) && ([menuItem state] == NSOnState)) {
-				searchType = [menuItem representedObject];
-				break;
-			}
-		}
-		
-		[self performSearchForTerm:[sender stringValue] type:searchType];
+	if (![[sender stringValue] length] == 0) {		
+		[self performSearchForTerm:[sender stringValue] type:_savedSearchType];
 	}
 }	
 
 - (IBAction)setAproposFieldSearchType:(id)sender
 {
+	[_savedSearchType release];
+	_savedSearchType = [[sender representedObject] retain];
+	
 	// Clear checks by other search-type menu items.
-	for (NSMenuItem *menuItem in [aproposFieldMenu itemArray])
+	for (NSMenuItem *menuItem in [aproposFieldMenu itemArray]) {
 		if ([menuItem action] == @selector(setAproposFieldSearchType:))
 			[menuItem setState:NSOffState];
+		if ([[menuItem representedObject] isEqualToString:_savedSearchType])
+			[menuItem setState:NSOnState];
+	}
 	
-	// Select this item.
-	[sender setState:NSOnState];
+	[[aproposField cell] setSearchMenuTemplate:aproposFieldMenu];
 }
 
 - (IBAction)loadRequestedPage:(id)sender
@@ -818,8 +835,10 @@ static NSString *const iManFindResultDisplayString = @"string";
 
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
     [accessoryView release]; // loaded from iManSavePanelAccessory.nib
     [_history release];
+	[_savedSearchType release];
     [_findResults release];
 	[page_ release];
     [super dealloc];
