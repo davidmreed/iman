@@ -37,6 +37,7 @@
 		635B7A890F1698CA0043FFEF /* RKLMatchEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7A850F1698CA0043FFEF /* RKLMatchEnumerator.m */; };
 		635B7AE70F16A19A0043FFEF /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 635B7AE60F16A19A0043FFEF /* libicucore.dylib */; };
 		6378734711A9753A00D34D02 /* iManSearchResult+Description.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378734511A9753A00D34D02 /* iManSearchResult+Description.m */; };
+		637873A611A9EA9800D34D02 /* iManHistoryQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 637873A411A9EA9800D34D02 /* iManHistoryQueue.m */; };
 		63CEBADE0F1B0227001180EC /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CEBADD0F1B0227001180EC /* Sparkle.framework */; };
 		63CEBAF50F1B0397001180EC /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 63CEBAF40F1B0397001180EC /* dsa_pub.pem */; };
 		63FCFBF50F1BB7D1004B3D5F /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63CEBADD0F1B0227001180EC /* Sparkle.framework */; };
@@ -124,6 +125,8 @@
 		635B7AE60F16A19A0043FFEF /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
 		6378734411A9753A00D34D02 /* iManSearchResult+Description.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "iManSearchResult+Description.h"; sourceTree = "<group>"; };
 		6378734511A9753A00D34D02 /* iManSearchResult+Description.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "iManSearchResult+Description.m"; sourceTree = "<group>"; };
+		637873A311A9EA9800D34D02 /* iManHistoryQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManHistoryQueue.h; sourceTree = "<group>"; };
+		637873A411A9EA9800D34D02 /* iManHistoryQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManHistoryQueue.m; sourceTree = "<group>"; };
 		63CEBADD0F1B0227001180EC /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Sparkle.framework; sourceTree = SOURCE_ROOT; };
 		63CEBAF40F1B0397001180EC /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -251,6 +254,8 @@
 				1174302B06AF407C00CE425B /* iManURLHandler.h */,
 				1174307C06AF416800CE425B /* iMan.m */,
 				1174307A06AF416800CE425B /* iManDocument.m */,
+				637873A311A9EA9800D34D02 /* iManHistoryQueue.h */,
+				637873A411A9EA9800D34D02 /* iManHistoryQueue.m */,
 				6378734411A9753A00D34D02 /* iManSearchResult+Description.h */,
 				6378734511A9753A00D34D02 /* iManSearchResult+Description.m */,
 				1174307B06AF416800CE425B /* iManConstants.m */,
@@ -319,22 +324,11 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		8D15AC280486D014006FF6A4 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
 		8D15AC270486D014006FF6A4 /* iMan */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 119D4D1D0A9914D900D25E74 /* Build configuration list for PBXNativeTarget "iMan" */;
 			buildPhases = (
-				8D15AC280486D014006FF6A4 /* Headers */,
 				8D15AC2B0486D014006FF6A4 /* Resources */,
 				8D15AC300486D014006FF6A4 /* Sources */,
 				8D15AC330486D014006FF6A4 /* Frameworks */,
@@ -446,6 +440,7 @@
 				635B7A890F1698CA0043FFEF /* RKLMatchEnumerator.m in Sources */,
 				6302D5D310B83AF1000051DB /* NSUserDefaults+DMRArchiving.m in Sources */,
 				6378734711A9753A00D34D02 /* iManSearchResult+Description.m in Sources */,
+				637873A611A9EA9800D34D02 /* iManHistoryQueue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
