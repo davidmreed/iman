@@ -7,6 +7,7 @@
 //
 
 #import "iManBrowser.h"
+#import <iManEngine/iManEnginePreferences.h>
 
 @implementation iManBrowser
 
@@ -42,7 +43,7 @@
 		
 		for (NSString *file in dir) {
 			BOOL isDir;
-			if ([fm fileExistsAtPath:dir isDirectory:&isDir] && isDir) {
+			if ([fm fileExistsAtPath:file isDirectory:&isDir] && isDir) {
 				[dir skipDescendents];
 				if ([[file lastPathComponent] hasPrefix:@"man"]) {
 					[cats addObject:[[file lastPathComponent] substringFromIndex:3]];
@@ -71,12 +72,12 @@
 	return [pages autorelease];
 }
 
-- (NSArray *)pagesinCategory:(NSString *)category
+- (NSArray *)pagesInCategory:(NSString *)category
 {
 	NSMutableArray *pages = [[NSMutableArray alloc] init];
 	
 	for (NSString *path in [self manpaths]) {
-		[pages addObjectsFromArray:[self pagesinCategory:category underManpath:path]]
+		[pages addObjectsFromArray:[self pagesInCategory:category underManpath:path]];
 	}
 	
 	return [pages autorelease];
