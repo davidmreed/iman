@@ -19,6 +19,6 @@
 - (NSArray *)manpaths;
 - (NSArray *)categories;
 - (NSArray *)pagesInCategory:(NSString *)category underManpath:(NSString *)manpath;
-- (NSArray *)pagesinCategory:(NSString *)category;
+- (NSArray *)pagesInCategory:(NSString *)category;
 
 @end
