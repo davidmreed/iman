@@ -13,6 +13,7 @@
 #import "iManErrors.h"
 #import "iManEnginePreferences.h"
 #import "NSTask+iManExtensions.h"
+#import "iManRWLock.h"
 
 @implementation iManSearchOperation
 
@@ -35,7 +36,7 @@
     NSData *data;
 	NSString *argument;
 	unsigned index;
-	char *tempDir = "/tmp/imanXXXXXXXX";
+	char tempDir[] = "/tmp/imanXXXXXXXX";
 	NSString *tempLink;
 	NSError *taskError;
 	
@@ -46,7 +47,7 @@
 	}	
 	
 	// We'll create a temporary directory with a symlink inside that points to our Application Support index folder. This obviates the need to workaround shell scripts breaking because of the space in "Application Support", or international characters which might or might not exist in the path to that folder.
-	if (mkdtemp(tempDir) == NULL) {
+	if (mkdtemp(&tempDir) == NULL) {
 		_error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
 		[pool release];
 		return;

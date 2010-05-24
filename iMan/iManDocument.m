@@ -124,7 +124,7 @@ static NSString *const iManFindResultDisplayString = @"string";
 		
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(displayFontDidChange:)
-                                                 name:iManFontChangedNotification
+                                                 name:iManStyleChangedNotification
                                                object:nil];
 	
 	[self synchronizeUIWithDocumentState];
