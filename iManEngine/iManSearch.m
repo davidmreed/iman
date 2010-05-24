@@ -11,19 +11,19 @@
 #import "iManEnginePreferences.h"
 #import "iManSearchOperation.h"
 #import "NSTask+iManExtensions.h"
+#import "iManErrors.h"
 
 NSString *const iManSearchTypeApropos = @"apropos";
 NSString *const iManSearchTypeWhatis = @"whatis";
 
 NSString *const iManSearchDidCompleteNotification = @"iManSearchDidCompleteNotification";
 NSString *const iManSearchDidFailNotification = @"iManSearchDidFailNotification";
-NSString *const iManSearchError = @"iManSearchError";
 
 NSOperationQueue *_iManSearchQueue;
 
 @interface iManSearch (iManSearchPrivate)
 
-- (void)_search:(id)ignored;
+- (void)_searchDidFinish:(iManSearchOperation *)operation;
 
 @end
 
@@ -64,9 +64,9 @@ NSOperationQueue *_iManSearchQueue;
 	
 	term_ = [term retain];
 	searchType_ = [searchType retain];
-	searching_ = NO;
+	operation_ = nil;
 	resultsLock_ = [[NSLock alloc] init];
-	results_ = [[NSMutableDictionary alloc] init];
+	results_ = [[NSArray alloc] init];
 	
 	return self;
 }
@@ -83,43 +83,61 @@ NSOperationQueue *_iManSearchQueue;
 
 - (void)search
 {
-	if (!searching_) {
-		iManSearchOperation *operation = [[iManSearchOperation alloc] initWithTerm:[self term] searchType:[self searchType]];		
-		[operation addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
-		[_iManSearchQueue addOperation:operation];
-		[operation release];
-		searching_ = YES;
+	if (![self isSearching]) {
+		operation_ = [[iManSearchOperation alloc] initWithTerm:[self term] searchType:[self searchType]];		
+		[operation_ addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
+		[_iManSearchQueue addOperation:operation_];
 	}
 }
 
+- (BOOL)isSearching
+{
+	return (operation_ != nil);
+}
 
-- (NSDictionary *)results
+- (NSArray *)results
 {	
 	return results_;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	if ([keyPath isEqualToString:@"isFinished"]) {
-		[results_ release];
-		results_ = nil;
-		searching_ = NO;
-		[object removeObserver:self forKeyPath:keyPath];
-		if ([object results] != nil) {
-			results_ = [[object results] retain];
-			[[NSNotificationCenter defaultCenter] postNotificationName:iManSearchDidCompleteNotification
-																object:self
-															  userInfo:nil];
-		} else {
-			[[NSNotificationCenter defaultCenter] postNotificationName:iManSearchDidFailNotification
-																object:self
-															  userInfo:nil];
-		}
+	// This notification isn't necessarily coming in on the main thread (in fact, it shouldn't be), so bounce it there to get the results and notify our client objects.
+	if ([keyPath isEqualToString:@"isFinished"] && (object == operation_)) {
+		[self performSelectorOnMainThread:@selector(_searchDidFinish:) withObject:object waitUntilDone:NO];
 	}
 }
 
+- (void)_searchDidFinish:(iManSearchOperation *)operation 
+{
+	[self willChangeValueForKey:@"results"];
+	[results_ release];
+	results_ = nil;
+	
+	if ([operation results] != nil) {
+		results_ = [[operation results] retain];
+		[[NSNotificationCenter defaultCenter] postNotificationName:iManSearchDidCompleteNotification
+															object:self
+														  userInfo:nil];
+	} else {
+		[[NSNotificationCenter defaultCenter] postNotificationName:iManSearchDidFailNotification
+															object:self
+														  userInfo:[NSDictionary dictionaryWithObject:[operation error] forKey:iManErrorKey]];
+	}
+	// Remove ourself as an observer and release our reference to the operation.
+	[operation_ removeObserver:self forKeyPath:@"isFinished"];
+	[operation_ release];
+	operation_ = nil;
+	[self didChangeValueForKey:@"results"];	
+}	
+
 - (void)dealloc
 {
+	// Occasionally when several search operations are initiated by the same document very quickly, we get deallocated before our search operation finishes. Make sure we are removed as an observer.  FIXME: make our operations killable.
+	if (operation_ != nil) {
+		[operation_ removeObserver:self forKeyPath:@"isFinished"];
+		[operation_ release];
+	}
 	[term_ release];
 	[searchType_ release];
 	[results_ release];

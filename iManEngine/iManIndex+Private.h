@@ -11,7 +11,7 @@
 @interface iManIndex (Private)
 
 - (NSString *)indexPath;
-- (NSDistributedLock *)lock;
+- (iManRWLock *)lock;
 
 @end
 

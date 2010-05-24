@@ -9,6 +9,7 @@
 #import "iManIndex+Private.h"
 #import "iManAproposIndex.h"
 #import "iManEnginePreferences.h"
+#import "iManRWLock.h"
 
 @implementation iManIndex
 
@@ -31,7 +32,7 @@
 {
 	self = [super init];
 
-	indexLock_ = [[NSDistributedLock alloc] initWithPath:[[self indexPath] stringByAppendingPathComponent:@"index.lock"]];
+	indexLock_ = [[iManRWLock alloc] init];
 	
 	return self;
 }
@@ -84,7 +85,7 @@
 {
 }
 
-- (NSDistributedLock *)lock
+- (iManRWLock *)lock
 {
 	return indexLock_;
 }

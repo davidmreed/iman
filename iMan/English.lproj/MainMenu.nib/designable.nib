@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="57"/>
+			<integer value="81"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -236,15 +236,6 @@
 									<reference key="NSMenu" ref="420997089"/>
 									<string key="NSTitle">New Window</string>
 									<string key="NSKeyEquiv">n</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="579971910"/>
-									<reference key="NSMixedImage" ref="440027848"/>
-								</object>
-								<object class="NSMenuItem" id="802648721">
-									<reference key="NSMenu" ref="420997089"/>
-									<string key="NSTitle">New Search Window</string>
-									<string key="NSKeyEquiv">N</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="579971910"/>
@@ -749,14 +740,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">newSearchWindow:</string>
-						<reference key="source" ref="982226239"/>
-						<reference key="destination" ref="802648721"/>
-					</object>
-					<int key="connectionID">385</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">forward:</string>
 						<reference key="source" ref="732627947"/>
 						<reference key="destination" ref="341643843"/>
@@ -1038,7 +1021,6 @@
 							<reference ref="613064645"/>
 							<reference ref="362621873"/>
 							<reference ref="694242823"/>
-							<reference ref="802648721"/>
 						</object>
 						<reference key="parent" ref="200555932"/>
 					</object>
@@ -1080,11 +1062,6 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">378</int>
 						<reference key="object" ref="694242823"/>
-						<reference key="parent" ref="420997089"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">384</int>
-						<reference key="object" ref="802648721"/>
 						<reference key="parent" ref="420997089"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -1286,6 +1263,7 @@
 					<string>163.ImportedFromIB2</string>
 					<string>164.IBPluginDependency</string>
 					<string>164.ImportedFromIB2</string>
+					<string>169.IBEditorWindowLastContentRect</string>
 					<string>169.IBPluginDependency</string>
 					<string>169.ImportedFromIB2</string>
 					<string>171.IBPluginDependency</string>
@@ -1311,10 +1289,9 @@
 					<string>357.ImportedFromIB2</string>
 					<string>378.IBPluginDependency</string>
 					<string>378.ImportedFromIB2</string>
-					<string>384.IBPluginDependency</string>
-					<string>384.ImportedFromIB2</string>
 					<string>395.IBPluginDependency</string>
 					<string>395.ImportedFromIB2</string>
+					<string>397.IBEditorWindowLastContentRect</string>
 					<string>397.IBPluginDependency</string>
 					<string>397.ImportedFromIB2</string>
 					<string>398.IBPluginDependency</string>
@@ -1354,6 +1331,7 @@
 					<string>78.ImportedFromIB2</string>
 					<string>79.IBPluginDependency</string>
 					<string>79.ImportedFromIB2</string>
+					<string>81.IBEditorWindowLastContentRect</string>
 					<string>81.IBPluginDependency</string>
 					<string>81.ImportedFromIB2</string>
 					<string>82.IBPluginDependency</string>
@@ -1406,6 +1384,7 @@
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
+					<string>{{107, 672}, {151, 153}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1433,8 +1412,7 @@
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
+					<string>{{151, 732}, {213, 93}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1474,6 +1452,7 @@
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
+					<string>{{65, 682}, {179, 143}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1507,6 +1486,7 @@
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<object class="IBPartialClassDescription">
 					<string key="className">FirstResponder</string>
+					<string key="superclassName">NSObject</string>
 					<object class="NSMutableDictionary" key="actions">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
@@ -1555,14 +1535,12 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>emptyPageCache:</string>
 							<string>installCommandLineTool:</string>
-							<string>newSearchWindow:</string>
 							<string>showHelp:</string>
 							<string>showPreferences:</string>
 							<string>updateIndex:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -1595,14 +1573,22 @@
 							<string>clearHistory:</string>
 							<string>export:</string>
 							<string>forward:</string>
+							<string>loadRequestedPage:</string>
+							<string>openSearchResultPage:</string>
+							<string>performAproposSearch:</string>
 							<string>performSearch:</string>
-							<string>refresh:</string>
-							<string>setCaseSensitive:</string>
-							<string>setUseRegularExpressions:</string>
+							<string>reload:</string>
+							<string>setAproposFieldSearchType:</string>
+							<string>takeCaseSensitiveFrom:</string>
+							<string>takeUseRegexpsFrom:</string>
 							<string>toggleFindDrawer:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -1620,23 +1606,39 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>accessoryView</string>
+							<string>addressField</string>
+							<string>aproposDrawer</string>
+							<string>aproposField</string>
+							<string>aproposFieldMenu</string>
+							<string>aproposResultsView</string>
+							<string>aproposTabView</string>
 							<string>findDrawer</string>
-							<string>findResults</string>
+							<string>findDrawerSearchField</string>
+							<string>findDrawerSearchFieldMenu</string>
+							<string>findResultsView</string>
 							<string>formatMenu</string>
+							<string>loadingMessageLabel</string>
 							<string>manpageView</string>
 							<string>progressIndicator</string>
-							<string>searchField</string>
 							<string>tabView</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSView</string>
+							<string>NSTextField</string>
 							<string>NSDrawer</string>
+							<string>NSSearchField</string>
+							<string>NSMenu</string>
+							<string>NSTableView</string>
+							<string>NSTabView</string>
+							<string>NSDrawer</string>
+							<string>NSSearchField</string>
+							<string>NSMenu</string>
 							<string>NSTableView</string>
 							<string>NSPopUpButton</string>
+							<string>NSTextField</string>
 							<string>NSTextView</string>
 							<string>NSProgressIndicator</string>
-							<string>NSSearchField</string>
 							<string>NSTabView</string>
 						</object>
 					</object>

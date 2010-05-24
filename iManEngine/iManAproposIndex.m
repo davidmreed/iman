@@ -9,9 +9,8 @@
 #import "iManIndex+Private.h"
 #import "iManEnginePreferences.h"
 #import "iManMakewhatisOperation.h"
+#import "iManRWLock.h"
 #import "iManErrors.h"
-
-// FIXME: the way this is currently implemented will demand an update each time an application with a different MANPATH attempts to search.
 
 @implementation iManAproposIndex
 
@@ -32,13 +31,15 @@
 
 - (void)update
 {
-	if ([[self lock] tryLock]) {
-		iManMakewhatisOperation *operation = [[iManMakewhatisOperation alloc] initWithPath:[[self indexPath] stringByAppendingPathComponent:@"whatis"]];
+	if ([[self lock] tryWriteLock]) {
+		_operation = [[iManMakewhatisOperation alloc] initWithPath:[[self indexPath] stringByAppendingPathComponent:@"whatis"]];
 		
-		[operation addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
-		[_iManSearchQueue addOperation:operation];
-		[operation release];
+		[_operation addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
+		[_iManSearchQueue addOperation:_operation];
 	} else {
+		[[NSNotificationCenter defaultCenter] postNotificationName:iManIndexDidFailUpdateNotification
+															object:self
+														  userInfo:[NSDictionary dictionaryWithObject:[NSError errorWithDomain:iManEngineErrorDomain code:iManIndexLockedError userInfo:nil] forKey:iManErrorKey]];
 	}
 }
 
@@ -46,17 +47,15 @@
 {	
 	// We get this KVO notification on the thread on which the operation has been executing. Annoying. Reroute to main thread.
 	if ([keyPath isEqualToString:@"isFinished"]) {
-		[self performSelectorOnMainThread:@selector(_handleUpdateIndexFinished:) withObject:[object retain] waitUntilDone:NO];
-		[object removeObserver:self forKeyPath:keyPath];
+		[self performSelectorOnMainThread:@selector(_handleUpdateIndexFinished:) withObject:object waitUntilDone:NO];
 	}
 }
 
 - (void)_handleUpdateIndexFinished:(iManMakewhatisOperation *)operation
 {
-	// operation is retained to keep it from getting deallocated as soon as -observeValueForKeyPath: returns.
 	[[self lock] unlock];
 	
-	if ([operation error] == nil) {
+	if ([_operation error] == nil) {
 		// Create a file to mark the index's validity.
 		[[[iManEnginePreferences sharedInstance] manpathString] writeToFile:[[self indexPath] stringByAppendingPathComponent:@"index.valid"] atomically:NO encoding:NSUTF8StringEncoding error:NULL];
 		[[NSNotificationCenter defaultCenter] postNotificationName:iManIndexDidUpdateNotification
@@ -64,10 +63,20 @@
 	} else {
 		[[NSNotificationCenter defaultCenter] postNotificationName:iManIndexDidFailUpdateNotification
 															object:self
-														  userInfo:[NSDictionary dictionaryWithObject:[operation error] forKey:iManErrorKey]];
+														  userInfo:[NSDictionary dictionaryWithObject:[_operation error] forKey:iManErrorKey]];
 	}
 	
-	[operation release];
+	[_operation removeObserver:self forKeyPath:@"isFinished"];
+	[_operation release];
+}
+
+- (void)dealloc
+{
+	if (_operation != nil) {
+		[_operation removeObserver:self forKeyPath:@"isFinished"];
+		[_operation release];
+	}
+	[super dealloc];
 }
 
 @end
