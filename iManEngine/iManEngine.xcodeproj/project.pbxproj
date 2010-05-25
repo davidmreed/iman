@@ -37,8 +37,8 @@
 		63C27DB711A5A7CD0073538B /* iManSearchResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C27DB511A5A7CD0073538B /* iManSearchResult.m */; };
 		63D688AE10D9C72F008F63E6 /* iManErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 63D688AC10D9C72F008F63E6 /* iManErrors.h */; };
 		63D688AF10D9C72F008F63E6 /* iManErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D688AD10D9C72F008F63E6 /* iManErrors.m */; };
-		63F511D311A2C3BE00DBCE65 /* iManBrowser.h in Headers */ = {isa = PBXBuildFile; fileRef = 63F511D111A2C3BE00DBCE65 /* iManBrowser.h */; };
-		63F511D411A2C3BE00DBCE65 /* iManBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F511D211A2C3BE00DBCE65 /* iManBrowser.m */; };
+		63E5A99811AB575F00EE3F24 /* iManPageDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 63E5A99611AB575F00EE3F24 /* iManPageDatabase.h */; };
+		63E5A99911AB575F00EE3F24 /* iManPageDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5A99711AB575F00EE3F24 /* iManPageDatabase.m */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
@@ -84,8 +84,8 @@
 		63C27DB511A5A7CD0073538B /* iManSearchResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManSearchResult.m; sourceTree = "<group>"; };
 		63D688AC10D9C72F008F63E6 /* iManErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManErrors.h; sourceTree = "<group>"; };
 		63D688AD10D9C72F008F63E6 /* iManErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManErrors.m; sourceTree = "<group>"; };
-		63F511D111A2C3BE00DBCE65 /* iManBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManBrowser.h; sourceTree = "<group>"; };
-		63F511D211A2C3BE00DBCE65 /* iManBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManBrowser.m; sourceTree = "<group>"; };
+		63E5A99611AB575F00EE3F24 /* iManPageDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManPageDatabase.h; sourceTree = "<group>"; };
+		63E5A99711AB575F00EE3F24 /* iManPageDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManPageDatabase.m; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -147,10 +147,10 @@
 		08FB77AEFE84172EC02AAC07 /* Public Classes */ = {
 			isa = PBXGroup;
 			children = (
+				63E5A99611AB575F00EE3F24 /* iManPageDatabase.h */,
+				63E5A99711AB575F00EE3F24 /* iManPageDatabase.m */,
 				63D688AC10D9C72F008F63E6 /* iManErrors.h */,
 				63D688AD10D9C72F008F63E6 /* iManErrors.m */,
-				63F511D111A2C3BE00DBCE65 /* iManBrowser.h */,
-				63F511D211A2C3BE00DBCE65 /* iManBrowser.m */,
 				6342BFDC10B797AB006995CA /* iManSearchOperation.h */,
 				6342BFDD10B797AB006995CA /* iManSearchOperation.m */,
 				11BABB0809D1DF2C00A3D6B1 /* iManEngine.h */,
@@ -252,8 +252,7 @@
 				6342BFDE10B797AB006995CA /* iManSearchOperation.h in Headers */,
 				63D688AE10D9C72F008F63E6 /* iManErrors.h in Headers */,
 				63C27DB611A5A7CD0073538B /* iManSearchResult.h in Headers */,
-				638AA93510DAD6E000A8BF2F /* iManMakewhatisOperation.h in Headers */,
-				63F511D311A2C3BE00DBCE65 /* iManBrowser.h in Headers */,
+				63E5A99811AB575F00EE3F24 /* iManPageDatabase.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,7 +329,7 @@
 				638AA93610DAD6E000A8BF2F /* iManMakewhatisOperation.m in Sources */,
 				63C27DB711A5A7CD0073538B /* iManSearchResult.m in Sources */,
 				6378730F11A96C0500D34D02 /* iManRWLock.m in Sources */,
-				63F511D411A2C3BE00DBCE65 /* iManBrowser.m in Sources */,
+				63E5A99911AB575F00EE3F24 /* iManPageDatabase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
