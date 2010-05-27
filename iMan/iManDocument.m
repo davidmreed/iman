@@ -64,7 +64,7 @@ static NSString *const iManFindResultDisplayString = @"string";
 - (NSURL *)fileURL
 {
 	// Override NSDocument method to return a correct file URL for the current page, regardless of whether it was loaded directly or searched.
-	if ([[self page] path] != nil) 		
+	if ([self page] != nil) 		
 		return [NSURL fileURLWithPath:[[self page] path]];
 	
 	return nil;
@@ -344,24 +344,26 @@ static NSString *const iManFindResultDisplayString = @"string";
 
 	// Trim whitespace
 	CFStringTrimWhitespace((CFMutableStringRef)input);
-	if ([input hasPrefix:@"man:"]) {
-		// Treat input as man: URL.
-		[self loadPageWithURL:[NSURL URLWithString:input]];
-	} else if ([input isMatchedByRegex:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)"]) {
-		// Treat input as "groff(1) (ignoring spaces).
-		[self loadPageWithName:[input stringByMatching:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)" capture:1]
-					   section:[input stringByMatching:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)" capture:2]];
-	} else if ([input isMatchedByRegex:@"(\\S+)\\s+([0-9n][a-zA-Z]*)"]) {
-		// Treat input as "groff 1"
-		[self loadPageWithName:[input stringByMatching:@"(\\S+)\\s+([0-9n][a-zA-Z]*)" capture:1]
-					   section:[input stringByMatching:@"(\\S+)\\s+([0-9n][a-zA-Z]*)" capture:2]];
-	} else if ([input isMatchedByRegex:@"([0-9n][a-zA-Z]*)\\s+(\\S+)"]) {
-		// Treat input as "1 groff"
-		[self loadPageWithName:[input stringByMatching:@"([0-9n][a-zA-Z]*)\\s+(\\S+)" capture:2]
-					   section:[input stringByMatching:@"([0-9n][a-zA-Z]*)\\s+(\\S+)" capture:1]];
-	} else {
-		// Treat the whole input as the page name.
-		[self loadPageWithName:input section:nil];
+	if ([input length] > 0) {
+		if ([input hasPrefix:@"man:"]) {
+			// Treat input as man: URL.
+			[self loadPageWithURL:[NSURL URLWithString:input]];
+		} else if ([input isMatchedByRegex:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)"]) {
+			// Treat input as "groff(1) (ignoring spaces).
+			[self loadPageWithName:[input stringByMatching:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)" capture:1]
+						   section:[input stringByMatching:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)" capture:2]];
+		} else if ([input isMatchedByRegex:@"(\\S+)\\s+([0-9n][a-zA-Z]*)"]) {
+			// Treat input as "groff 1"
+			[self loadPageWithName:[input stringByMatching:@"(\\S+)\\s+([0-9n][a-zA-Z]*)" capture:1]
+						   section:[input stringByMatching:@"(\\S+)\\s+([0-9n][a-zA-Z]*)" capture:2]];
+		} else if ([input isMatchedByRegex:@"([0-9n][a-zA-Z]*)\\s+(\\S+)"]) {
+			// Treat input as "1 groff"
+			[self loadPageWithName:[input stringByMatching:@"([0-9n][a-zA-Z]*)\\s+(\\S+)" capture:2]
+						   section:[input stringByMatching:@"([0-9n][a-zA-Z]*)\\s+(\\S+)" capture:1]];
+		} else {
+			// Treat the whole input as the page name.
+			[self loadPageWithName:input section:nil];
+		}
 	}
 }
 
@@ -470,7 +472,7 @@ static NSString *const iManFindResultDisplayString = @"string";
 
 - (void)loadPageWithURL:(NSURL *)url
 {
-	[self loadPage:[iManPage pageWithURL:url]];
+	[self loadPageWithName:[url pageName] section:[url pageSection]];
 }
 
 - (void)loadPageWithName:(NSString *)pageName section:(NSString *)pageSection
