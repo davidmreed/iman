@@ -1,0 +1,102 @@
+//
+//  iManIndex.m
+//  iManEngine
+//  Copyright (c) 2006-2009 by David Reed, distributed under the BSD License.
+//  see iman-macosx.sourceforge.net for details.
+//
+
+#import "iManIndex.h"
+#import "iManIndex+Private.h"
+#import "iManAproposIndex.h"
+#import "iManEnginePreferences.h"
+#import "iManRWLock.h"
+
+@implementation iManIndex
+
++ (NSArray *)availableIndexes
+{
+	return [NSArray arrayWithObject:[self aproposIndex]];
+}
+
++ (iManIndex *)aproposIndex
+{
+	static iManAproposIndex *index;
+	
+	if (index == nil)
+		index = [[iManAproposIndex alloc] init];
+	
+	return (iManIndex *)index;
+}
+
+- init
+{
+	self = [super init];
+
+	indexLock_ = [[iManRWLock alloc] init];
+	
+	return self;
+}
+
+- (NSString *)name
+{
+	return @"";
+}
+
+- (NSString *)identifier
+{
+	return @"";
+}
+
+- (NSString *)indexPath
+{
+	if ([[self class] isSubclassOfClass:[iManIndex class]]) {
+		NSString *folder;
+		NSMutableArray *pathComponents;
+		BOOL isDir;
+
+		folder = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
+		pathComponents = [NSMutableArray arrayWithObjects:[[NSBundle bundleForClass:[iManIndex class]] bundleIdentifier], [self identifier], nil];
+		
+		while ([pathComponents count] != 0) {
+			folder = [folder stringByAppendingPathComponent:[pathComponents objectAtIndex:0]];
+			[pathComponents removeObjectAtIndex:0];
+			
+			if (!([[NSFileManager defaultManager] fileExistsAtPath:folder isDirectory:&isDir] && isDir)) {
+				if (![[NSFileManager defaultManager] createDirectoryAtPath:folder attributes:[NSDictionary dictionary]]) {
+					NSLog(@"iManIndex: couldn't create directory \"%@\"", folder);
+					folder = nil;
+					break;
+				}
+			}
+		}
+		
+		return folder;
+	}
+	
+	return nil;
+}
+
+- (BOOL)isValid
+{
+	return YES;
+}
+
+- (void)update
+{
+}
+
+- (iManRWLock *)lock
+{
+	return indexLock_;
+}
+
+- (void)dealloc
+{
+	[indexLock_ release];
+	[super dealloc];
+}
+
+@end
+
+NSString *const iManIndexDidUpdateNotification = @"iManIndexDidUpdateNotification";
+NSString *const iManIndexDidFailUpdateNotification = @"iManIndexDidFailUpdateNotification";

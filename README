@@ -1,0 +1,38 @@
+iMan 0.3
+Copyright (c) 2004-2009 by David Reed. This application and its source code are distributed under the terms of the BSD License, which should be included in this distribution.
+
+Thanks for downloading iMan. This directory contains almost everything you'll need to build or make changes to iMan: source code, resources, and and links to the third-party frameworks needed (see below). 
+
+iMan is divided into two main parts, an application and an engine framework. The application, conceptually the Controller layer, manages iMan's UI and interacts with the Model layer, iManEngine.framework. The engine framework handles the low-level duties of asynchronously interfacing with the command line tools (man, groff, and makewhatis), parsing output, and sending that output in displayable form back to the UI. The engine could fairly easily be embedded in other applications that need this functionality. However, the iManEngine may not work reliably in more than one application running at the same time.
+
+Currently, iMan consists of the following classes:
+	* iMan
+	The delegate of NSApplication, handles various minor tasks and service invocations. Also responsible for re-indexing and update checking.
+
+	* iManDocument
+	The "viewing window" class, iManDocument handles loading and display of man pages. It also provides the +loadExternalURL: method used by URL handlers and services.
+
+	* iManSearchDocument
+	The "search window" class. iManSearchDocument is really conceptually closer to an NSWindowController than an NSDocument, but for the time being it is a non-loadable, non-savable document class.
+
+	* iManPreferencesController
+	A fairly straightforward preference window controller. The font and style handling code is complex for a reason: font/styles are saved as archived NSDictionaries that can be applied directly to styled text, hence some manipulation must be done for each style change.
+
+	* iManURLHandler
+	This class is invoked to handle clicks on URLs of scheme "man:" and "x-man-page:" (see iMan.scriptTerminology). It calls through to +[iMan loadExternalURL:].
+		
+iManEngine.framework holds (among others) the following classes:
+	* iManPage
+	This class represents a single page. It abstracts away all the work of resolving and rendering pages, which is done asynchronously via iManResolveOperation and iManRenderOperation.
+	* iManSearch
+	As iManPage is to rendering manpages, iManSearch is to searching them. It provides an API that supports future expansion (like SearchKit indexing/searching), though currently it provides only apropos/whatis searches. Its work is also done asynchronously via iManSearchOperation.
+	* iManIndex
+	iManIndex represents one of the theoretically more than one indexes used by iManSearch (right now, there is only the singleton iManAproposIndex). It also handles the low-level business of updating indices via iManMakewhatisOperation.
+	* iManEnginePreferences
+	This class manages manpaths and tool paths. Called by both UI and engine. It uses locks for thread safety.
+
+iMan also requires one external library, RegexKitLite, by John Englehart, which can be found at http://regexkit.sourceforge.net/. A modified version of Mr. Englehart's supplied example RKLMatchEnumerator.m is included with iMan.
+
+The source code is fairly lightly commented. (Better documentation is on the to-do list). Documentation for iManEngine is included in HeaderDoc comments. If you have questions (or patches, or bugs, or improvements, or...), please send me an email.
+
+-- David Reed <david@ktema.org>

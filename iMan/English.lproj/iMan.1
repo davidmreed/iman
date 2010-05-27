@@ -1,0 +1,52 @@
+.\" Man-page for iMan 0.3, Copyright (c) 2009 by David Reed.
+.Dd June 5, 2009
+.Dt iMan 1 
+.Os Mac OS X
+.Sh NAME 
+.Nm iMan
+.Sh DESCRIPTION
+.Nm
+is a graphical, featureful man page viewer based on the Cocoa frameworks. 
+.Nm
+lets you view man pages in Aqua beauty instead of the unpleasant, clumsy Terminal interface.
+.Pp
+Features include:
+.Bl -tag -width
+.It  * Intuitive, browser-inspired and fully OS X native interface.
+.It  * Support for apropos and whatis searches, as well as in-page search with regular expressions.
+.It  * Customizable fonts and styles.
+.It  * Previewing of arbitrary man-format files.
+.It  * Support for printing and exporting of man pages.
+.El
+.Pp
+.Nm
+is open-source software. It is free to be distributed and modified by all subject to the BSD License. A copy of this should have been included with iMan; if not see http://iman-macosx.sf.net/license.html.
+.Sh VIEWING MAN PAGES
+To view a man page installed in one of the standard man directories, simply type the title of the page into the Page field in the toolbar. You may also specify a section to search if desired. If no section is specified, 
+.Nm
+will open the first page located with the specified title. Man page files which are not in one of the standard directories may be opened by double-clicking them in the Finder or selecting Open from the File menu.
+.Pp
+.Nm
+automatically detects references to other manpages in the displayed page and adds hyperlinks as appropriate. Click a hyperlink to load the referenced page. 
+.Nm
+also supports hyperlinks from other applications. Links of the form man:page(section) will automatically open
+.Nm
+and load the specified page.
+.Sh SEARCHING
+To search for man pages, enter text in the Search field in the toolbar and press Enter. Search results will be displayed in a drawer. Select a page name in the list to display a brief description of the page and a list of all commands documented therein.  Double-click on any result to open it.
+.Sh CONTACT
+New releases and source code may be found on the
+.Nm
+website: http://iMan-macosx.sf.net/.
+.Pp
+David Reed, the author of
+.Nm
+, may be contacted at: david@ktema.org.
+.Sh SEE ALSO 
+RegexKitLite provides regular expression support. It may be found at http://regexkit.sourceforge.net.
+.Sh BUGS
+iMan allows the user to select proportional-width fonts (due to a bug in NSFontManager).
+.Pp
+There is currently no way to have the display window resize to fit the displayed page (this is linked to the above bug).
+.Pp
+iMan improperly hyperlinks portions of the page header, which lead nowhere due to all-caps.

@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# iman -- open iMan to view the specified page.
+# Copyright (c) David Reed, 2010. BSD Licensed.
+# See iman-macosx.sf.net.
+echo $1
+echo $2
+
+if [[ $# == 2 ]];
+then
+	URL="man://$1/$2"
+elif [[ $# == 1 ]];
+then
+	# Check if we have been given a URL as argument.
+	if [[ ($1 =~ man:) || ($1 =~ x-man-page:) ]];
+	then
+		URL=$1
+	elif [[ -e $1 ]];
+	then
+		open -a iMan "$1"
+	else
+		URL="man://$1"
+	fi
+else
+	echo "iman: pass a manpage name and optional section, a file path, or a man: URL to have it opened by iMan\n"
+	exit -1
+fi
+
+open -a iMan "$URL"

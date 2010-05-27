@@ -1,0 +1,763 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		11046A4609FAC93A00C397CE /* iManIndexingWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11046A4409FAC93A00C397CE /* iManIndexingWindowController.m */; };
+		1117ECC109D1D20A00A5820F /* iMan.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 1117ECBF09D1D20A00A5820F /* iMan.scriptSuite */; };
+		116DE5F90742E456006D5514 /* iManPathEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 116DE5F70742E456006D5514 /* iManPathEditor.nib */; };
+		1174307F06AF416800CE425B /* iManURLHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1174307706AF416800CE425B /* iManURLHandler.m */; };
+		1174308106AF416800CE425B /* iManPreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1174307906AF416800CE425B /* iManPreferencesController.m */; };
+		1174308206AF416800CE425B /* iManDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 1174307A06AF416800CE425B /* iManDocument.m */; };
+		1174308306AF416800CE425B /* iManConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 1174307B06AF416800CE425B /* iManConstants.m */; };
+		1174308406AF416800CE425B /* iMan.m in Sources */ = {isa = PBXBuildFile; fileRef = 1174307C06AF416800CE425B /* iMan.m */; };
+		1174312306AF430B00CE425B /* iManSavePanelAccessory.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1174310706AF430B00CE425B /* iManSavePanelAccessory.nib */; };
+		1174312406AF430B00CE425B /* iManDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1174310906AF430B00CE425B /* iManDocument.icns */; };
+		1174312506AF430B00CE425B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1174310B06AF430B00CE425B /* Localizable.strings */; };
+		1174312606AF430B00CE425B /* iMan.scriptTerminology in Resources */ = {isa = PBXBuildFile; fileRef = 1174310D06AF430B00CE425B /* iMan.scriptTerminology */; };
+		1174312706AF430B00CE425B /* iManToolbarItemBack.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 1174310F06AF430B00CE425B /* iManToolbarItemBack.tiff */; };
+		1174312806AF430B00CE425B /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1174311106AF430B00CE425B /* Credits.rtf */; };
+		1174312906AF430B00CE425B /* iMan.1 in Resources */ = {isa = PBXBuildFile; fileRef = 1174311306AF430B00CE425B /* iMan.1 */; };
+		1174312A06AF430B00CE425B /* iMan.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1174311506AF430B00CE425B /* iMan.icns */; };
+		1174312B06AF430B00CE425B /* iManPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1174311706AF430B00CE425B /* iManPreferences.nib */; };
+		1174312D06AF430B00CE425B /* iManSearchIcon.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 1174311B06AF430B00CE425B /* iManSearchIcon.tiff */; };
+		1174312E06AF430B00CE425B /* iManDocument.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1174311D06AF430B00CE425B /* iManDocument.nib */; };
+		1174312F06AF430B00CE425B /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1174311F06AF430B00CE425B /* MainMenu.nib */; };
+		1174313006AF430B00CE425B /* iManToolbarItemForward.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 1174312106AF430B00CE425B /* iManToolbarItemForward.tiff */; };
+		1175BF700708B3B1009B6D58 /* iManToolbarItemReload.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 1175BF6E0708B3B1009B6D58 /* iManToolbarItemReload.tiff */; };
+		11A1B38A0A9CB69600115362 /* iManEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119D4DE70A99475E00D25E74 /* iManEngine.framework */; };
+		11A1B38B0A9CB69E00115362 /* iManEngine.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 119D4DE70A99475E00D25E74 /* iManEngine.framework */; };
+		11B7680D0719C3BB00C503A1 /* iManIndexPanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11B7680B0719C3BB00C503A1 /* iManIndexPanel.nib */; };
+		6302D5D310B83AF1000051DB /* NSUserDefaults+DMRArchiving.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302D5D110B83AF1000051DB /* NSUserDefaults+DMRArchiving.m */; };
+		6343C1CD11A1E2B40018D313 /* iman in Resources */ = {isa = PBXBuildFile; fileRef = 6343C1CC11A1E2B40018D313 /* iman */; };
+		635B7A870F1698CA0043FFEF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7A830F1698CA0043FFEF /* RegexKitLite.m */; };
+		635B7A890F1698CA0043FFEF /* RKLMatchEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7A850F1698CA0043FFEF /* RKLMatchEnumerator.m */; };
+		635B7AE70F16A19A0043FFEF /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 635B7AE60F16A19A0043FFEF /* libicucore.dylib */; };
+		6378734711A9753A00D34D02 /* iManSearchResult+Description.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378734511A9753A00D34D02 /* iManSearchResult+Description.m */; };
+		637873A611A9EA9800D34D02 /* iManHistoryQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 637873A411A9EA9800D34D02 /* iManHistoryQueue.m */; };
+		63CEBADE0F1B0227001180EC /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CEBADD0F1B0227001180EC /* Sparkle.framework */; };
+		63CEBAF50F1B0397001180EC /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 63CEBAF40F1B0397001180EC /* dsa_pub.pem */; };
+		63FCFBF50F1BB7D1004B3D5F /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63CEBADD0F1B0227001180EC /* Sparkle.framework */; };
+		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
+		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		119D4DE60A99475E00D25E74 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 119D4DE20A99475E00D25E74 /* iManEngine.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = iManEngine;
+		};
+		11A1B35F0A9CB5E700115362 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 119D4DE20A99475E00D25E74 /* iManEngine.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = iManEngine;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		114A7A4C06AFF8D3003D4A54 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				63FCFBF50F1BB7D1004B3D5F /* Sparkle.framework in CopyFiles */,
+				11A1B38B0A9CB69E00115362 /* iManEngine.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		089C1660FE840EACC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		11046A4309FAC93A00C397CE /* iManIndexingWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManIndexingWindowController.h; sourceTree = "<group>"; };
+		11046A4409FAC93A00C397CE /* iManIndexingWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManIndexingWindowController.m; sourceTree = "<group>"; };
+		1117ECC009D1D20A00A5820F /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = English; path = English.lproj/iMan.scriptSuite; sourceTree = "<group>"; };
+		112615FB071EEEAB0026FA3B /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; wrapsLines = 1; };
+		1149AE3F074141A3002E3044 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
+		116DE5F80742E456006D5514 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/iManPathEditor.nib; sourceTree = "<group>"; };
+		1171C45007186C3D0052DACF /* CHANGELOG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG; sourceTree = "<group>"; };
+		1174301C06AF406300CE425B /* iMan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iMan.h; sourceTree = SOURCE_ROOT; };
+		1174301E06AF406300CE425B /* iManConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManConstants.h; sourceTree = SOURCE_ROOT; };
+		1174302006AF406300CE425B /* iManPreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManPreferencesController.h; sourceTree = SOURCE_ROOT; };
+		1174302B06AF407C00CE425B /* iManURLHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManURLHandler.h; sourceTree = SOURCE_ROOT; };
+		1174302C06AF407C00CE425B /* iManDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManDocument.h; sourceTree = SOURCE_ROOT; };
+		1174307706AF416800CE425B /* iManURLHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManURLHandler.m; sourceTree = SOURCE_ROOT; };
+		1174307906AF416800CE425B /* iManPreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManPreferencesController.m; sourceTree = SOURCE_ROOT; };
+		1174307A06AF416800CE425B /* iManDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManDocument.m; sourceTree = SOURCE_ROOT; };
+		1174307B06AF416800CE425B /* iManConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManConstants.m; sourceTree = SOURCE_ROOT; };
+		1174307C06AF416800CE425B /* iMan.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iMan.m; sourceTree = SOURCE_ROOT; };
+		1174310806AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/iManSavePanelAccessory.nib; sourceTree = "<group>"; };
+		1174310A06AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = English; path = English.lproj/iManDocument.icns; sourceTree = "<group>"; };
+		1174310C06AF430B00CE425B /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		1174310E06AF430B00CE425B /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.scriptTerminology; name = English; path = English.lproj/iMan.scriptTerminology; sourceTree = "<group>"; };
+		1174311006AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = English; path = English.lproj/iManToolbarItemBack.tiff; sourceTree = "<group>"; };
+		1174311206AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = English.lproj/Credits.rtf; sourceTree = "<group>"; };
+		1174311406AF430B00CE425B /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; name = English; path = English.lproj/iMan.1; sourceTree = "<group>"; };
+		1174311606AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = English; path = English.lproj/iMan.icns; sourceTree = "<group>"; };
+		1174311806AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/iManPreferences.nib; sourceTree = "<group>"; };
+		1174311C06AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = English; path = English.lproj/iManSearchIcon.tiff; sourceTree = "<group>"; };
+		1174311E06AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/iManDocument.nib; sourceTree = "<group>"; };
+		1174312006AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
+		1174312206AF430B00CE425B /* English */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = English; path = English.lproj/iManToolbarItemForward.tiff; sourceTree = "<group>"; };
+		1175BF6F0708B3B1009B6D58 /* English */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = English; path = English.lproj/iManToolbarItemReload.tiff; sourceTree = "<group>"; };
+		119D4DE20A99475E00D25E74 /* iManEngine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iManEngine.xcodeproj; path = ../iManEngine/iManEngine.xcodeproj; sourceTree = "<group>"; };
+		11B7680C0719C3BB00C503A1 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/iManIndexPanel.nib; sourceTree = "<group>"; };
+		2A37F4B0FDCFA73011CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = SOURCE_ROOT; };
+		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		6302D5D010B83AF1000051DB /* NSUserDefaults+DMRArchiving.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSUserDefaults+DMRArchiving.h"; path = "Snippets/NSUserDefaults+DMRArchiving.h"; sourceTree = "<group>"; };
+		6302D5D110B83AF1000051DB /* NSUserDefaults+DMRArchiving.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSUserDefaults+DMRArchiving.m"; path = "Snippets/NSUserDefaults+DMRArchiving.m"; sourceTree = "<group>"; };
+		6343C1CC11A1E2B40018D313 /* iman */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = iman; sourceTree = "<group>"; };
+		635B7A820F1698CA0043FFEF /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
+		635B7A830F1698CA0043FFEF /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
+		635B7A840F1698CA0043FFEF /* RKLMatchEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKLMatchEnumerator.h; sourceTree = "<group>"; };
+		635B7A850F1698CA0043FFEF /* RKLMatchEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RKLMatchEnumerator.m; sourceTree = "<group>"; };
+		635B7AE60F16A19A0043FFEF /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
+		6378734411A9753A00D34D02 /* iManSearchResult+Description.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "iManSearchResult+Description.h"; sourceTree = "<group>"; };
+		6378734511A9753A00D34D02 /* iManSearchResult+Description.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "iManSearchResult+Description.m"; sourceTree = "<group>"; };
+		637873A311A9EA9800D34D02 /* iManHistoryQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManHistoryQueue.h; sourceTree = "<group>"; };
+		637873A411A9EA9800D34D02 /* iManHistoryQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManHistoryQueue.m; sourceTree = "<group>"; };
+		63CEBADD0F1B0227001180EC /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Sparkle.framework; sourceTree = SOURCE_ROOT; };
+		63CEBAF40F1B0397001180EC /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
+		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8D15AC370486D014006FF6A4 /* iMan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iMan.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D15AC330486D014006FF6A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				11A1B38A0A9CB69600115362 /* iManEngine.framework in Frameworks */,
+				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
+				635B7AE70F16A19A0043FFEF /* libicucore.dylib in Frameworks */,
+				63CEBADE0F1B0227001180EC /* Sparkle.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				63CEBADD0F1B0227001180EC /* Sparkle.framework */,
+				635B7AE60F16A19A0043FFEF /* libicucore.dylib */,
+				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A8FEA54F5311CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */,
+				2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		1117ECB909D1D1BC00A5820F /* NIB Files */ = {
+			isa = PBXGroup;
+			children = (
+				11B7680B0719C3BB00C503A1 /* iManIndexPanel.nib */,
+				1174311F06AF430B00CE425B /* MainMenu.nib */,
+				1174311D06AF430B00CE425B /* iManDocument.nib */,
+				1174311706AF430B00CE425B /* iManPreferences.nib */,
+				116DE5F70742E456006D5514 /* iManPathEditor.nib */,
+				1174310706AF430B00CE425B /* iManSavePanelAccessory.nib */,
+			);
+			name = "NIB Files";
+			sourceTree = "<group>";
+		};
+		1117ECBC09D1D1D700A5820F /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				1174311506AF430B00CE425B /* iMan.icns */,
+				1174310906AF430B00CE425B /* iManDocument.icns */,
+				1174311B06AF430B00CE425B /* iManSearchIcon.tiff */,
+				1175BF6E0708B3B1009B6D58 /* iManToolbarItemReload.tiff */,
+				1174310F06AF430B00CE425B /* iManToolbarItemBack.tiff */,
+				1174312106AF430B00CE425B /* iManToolbarItemForward.tiff */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+		11230AFB09D1E2F00079DFCF /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				2A37F4B0FDCFA73011CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		1171C45307186C440052DACF /* iMan */ = {
+			isa = PBXGroup;
+			children = (
+				1149AE3F074141A3002E3044 /* TODO */,
+				112615FB071EEEAB0026FA3B /* README */,
+				1171C45007186C3D0052DACF /* CHANGELOG */,
+			);
+			name = iMan;
+			path = ..;
+			sourceTree = SOURCE_ROOT;
+		};
+		119D4DE30A99475E00D25E74 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				119D4DE70A99475E00D25E74 /* iManEngine.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		19C28FB0FE9D524F11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				119D4DE20A99475E00D25E74 /* iManEngine.xcodeproj */,
+				8D15AC370486D014006FF6A4 /* iMan.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2A37F4AAFDCFA73011CA2CEA /* iMan */ = {
+			isa = PBXGroup;
+			children = (
+				1171C45307186C440052DACF /* iMan */,
+				2A37F4ABFDCFA73011CA2CEA /* Classes */,
+				11230AFB09D1E2F00079DFCF /* Other Sources */,
+				2A37F4AFFDCFA73011CA2CEA /* External Code */,
+				2A37F4B8FDCFA73011CA2CEA /* Resources */,
+				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
+				19C28FB0FE9D524F11CA2CBB /* Products */,
+			);
+			name = iMan;
+			sourceTree = "<group>";
+		};
+		2A37F4ABFDCFA73011CA2CEA /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				1174301C06AF406300CE425B /* iMan.h */,
+				1174301E06AF406300CE425B /* iManConstants.h */,
+				1174302C06AF407C00CE425B /* iManDocument.h */,
+				11046A4309FAC93A00C397CE /* iManIndexingWindowController.h */,
+				1174302006AF406300CE425B /* iManPreferencesController.h */,
+				1174302B06AF407C00CE425B /* iManURLHandler.h */,
+				1174307C06AF416800CE425B /* iMan.m */,
+				1174307A06AF416800CE425B /* iManDocument.m */,
+				637873A311A9EA9800D34D02 /* iManHistoryQueue.h */,
+				637873A411A9EA9800D34D02 /* iManHistoryQueue.m */,
+				6378734411A9753A00D34D02 /* iManSearchResult+Description.h */,
+				6378734511A9753A00D34D02 /* iManSearchResult+Description.m */,
+				1174307B06AF416800CE425B /* iManConstants.m */,
+				11046A4409FAC93A00C397CE /* iManIndexingWindowController.m */,
+				1174307906AF416800CE425B /* iManPreferencesController.m */,
+				1174307706AF416800CE425B /* iManURLHandler.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		2A37F4AFFDCFA73011CA2CEA /* External Code */ = {
+			isa = PBXGroup;
+			children = (
+				6302D5D010B83AF1000051DB /* NSUserDefaults+DMRArchiving.h */,
+				6302D5D110B83AF1000051DB /* NSUserDefaults+DMRArchiving.m */,
+				637FAC200F1A64D70080BA28 /* RegexKitLiteSupport */,
+				635B7A810F1698AB0043FFEF /* RegexKitLite */,
+			);
+			name = "External Code";
+			path = ..;
+			sourceTree = "<group>";
+		};
+		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				63CEBAF40F1B0397001180EC /* dsa_pub.pem */,
+				6343C1CC11A1E2B40018D313 /* iman */,
+				8D15AC360486D014006FF6A4 /* Info.plist */,
+				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
+				1174310B06AF430B00CE425B /* Localizable.strings */,
+				1174310D06AF430B00CE425B /* iMan.scriptTerminology */,
+				1117ECBF09D1D20A00A5820F /* iMan.scriptSuite */,
+				1174311306AF430B00CE425B /* iMan.1 */,
+				1174311106AF430B00CE425B /* Credits.rtf */,
+				1117ECB909D1D1BC00A5820F /* NIB Files */,
+				1117ECBC09D1D1D700A5820F /* Images */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		2A37F4C3FDCFA73011CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */,
+				1058C7A8FEA54F5311CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		635B7A810F1698AB0043FFEF /* RegexKitLite */ = {
+			isa = PBXGroup;
+			children = (
+				635B7A820F1698CA0043FFEF /* RegexKitLite.h */,
+				635B7A830F1698CA0043FFEF /* RegexKitLite.m */,
+			);
+			path = RegexKitLite;
+			sourceTree = "<group>";
+		};
+		637FAC200F1A64D70080BA28 /* RegexKitLiteSupport */ = {
+			isa = PBXGroup;
+			children = (
+				635B7A840F1698CA0043FFEF /* RKLMatchEnumerator.h */,
+				635B7A850F1698CA0043FFEF /* RKLMatchEnumerator.m */,
+			);
+			path = RegexKitLiteSupport;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D15AC270486D014006FF6A4 /* iMan */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 119D4D1D0A9914D900D25E74 /* Build configuration list for PBXNativeTarget "iMan" */;
+			buildPhases = (
+				8D15AC2B0486D014006FF6A4 /* Resources */,
+				8D15AC300486D014006FF6A4 /* Sources */,
+				8D15AC330486D014006FF6A4 /* Frameworks */,
+				114A7A4C06AFF8D3003D4A54 /* CopyFiles */,
+				1169DC090707240100098A00 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				11A1B3600A9CB5E700115362 /* PBXTargetDependency */,
+			);
+			name = iMan;
+			productInstallPath = "$(HOME)/Applications";
+			productName = iMan;
+			productReference = 8D15AC370486D014006FF6A4 /* iMan.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 119D4D210A9914D900D25E74 /* Build configuration list for PBXProject "iMan" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 2A37F4AAFDCFA73011CA2CEA /* iMan */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 119D4DE30A99475E00D25E74 /* Products */;
+					ProjectRef = 119D4DE20A99475E00D25E74 /* iManEngine.xcodeproj */;
+				},
+			);
+			projectRoot = ..;
+			targets = (
+				8D15AC270486D014006FF6A4 /* iMan */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		119D4DE70A99475E00D25E74 /* iManEngine.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = iManEngine.framework;
+			remoteRef = 119D4DE60A99475E00D25E74 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D15AC2B0486D014006FF6A4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */,
+				1174312306AF430B00CE425B /* iManSavePanelAccessory.nib in Resources */,
+				1174312406AF430B00CE425B /* iManDocument.icns in Resources */,
+				1174312506AF430B00CE425B /* Localizable.strings in Resources */,
+				1174312606AF430B00CE425B /* iMan.scriptTerminology in Resources */,
+				1174312706AF430B00CE425B /* iManToolbarItemBack.tiff in Resources */,
+				1174312806AF430B00CE425B /* Credits.rtf in Resources */,
+				1174312906AF430B00CE425B /* iMan.1 in Resources */,
+				1174312A06AF430B00CE425B /* iMan.icns in Resources */,
+				1174312B06AF430B00CE425B /* iManPreferences.nib in Resources */,
+				1174312D06AF430B00CE425B /* iManSearchIcon.tiff in Resources */,
+				1174312E06AF430B00CE425B /* iManDocument.nib in Resources */,
+				1174312F06AF430B00CE425B /* MainMenu.nib in Resources */,
+				1174313006AF430B00CE425B /* iManToolbarItemForward.tiff in Resources */,
+				1175BF700708B3B1009B6D58 /* iManToolbarItemReload.tiff in Resources */,
+				11B7680D0719C3BB00C503A1 /* iManIndexPanel.nib in Resources */,
+				116DE5F90742E456006D5514 /* iManPathEditor.nib in Resources */,
+				1117ECC109D1D20A00A5820F /* iMan.scriptSuite in Resources */,
+				63CEBAF50F1B0397001180EC /* dsa_pub.pem in Resources */,
+				6343C1CD11A1E2B40018D313 /* iman in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1169DC090707240100098A00 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "find \"${BUILT_PRODUCTS_DIR}/iMan.app/Contents/Frameworks\" -name Headers -prune -exec rm -r \"{}\" ';'";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D15AC300486D014006FF6A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D15AC320486D014006FF6A4 /* main.m in Sources */,
+				1174307F06AF416800CE425B /* iManURLHandler.m in Sources */,
+				1174308106AF416800CE425B /* iManPreferencesController.m in Sources */,
+				1174308206AF416800CE425B /* iManDocument.m in Sources */,
+				1174308306AF416800CE425B /* iManConstants.m in Sources */,
+				1174308406AF416800CE425B /* iMan.m in Sources */,
+				11046A4609FAC93A00C397CE /* iManIndexingWindowController.m in Sources */,
+				635B7A870F1698CA0043FFEF /* RegexKitLite.m in Sources */,
+				635B7A890F1698CA0043FFEF /* RKLMatchEnumerator.m in Sources */,
+				6302D5D310B83AF1000051DB /* NSUserDefaults+DMRArchiving.m in Sources */,
+				6378734711A9753A00D34D02 /* iManSearchResult+Description.m in Sources */,
+				637873A611A9EA9800D34D02 /* iManHistoryQueue.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		11A1B3600A9CB5E700115362 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = iManEngine;
+			targetProxy = 11A1B35F0A9CB5E700115362 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		089C165FFE840EACC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C1660FE840EACC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1117ECBF09D1D20A00A5820F /* iMan.scriptSuite */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1117ECC009D1D20A00A5820F /* English */,
+			);
+			name = iMan.scriptSuite;
+			sourceTree = "<group>";
+		};
+		116DE5F70742E456006D5514 /* iManPathEditor.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				116DE5F80742E456006D5514 /* English */,
+			);
+			name = iManPathEditor.nib;
+			sourceTree = "<group>";
+		};
+		1174310706AF430B00CE425B /* iManSavePanelAccessory.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1174310806AF430B00CE425B /* English */,
+			);
+			name = iManSavePanelAccessory.nib;
+			sourceTree = SOURCE_ROOT;
+		};
+		1174310906AF430B00CE425B /* iManDocument.icns */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1174310A06AF430B00CE425B /* English */,
+			);
+			name = iManDocument.icns;
+			sourceTree = SOURCE_ROOT;
+		};
+		1174310B06AF430B00CE425B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1174310C06AF430B00CE425B /* English */,
+			);
+			name = Localizable.strings;
+			sourceTree = SOURCE_ROOT;
+		};
+		1174310D06AF430B00CE425B /* iMan.scriptTerminology */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1174310E06AF430B00CE425B /* English */,
+			);
+			name = iMan.scriptTerminology;
+			sourceTree = SOURCE_ROOT;
+		};
+		1174310F06AF430B00CE425B /* iManToolbarItemBack.tiff */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1174311006AF430B00CE425B /* English */,
+			);
+			name = iManToolbarItemBack.tiff;
+			sourceTree = SOURCE_ROOT;
+		};
+		1174311106AF430B00CE425B /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1174311206AF430B00CE425B /* English */,
+			);
+			name = Credits.rtf;
+			sourceTree = SOURCE_ROOT;
+		};
+		1174311306AF430B00CE425B /* iMan.1 */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1174311406AF430B00CE425B /* English */,
+			);
+			name = iMan.1;
+			sourceTree = SOURCE_ROOT;
+		};
+		1174311506AF430B00CE425B /* iMan.icns */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1174311606AF430B00CE425B /* English */,
+			);
+			name = iMan.icns;
+			sourceTree = SOURCE_ROOT;
+		};
+		1174311706AF430B00CE425B /* iManPreferences.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1174311806AF430B00CE425B /* English */,
+			);
+			name = iManPreferences.nib;
+			sourceTree = SOURCE_ROOT;
+		};
+		1174311B06AF430B00CE425B /* iManSearchIcon.tiff */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1174311C06AF430B00CE425B /* English */,
+			);
+			name = iManSearchIcon.tiff;
+			sourceTree = SOURCE_ROOT;
+		};
+		1174311D06AF430B00CE425B /* iManDocument.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1174311E06AF430B00CE425B /* English */,
+			);
+			name = iManDocument.nib;
+			sourceTree = SOURCE_ROOT;
+		};
+		1174311F06AF430B00CE425B /* MainMenu.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1174312006AF430B00CE425B /* English */,
+			);
+			name = MainMenu.nib;
+			sourceTree = SOURCE_ROOT;
+		};
+		1174312106AF430B00CE425B /* iManToolbarItemForward.tiff */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1174312206AF430B00CE425B /* English */,
+			);
+			name = iManToolbarItemForward.tiff;
+			sourceTree = SOURCE_ROOT;
+		};
+		1175BF6E0708B3B1009B6D58 /* iManToolbarItemReload.tiff */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1175BF6F0708B3B1009B6D58 /* English */,
+			);
+			name = iManToolbarItemReload.tiff;
+			sourceTree = "<group>";
+		};
+		11B7680B0719C3BB00C503A1 /* iManIndexPanel.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				11B7680C0719C3BB00C503A1 /* English */,
+			);
+			name = iManIndexPanel.nib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		119D4D1E0A9914D900D25E74 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/..\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = Info.plist;
+				OTHER_CFLAGS = "";
+				PRODUCT_NAME = iMan;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+			};
+			name = Development;
+		};
+		119D4D1F0A9914D900D25E74 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/..\"",
+				);
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = Info.plist;
+				OTHER_CFLAGS = "";
+				PRODUCT_NAME = iMan;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+			};
+			name = Deployment;
+		};
+		119D4D200A9914D900D25E74 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_POSTPROCESSING = NO;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = iMan;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+			};
+			name = Default;
+		};
+		119D4D220A9914D900D25E74 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_MODEL_TUNING = G5;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../Externals",
+					"${SRCROOT}/..",
+				);
+				SDKROOT = macosx10.5;
+			};
+			name = Development;
+		};
+		119D4D230A9914D900D25E74 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GCC_MODEL_TUNING = G5;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../Externals",
+					"${SRCROOT}/..",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				SDKROOT = macosx10.5;
+			};
+			name = Deployment;
+		};
+		119D4D240A9914D900D25E74 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../Externals",
+					"${SRCROOT}/..",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				SDKROOT = macosx10.5;
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		119D4D1D0A9914D900D25E74 /* Build configuration list for PBXNativeTarget "iMan" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				119D4D1E0A9914D900D25E74 /* Development */,
+				119D4D1F0A9914D900D25E74 /* Deployment */,
+				119D4D200A9914D900D25E74 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		119D4D210A9914D900D25E74 /* Build configuration list for PBXProject "iMan" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				119D4D220A9914D900D25E74 /* Development */,
+				119D4D230A9914D900D25E74 /* Deployment */,
+				119D4D240A9914D900D25E74 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
+}
