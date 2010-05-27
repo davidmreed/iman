@@ -86,9 +86,7 @@
 		11046A4409FAC93A00C397CE /* iManIndexingWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManIndexingWindowController.m; sourceTree = "<group>"; };
 		1117ECC009D1D20A00A5820F /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = English; path = English.lproj/iMan.scriptSuite; sourceTree = "<group>"; };
 		112615FB071EEEAB0026FA3B /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; wrapsLines = 1; };
-		1149AE3F074141A3002E3044 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		116DE5F80742E456006D5514 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/iManPathEditor.nib; sourceTree = "<group>"; };
-		1171C45007186C3D0052DACF /* CHANGELOG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG; sourceTree = "<group>"; };
 		1174301C06AF406300CE425B /* iMan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iMan.h; sourceTree = SOURCE_ROOT; };
 		1174301E06AF406300CE425B /* iManConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManConstants.h; sourceTree = SOURCE_ROOT; };
 		1174302006AF406300CE425B /* iManPreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManPreferencesController.h; sourceTree = SOURCE_ROOT; };
@@ -209,9 +207,7 @@
 		1171C45307186C440052DACF /* iMan */ = {
 			isa = PBXGroup;
 			children = (
-				1149AE3F074141A3002E3044 /* TODO */,
 				112615FB071EEEAB0026FA3B /* README */,
-				1171C45007186C3D0052DACF /* CHANGELOG */,
 			);
 			name = iMan;
 			path = ..;
