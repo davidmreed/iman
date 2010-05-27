@@ -1,9 +1,8 @@
 //
 //  iManSearchResult.m
 //  iManEngine
-//
-//  Created by David Reed on 5/20/10.
-//  Copyright 2010 David Reed. All rights reserved.
+//  Copyright (c) 2004-2010 by David Reed, distributed under the BSD License.
+//  see iman-macosx.sourceforge.net for details.
 //
 
 #import "iManSearchResult.h"
