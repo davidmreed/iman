@@ -11,12 +11,10 @@
 @interface iManRenderOperation : NSOperation {
 	NSString *_path;
 	NSError *_error;
-	BOOL _pendingResolution;
 	NSAttributedString *_page;
 }
 
 - (iManRenderOperation *)initWithPath:(NSString *)path;
-- (iManRenderOperation *)initWithDeferredPath;
 
 - (NSString *)path;
 - (NSAttributedString *)page;

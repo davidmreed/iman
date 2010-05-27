@@ -11,6 +11,7 @@
 #import <iManEngine/iManEnginePreferences.h>
 #import <iManEngine/iManErrors.h>
 #import <iManEngine/iManSearchOperation.h>
-#import <iManEngine/iManResolveOperation.h>
 #import <iManEngine/iManRenderOperation.h>
 #import <iManEngine/iManSearchResult.h>
+#import <iManEngine/iManPageDatabase.h>
+#import <iManEngine/NSURL+iManExtensions.h>

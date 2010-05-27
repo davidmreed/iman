@@ -62,7 +62,7 @@ static NSString *const iManFindResultDisplayString = @"string";
 - (NSURL *)fileURL
 {
 	// Override NSDocument method to return a correct file URL for the current page, regardless of whether it was loaded directly or searched.
-	if ([[self page] path] != nil) 		
+	if ([self page] != nil) 		
 		return [NSURL fileURLWithPath:[[self page] path]];
 	
 	return nil;
@@ -342,24 +342,26 @@ static NSString *const iManFindResultDisplayString = @"string";
 
 	// Trim whitespace
 	CFStringTrimWhitespace((CFMutableStringRef)input);
-	if ([input hasPrefix:@"man:"]) {
-		// Treat input as man: URL.
-		[self loadPageWithURL:[NSURL URLWithString:input]];
-	} else if ([input isMatchedByRegex:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)"]) {
-		// Treat input as "groff(1) (ignoring spaces).
-		[self loadPageWithName:[input stringByMatching:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)" capture:1]
-					   section:[input stringByMatching:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)" capture:2]];
-	} else if ([input isMatchedByRegex:@"(\\S+)\\s+([0-9n][a-zA-Z]*)"]) {
-		// Treat input as "groff 1"
-		[self loadPageWithName:[input stringByMatching:@"(\\S+)\\s+([0-9n][a-zA-Z]*)" capture:1]
-					   section:[input stringByMatching:@"(\\S+)\\s+([0-9n][a-zA-Z]*)" capture:2]];
-	} else if ([input isMatchedByRegex:@"([0-9n][a-zA-Z]*)\\s+(\\S+)"]) {
-		// Treat input as "1 groff"
-		[self loadPageWithName:[input stringByMatching:@"([0-9n][a-zA-Z]*)\\s+(\\S+)" capture:2]
-					   section:[input stringByMatching:@"([0-9n][a-zA-Z]*)\\s+(\\S+)" capture:1]];
-	} else {
-		// Treat the whole input as the page name.
-		[self loadPageWithName:input section:nil];
+	if ([input length] > 0) {
+		if ([input hasPrefix:@"man:"]) {
+			// Treat input as man: URL.
+			[self loadPageWithURL:[NSURL URLWithString:input]];
+		} else if ([input isMatchedByRegex:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)"]) {
+			// Treat input as "groff(1) (ignoring spaces).
+			[self loadPageWithName:[input stringByMatching:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)" capture:1]
+						   section:[input stringByMatching:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)" capture:2]];
+		} else if ([input isMatchedByRegex:@"(\\S+)\\s+([0-9n][a-zA-Z]*)"]) {
+			// Treat input as "groff 1"
+			[self loadPageWithName:[input stringByMatching:@"(\\S+)\\s+([0-9n][a-zA-Z]*)" capture:1]
+						   section:[input stringByMatching:@"(\\S+)\\s+([0-9n][a-zA-Z]*)" capture:2]];
+		} else if ([input isMatchedByRegex:@"([0-9n][a-zA-Z]*)\\s+(\\S+)"]) {
+			// Treat input as "1 groff"
+			[self loadPageWithName:[input stringByMatching:@"([0-9n][a-zA-Z]*)\\s+(\\S+)" capture:2]
+						   section:[input stringByMatching:@"([0-9n][a-zA-Z]*)\\s+(\\S+)" capture:1]];
+		} else {
+			// Treat the whole input as the page name.
+			[self loadPageWithName:input section:nil];
+		}
 	}
 }
 
@@ -378,6 +380,16 @@ static NSString *const iManFindResultDisplayString = @"string";
 		[iMan loadURLInNewDocument:[NSURL URLWithString:[NSString stringWithFormat:@"man:%@", result]]];
 	else
 		[self loadPageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"man:%@", result]]];
+}
+
+- (IBAction)pageSelectionSheetOK:(id)sender
+{
+	[NSApp endSheet:pageSelectionSheet returnCode:NSOKButton];
+}
+
+- (IBAction)pageSelectionSheetCancel:(id)sender
+{
+	[NSApp endSheet:pageSelectionSheet returnCode:NSCancelButton];
 }
 
 #pragma mark -
@@ -441,17 +453,45 @@ static NSString *const iManFindResultDisplayString = @"string";
 	}
 }
 
+- (void)pageSelectionSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	[sheet orderOut:self];
+	
+	if (returnCode == NSOKButton) {
+		[self loadPage:[iManPage pageWithPath:[_pageChoices objectAtIndex:[pageSelectionList selectedRow]]]];
+		[_pageChoices release];
+		_pageChoices = nil;
+	}
+}
+		 
+
 #pragma mark -
 #pragma mark UI Methods
 
 - (void)loadPageWithURL:(NSURL *)url
 {
-	[self loadPage:[iManPage pageWithURL:url]];
+	[self loadPageWithName:[url pageName] section:[url pageSection]];
 }
 
 - (void)loadPageWithName:(NSString *)pageName section:(NSString *)pageSection
 {
-	[self loadPage:[iManPage pageWithName:pageName inSection:pageSection]];
+	NSArray *paths;
+	iManPageDatabase *database = [[NSApp delegate] sharedPageDatabase];
+	
+	if (pageSection == nil) {
+		paths = [database pagesWithName:pageName];
+	} else {
+		paths = [database pagesWithName:pageName inSection:pageSection];
+	}
+	
+	if ([paths count] == 0) {
+		NSBeginAlertSheet(NSLocalizedString(@"The requested man page could not be found.", nil), NSLocalizedString(@"OK", nil), nil, nil, [self windowForSheet], self, NULL, NULL, NULL, NSLocalizedString(@"iMan was unable to find a page matching the requested title and section. Try searching to find this page.", nil));
+	} else if ([paths count] == 1) {
+		[self loadPage:[iManPage pageWithPath:[paths objectAtIndex:0]]];
+	} else {
+		_pageChoices = [paths retain];
+		[NSApp beginSheet:pageSelectionSheet modalForWindow:[self windowForSheet] modalDelegate:self didEndSelector:@selector(pageSelectionSheetDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+	}
 }
 
 - (void)loadPage:(iManPage *)page
@@ -851,15 +891,53 @@ static NSString *const iManFindResultDisplayString = @"string";
 }
 
 #pragma mark -
+#pragma mark Page Selection Sheet Data Source
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
+{
+	if (_pageChoices)
+		return [_pageChoices count];
+	
+	return 0;
+}
+
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+	if (_pageChoices) {
+		NSString *path = [_pageChoices objectAtIndex:row];
+		NSString *basename, *section;
+		
+		if ([[path pathExtension] isEqualToString:@"gz"]) {
+			basename = [[[path lastPathComponent] stringByDeletingPathExtension] stringByDeletingPathExtension];
+			section = [[path stringByDeletingPathExtension] pathExtension];
+		} else {
+			basename = [[path lastPathComponent] stringByDeletingPathExtension];
+			section = [path pathExtension];
+		}
+		
+		return [NSString stringWithFormat:@"%@(%@) — %@", basename, section, path];
+	}
+	
+	return nil;
+}
+
+- (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+	return NO;
+}
+
+#pragma mark -
 #pragma mark Find Results Table Delegate
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
-    if ([findResultsView selectedRow] != -1) {
-        NSRange range = [[[[self findResults] objectAtIndex:[findResultsView selectedRow]] objectForKey:iManFindResultRange] rangeValue];
-        [manpageView setSelectedRange:range];
-        [manpageView scrollRangeToVisible:range];
-    }
+	if ([notification object] == findResultsView) {
+		if ([findResultsView selectedRow] != -1) {
+			NSRange range = [[[[self findResults] objectAtIndex:[findResultsView selectedRow]] objectForKey:iManFindResultRange] rangeValue];
+			[manpageView setSelectedRange:range];
+			[manpageView scrollRangeToVisible:range];
+		}
+	}
 }
 
 #pragma mark -

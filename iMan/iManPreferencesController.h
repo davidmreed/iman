@@ -29,6 +29,8 @@
 	IBOutlet NSTextField *pathEditTitle;
 	IBOutlet NSButton *pathEditOKButton;
 	
+	BOOL didEditManpath;
+	
 	enum { editingManpath, editingToolPath } editOperation;
 }
 

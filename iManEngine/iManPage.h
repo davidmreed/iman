@@ -7,22 +7,18 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class iManRenderOperation, iManResolveOperation;
+@class iManRenderOperation;
 
 @interface iManPage : NSObject {
 	NSAttributedString *page_;
 	NSString *path_;
-	NSString *pageName_;
-	NSString *pageSection_;
 	iManRenderOperation *_renderOperation;
-	iManResolveOperation *_resolveOperation;
 }
 
 + (void)clearCache;
 
-+ pageWithURL:(NSURL *)url;
 + pageWithPath:(NSString *)path;
-+ pageWithName:(NSString *)name inSection:(NSString *)section;
+- initWithPath:(NSString *)path;
 
 - (NSString *)path;
 - (NSString *)pageName;
@@ -33,19 +29,14 @@
 
 - (BOOL)isLoaded;
 - (BOOL)isLoading;
-- (BOOL)isResolved;
-- (BOOL)isResolving;
 
 - (void)load;
 - (void)reload;
-- (void)resolve;
 
 @end
 
 extern NSString *const iManPageLoadDidCompleteNotification;
 extern NSString *const iManPageLoadDidFailNotification;
-extern NSString *const iManPageResolveDidCompleteNotification;
-extern NSString *const iManPageResolveDidFailNotification;
 extern NSString *const iManPageError;
 
 extern NSString *const iManPageStyleAttributeName;
