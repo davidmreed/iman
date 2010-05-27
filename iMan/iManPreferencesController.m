@@ -19,7 +19,7 @@
 @implementation iManPreferencesController
 
 #pragma mark -
-#pragma mark Initialization
+#pragma mark NSWindowController Overrides
 
 - (void)awakeFromNib
 {
@@ -56,6 +56,19 @@
 	[controller addObserver:self forKeyPath:@"values.iManUnderlineStyleMakeBold" options:0 context:NULL];
 	[controller addObserver:self forKeyPath:@"values.iManUnderlineStyleMakeItalic" options:0 context:NULL];
 	[controller addObserver:self forKeyPath:@"values.iManUnderlineStyleMakeUnderline" options:0 context:NULL];
+
+	// If YES on close, we need to rescan the database. Make sure we know when we do close.
+	[[self window] setDelegate:self];
+	didEditManpath = NO;
+}
+
+- (void)windowWillClose:(NSNotification *)notification
+{
+	// If we changed the manpath list, rescan the database.
+	if (didEditManpath) {
+		// after we are done and control returns to the run loop.
+		[[NSApp delegate] performSelector:@selector(rescanDatabase:) withObject:self afterDelay:0.1];
+	}
 }
 
 #pragma mark -
@@ -160,6 +173,7 @@
 	[prefs setManpaths:paths];
 	[paths release];
 	[manpathList reloadData];
+	didEditManpath = YES;
 }
 
 - (IBAction)editManpath:(id)sender
@@ -188,6 +202,7 @@
 	if (returnCode == NSOKButton) {
 		[[iManEnginePreferences sharedInstance] setManpaths:[[[iManEnginePreferences sharedInstance] manpaths] arrayByAddingObject:[[[pathEditField stringValue] copy] autorelease]]];
 		[manpathList reloadData];
+		didEditManpath = YES;
 	}
 }
 
@@ -201,6 +216,7 @@
 		[[iManEnginePreferences sharedInstance] setManpaths:array];
 		[array release];
 		[manpathList reloadData];
+		didEditManpath = YES;
 	}
 	[(NSNumber *)contextInfo release];
 }
