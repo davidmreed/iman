@@ -71,6 +71,49 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
 	[NSApp setServicesProvider:self];
+	
+	// Set up our page database and make sure that it is initialized.
+	// Initialize from saved data if possible.
+	
+	NSString *path = [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"iMan/iManPageDatabase"];
+	
+	if ([[NSFileManager defaultManager] isReadableFileAtPath:path]) {
+		_pageDatabase = [NSUnarchiver unarchiveObjectWithFile:path];
+		if (_pageDatabase != nil) {
+			[_pageDatabase retain];
+		} else {
+			[[NSFileManager defaultManager] removeItemAtPath:path error:NULL];
+		}
+	}
+	
+	if (_pageDatabase == nil) {
+		// Create a new page database, present a dialogue box, and spin off a thread to build the database.
+		_pageDatabase = [[iManPageDatabase alloc] initWithManpaths:[[iManEnginePreferences sharedInstance] manpaths]];
+				
+		[NSBundle loadNibNamed:@"iManInitializingDatabaseWindow" owner:self];
+		[progressIndicator startAnimation:self];
+		[initializingDatabaseWindow center];
+		[NSApp beginSheet:initializingDatabaseWindow modalForWindow:nil modalDelegate:self didEndSelector:nil contextInfo:NULL];
+		[NSThread detachNewThreadSelector:@selector(_initializePageDatabase:) toTarget:self withObject:nil];
+	}
+}
+
+- (void)_initializePageDatabase:(id)ignored
+{
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
+	// iManPageDatabase is thread-safe.
+	[_pageDatabase scanAllPages];
+	
+	[self performSelectorOnMainThread:@selector(_initializePageDatabaseDidEnd:) withObject:nil waitUntilDone:NO];
+	
+	[pool release];
+}
+
+- (void)_initializePageDatabaseDidEnd:(id)ignored
+{
+	[NSApp endSheet:initializingDatabaseWindow];
+	[initializingDatabaseWindow release];
 }
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender
@@ -78,12 +121,21 @@
     return YES;
 }
 
+- (void)applicationWillTerminate:(NSNotification *)notification
+{
+	NSString *directory = [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"iMan"];
+	
+	if (![[NSFileManager defaultManager] fileExistsAtPath:directory]) {
+		[[NSFileManager defaultManager] createDirectoryAtPath:directory attributes:nil];
+	}
+	
+	[NSArchiver archiveRootObject:_pageDatabase toFile:[directory stringByAppendingPathComponent:@"iManPageDatabase"]];
+}
+
 #pragma mark -
 #pragma mark Services
 
-- (void)loadManpage:(NSPasteboard *)pboard
-		   userData:(NSString *)userData
-			  error:(NSString **)error
+- (void)loadManpage:(NSPasteboard *)pboard userData:(NSString *)userData error:(NSString **)error
 {
 	NSString *manpage = [pboard stringForType:NSStringPboardType]; 
 	
@@ -91,6 +143,13 @@
 		[NSApp activateIgnoringOtherApps:YES];
 		[iMan loadExternalURL:[NSURL URLWithString:[[NSString stringWithFormat:@"man:%@", manpage] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 	}
+}
+
+#pragma mark -
+
+- (iManPageDatabase *)sharedPageDatabase
+{
+	return _pageDatabase;
 }
 
 #pragma mark -
@@ -162,6 +221,8 @@
 
 - (void)dealloc
 {
+	[_pageDatabase release];
+	[_preferencesController release];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super dealloc];
 }

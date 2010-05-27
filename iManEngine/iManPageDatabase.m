@@ -1,5 +1,5 @@
 //
-//  iManBrowser.m
+//  iManPageDatabase.m
 //  iManEngine
 //
 //  Created by David Reed on 5/18/10.
@@ -8,24 +8,19 @@
 
 #import "iManPageDatabase.h"
 #import <iManEngine/iManEnginePreferences.h>
+#import <iManEngine/iManRWLock.h>
 
 @implementation iManPageDatabase
-
-- init
-{
-	self = [self initWithManpaths:[[iManEnginePreferences sharedInstance] manpaths]];
-	
-	return self;
-}
 
 - initWithManpaths:(NSArray *)paths
 {
 	self = [super init];
 	if (self != nil) {
 		_manpaths = [paths copy];
-		_categoryDatabase = [[NSMutableDictionary alloc] init];
+		_sectionDatabase = [[NSMutableDictionary alloc] init];
 		_basenameDatabase = [[NSMutableDictionary alloc] init];
 		_directoryListings = [[NSMutableDictionary alloc] init];
+		_lock = [[iManRWLock alloc] init];
 	}
 	
 	return self;
@@ -36,12 +31,12 @@
 	self = [super init];
 	if (self) {
 		if ([coder allowsKeyedCoding]) {
-			_categoryDatabase = [[coder decodeObjectForKey:@"CategoryDatabase"] retain];
+			_sectionDatabase = [[coder decodeObjectForKey:@"CategoryDatabase"] retain];
 			_basenameDatabase = [[coder decodeObjectForKey:@"BasenameDatabase"] retain];
 			_directoryListings = [[coder decodeObjectForKey:@"DirectoryListings"] retain];
 			_manpaths = [[coder decodeObjectForKey:@"Manpaths"] retain];
 		} else {
-			_categoryDatabase = [[coder decodeObject] retain];
+			_sectionDatabase = [[coder decodeObject] retain];
 			_basenameDatabase = [[coder decodeObject] retain];
 			_directoryListings = [[coder decodeObject] retain];
 			_manpaths = [[coder decodeObject] retain];			
@@ -53,131 +48,194 @@
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
+	[_lock readLock];
 	if ([coder allowsKeyedCoding]) {
-		[coder encodeObject:_categoryDatabase forKey:@"CategoryDatabase"];
+		[coder encodeObject:_sectionDatabase forKey:@"CategoryDatabase"];
 		[coder encodeObject:_basenameDatabase forKey:@"BasenameDatabase"];
 		[coder encodeObject:_directoryListings forKey:@"DirectoryListings"];
 		[coder encodeObject:_manpaths forKey:@"Manpaths"];
 	} else {
-		[coder encodeObject:_categoryDatabase];
+		[coder encodeObject:_sectionDatabase];
 		[coder encodeObject:_basenameDatabase];
 		[coder encodeObject:_directoryListings];
 		[coder encodeObject:_manpaths];
 	}
+	[_lock unlock];
 }
 
 - (NSArray *)manpaths
 {
+	// immutable ivar; no lock needed.
 	return _manpaths;
 }
 
-- (NSArray *)categories
+- (NSArray *)sections
 {
-	NSFileManager *fm = [NSFileManager defaultManager];
-	NSMutableSet *cats = [NSMutableSet set];
+	NSArray *ret;
 	
-	for (NSString *path in [self manpaths]) {
-		NSDirectoryEnumerator *dir = [fm enumeratorAtPath:path];
+	[_lock readLock];
+	if (_sections != nil) {
+		ret = [_sections allObjects];
+	} else {
+		NSFileManager *fm = [NSFileManager defaultManager];
+
+		[_lock unlock];
+		[_lock writeLock];
 		
-		for (NSString *file in dir) {
-			BOOL isDir;
-			if ([fm fileExistsAtPath:file isDirectory:&isDir] && isDir) {
-				[dir skipDescendents];
-				if ([[file lastPathComponent] hasPrefix:@"man"]) {
-					[cats addObject:[[file lastPathComponent] substringFromIndex:3]];
+		_sections = [[NSMutableSet alloc] init];
+		
+		for (NSString *path in [self manpaths]) {
+			NSDirectoryEnumerator *dir = [fm enumeratorAtPath:path];
+			
+			for (NSString *file in dir) {
+				BOOL isDir;
+				if ([fm fileExistsAtPath:[path stringByAppendingPathComponent:file] isDirectory:&isDir] && isDir) {
+					[dir skipDescendents];
+					if ([[file lastPathComponent] hasPrefix:@"man"]) {
+						[_sections addObject:[[file lastPathComponent] substringFromIndex:3]];
+					}
 				}
 			}
 		}
+
+		ret = [_sections allObjects];
 	}
 	
-	return [cats allObjects];
+	[_lock unlock];
+	
+	return ret;
 }
 
-- (NSArray *)pagesInCategory:(NSString *)category underManpath:(NSString *)manpath
+- (NSArray *)pagesInSection:(NSString *)category underManpath:(NSString *)manpath
 {
-	NSString *path = [manpath stringByAppendingPathComponent:category];
+	NSString *path = [manpath stringByAppendingPathComponent:[NSString stringWithFormat:@"man%@", category]];
+	NSArray *ret;
 	
-	if ([_directoryListings objectForKey:path] == nil) {	
-		NSFileManager *fm = [NSFileManager defaultManager];
-		NSMutableArray *pages = [[NSMutableArray alloc] init];
-		NSString *categoryPath = [manpath stringByAppendingPathComponent:[NSString stringWithFormat:@"man%@", category]];
-		NSDirectoryEnumerator *dir = [fm enumeratorAtPath:categoryPath];
-		
-		for (NSString *path in dir) {
-			// Note use of -hasPrefix: rather than -isEqualToString:. Many pages in category 3, for example, have extensions like .3ssl, .3pm, .3x, etc. These are contained under man3 and we treat them as such.
-			if ([fm isReadableFileAtPath:path] &&
-				([[path pathExtension] hasPrefix:category] || ([[path pathExtension] isEqualToString:@"gz"] && [[[path stringByDeletingPathExtension] pathExtension] hasPrefix:category]))) {
-				NSString *basename, *properFilename, *nameWithCategory;
-				
-				// Add to the list of pages in this category.
-				[pages addObject:path];
-				
-				// Add the object to the basename database.
-				if ([[path pathExtension] isEqualToString:@"gz"]) 
-					properFilename = [[path lastPathComponent] stringByDeletingPathExtension];
-				else 
-					properFilename = [path lastPathComponent];
-				
-				basename = [properFilename stringByDeletingPathExtension];
-				nameWithCategory = [basename stringByAppendingPathExtension:category]; // We'll file it under its base name, its parent category name, and its own category name (i.e., basename, basename.3, basename.3pm). 
-				// Add to the global basename database
-				if ([_basenameDatabase objectForKey:basename] == nil)
-					[_basenameDatabase setObject:[NSMutableSet setWithObject:path] forKey:basename];
-				else
-					[[_basenameDatabase objectForKey:basename] addObject:path];
-				// Add to the basename database with its own category
-				if ([_basenameDatabase objectForKey:properFilename] == nil)
-					[_basenameDatabase setObject:[NSMutableSet setWithObject:path] forKey:properFilename];
-				else
-					[[_basenameDatabase objectForKey:properFilename] addObject:path];
-				// Add to the basename database with parent category
-				if ([_basenameDatabase objectForKey:nameWithCategory] == nil)
-					[_basenameDatabase setObject:[NSMutableSet setWithObject:path] forKey:nameWithCategory];
-				else
-					[[_basenameDatabase objectForKey:nameWithCategory] addObject:path];
-				
-			}
+	[_lock readLock];
+	ret = [NSArray arrayWithArray:[_directoryListings objectForKey:path]];
+	[_lock unlock];
+	
+	if (ret == nil) {
+		[self scanPagesInSection:category underManpath:manpath];
+		return [self pagesInSection:category underManpath:manpath];
+	}
+	
+	return ret;
+}
+
+- (void)scanPagesInSection:(NSString *)category underManpath:(NSString *)manpath
+{
+	NSFileManager *fm = [NSFileManager defaultManager];
+	NSMutableArray *pages = [[NSMutableArray alloc] init];
+	NSString *categoryPath = [manpath stringByAppendingPathComponent:[NSString stringWithFormat:@"man%@", category]];
+	NSDirectoryEnumerator *dir = [fm enumeratorAtPath:categoryPath];
+	
+	for (NSString *path in dir) {
+		// Note use of -hasPrefix: rather than -isEqualToString:. Many pages in category 3, for example, have extensions like .3ssl, .3pm, .3x, etc. These are contained under man3 and we treat them as such.
+		NSString *fullPath = [categoryPath stringByAppendingPathComponent:path];
+		if ([fm isReadableFileAtPath:fullPath] &&
+			([[fullPath pathExtension] hasPrefix:category] || ([[fullPath pathExtension] isEqualToString:@"gz"] && [[[fullPath stringByDeletingPathExtension] pathExtension] hasPrefix:category]))) {
+			NSString *basename, *properFilename, *nameWithCategory;
+			
+			// Add to the list of pages in this category.
+			[pages addObject:fullPath];
+			
+			// Add the object to the basename database.
+			if ([[fullPath pathExtension] isEqualToString:@"gz"]) 
+				properFilename = [[fullPath lastPathComponent] stringByDeletingPathExtension];
+			else 
+				properFilename = [fullPath lastPathComponent];
+			
+			basename = [properFilename stringByDeletingPathExtension];
+			nameWithCategory = [basename stringByAppendingPathExtension:category]; // We'll file it under its base name, its parent category name, and its own category name (i.e., basename, basename.3, basename.3pm). 
+																				   // Add to the global basename database
+			if ([_basenameDatabase objectForKey:basename] == nil)
+				[_basenameDatabase setObject:[NSMutableSet setWithObject:fullPath] forKey:basename];
+			else
+				[[_basenameDatabase objectForKey:basename] addObject:fullPath];
+			// Add to the basename database with its own category
+			if ([_basenameDatabase objectForKey:properFilename] == nil)
+				[_basenameDatabase setObject:[NSMutableSet setWithObject:fullPath] forKey:properFilename];
+			else
+				[[_basenameDatabase objectForKey:properFilename] addObject:fullPath];
+			// Add to the basename database with parent category
+			if ([_basenameDatabase objectForKey:nameWithCategory] == nil)
+				[_basenameDatabase setObject:[NSMutableSet setWithObject:fullPath] forKey:nameWithCategory];
+			else
+				[[_basenameDatabase objectForKey:nameWithCategory] addObject:fullPath];
+			
 		}
-		
-		[_directoryListings setObject:[NSArray arrayWithArray:pages] forKey:path];
-		[pages release];
 	}
 	
-	return [_directoryListings objectForKey:path];
+	[_lock writeLock];
+	[_directoryListings setObject:[NSArray arrayWithArray:pages] forKey:categoryPath];
+	[pages release];
+	[_lock unlock];
 }
 
-- (NSArray *)pagesInCategory:(NSString *)category
+- (NSArray *)pagesInSection:(NSString *)category
 {
-	if ([_categoryDatabase objectForKey:category] == nil) {
-		NSMutableArray *pages = [[NSMutableArray alloc] init];
+	NSArray *ret;
+	
+	[_lock readLock];
+	ret = [NSArray arrayWithArray:[_sectionDatabase objectForKey:category]];
+	[_lock unlock];
+	
+	return ret;
+}
+
+- (void)scanPagesInSection:(NSString *)category
+{
+	NSMutableArray *pages = [[NSMutableArray alloc] init];
 		
-		for (NSString *path in [self manpaths]) {
-			[pages addObjectsFromArray:[self pagesInCategory:category underManpath:path]];
-		}
-		
-		[_categoryDatabase setObject:[NSArray arrayWithArray:pages] forKey:category];
-		[pages release];
+	for (NSString *path in [self manpaths]) {
+		[self scanPagesInSection:category underManpath:path];
+		[pages addObjectsFromArray:[self pagesInSection:category underManpath:path]];
 	}
 	
-	return [_categoryDatabase objectForKey:category];
+	[_lock writeLock];
+	[_sectionDatabase setObject:[NSArray arrayWithArray:pages] forKey:category];
+	[_lock unlock];
+		
+	[pages release];
 }
 
-- (NSArray *)pagesWithBasename:(NSString *)basename
+- (NSArray *)pagesWithName:(NSString *)basename
 {
-	return [[_basenameDatabase objectForKey:basename] allObjects];
+	NSArray *ret;
+	
+	[_lock readLock];
+	ret = [[_basenameDatabase objectForKey:basename] allObjects];
+	[_lock unlock];
+	
+	return ret;
 }
 		  
-- (NSArray *)pagesWithBasename:(NSString *)basename inCategory:(NSString *)category
+- (NSArray *)pagesWithName:(NSString *)basename inSection:(NSString *)category
 {
-	return [[_basenameDatabase objectForKey:[basename stringByAppendingPathExtension:category]] allObjects];
+	NSArray *ret;
+	
+	[_lock readLock];
+	ret = [[_basenameDatabase objectForKey:[basename stringByAppendingPathExtension:category]] allObjects];
+	[_lock unlock];
+	
+	return ret;
+}
+
+- (void)scanAllPages
+{
+	for (NSString *section in [self sections]) 
+		[self scanPagesInSection:section];
 }
 
 - (void)dealloc
 {
+	[_sections release];
 	[_basenameDatabase release];
-	[_categoryDatabase release];
+	[_sectionDatabase release];
 	[_directoryListings release];
 	[_manpaths release];
+	[_lock release];
 	[super dealloc];
 }
 

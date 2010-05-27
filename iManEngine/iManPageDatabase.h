@@ -1,5 +1,5 @@
 //
-//  iManBrowser.h
+//  iManPageDatabase.h
 //  iManEngine
 //
 //  Created by David Reed on 5/18/10.
@@ -8,22 +8,30 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class iManRWLock;
 
 @interface iManPageDatabase : NSObject <NSCoding> {
 	NSArray *_manpaths;
-	NSMutableDictionary *_categoryDatabase;
+	NSMutableSet *_sections;
+	NSMutableDictionary *_sectionDatabase;
 	NSMutableDictionary *_basenameDatabase;
 	NSMutableDictionary *_directoryListings;
+	iManRWLock *_lock;
 }
 
 - initWithManpaths:(NSArray *)paths;
 
 - (NSArray *)manpaths;
-- (NSArray *)categories;
-- (NSArray *)pagesInCategory:(NSString *)category underManpath:(NSString *)manpath;
-- (NSArray *)pagesInCategory:(NSString *)category;
+- (NSArray *)sections;
+- (NSArray *)pagesInSection:(NSString *)category underManpath:(NSString *)manpath;
+- (NSArray *)pagesInSection:(NSString *)category;
 
-- (NSArray *)pagesWithBasename:(NSString *)basename;
-- (NSArray *)pagesWithBasename:(NSString *)basename inCategory:(NSString *)category;
+- (NSArray *)pagesWithName:(NSString *)basename;
+- (NSArray *)pagesWithName:(NSString *)basename inSection:(NSString *)category;
+
+- (void)scanPagesInSection:(NSString *)category underManpath:(NSString *)manpath;
+- (void)scanPagesInSection:(NSString *)category;
+- (void)scanAllPages;
+
 
 @end

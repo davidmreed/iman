@@ -41,6 +41,7 @@
 		637873A611A9EA9800D34D02 /* iManHistoryQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 637873A411A9EA9800D34D02 /* iManHistoryQueue.m */; };
 		63CEBADE0F1B0227001180EC /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CEBADD0F1B0227001180EC /* Sparkle.framework */; };
 		63CEBAF50F1B0397001180EC /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 63CEBAF40F1B0397001180EC /* dsa_pub.pem */; };
+		63E1138111AED89500100EED /* iManInitializingDatabaseWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E1137F11AED89500100EED /* iManInitializingDatabaseWindow.xib */; };
 		63FCFBF50F1BB7D1004B3D5F /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63CEBADD0F1B0227001180EC /* Sparkle.framework */; };
 		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -131,6 +132,7 @@
 		637873A411A9EA9800D34D02 /* iManHistoryQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManHistoryQueue.m; sourceTree = "<group>"; };
 		63CEBADD0F1B0227001180EC /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = ../Sparkle.framework; sourceTree = SOURCE_ROOT; };
 		63CEBAF40F1B0397001180EC /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
+		63E1138011AED89500100EED /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/iManInitializingDatabaseWindow.xib; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* iMan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iMan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -172,6 +174,7 @@
 		1117ECB909D1D1BC00A5820F /* NIB Files */ = {
 			isa = PBXGroup;
 			children = (
+				63E1137F11AED89500100EED /* iManInitializingDatabaseWindow.xib */,
 				11B7680B0719C3BB00C503A1 /* iManIndexPanel.nib */,
 				1174311F06AF430B00CE425B /* MainMenu.nib */,
 				1174311D06AF430B00CE425B /* iManDocument.nib */,
@@ -249,21 +252,21 @@
 			isa = PBXGroup;
 			children = (
 				1174301C06AF406300CE425B /* iMan.h */,
-				1174301E06AF406300CE425B /* iManConstants.h */,
-				1174302C06AF407C00CE425B /* iManDocument.h */,
-				11046A4309FAC93A00C397CE /* iManIndexingWindowController.h */,
-				1174302006AF406300CE425B /* iManPreferencesController.h */,
-				1174302B06AF407C00CE425B /* iManURLHandler.h */,
 				1174307C06AF416800CE425B /* iMan.m */,
+				1174301E06AF406300CE425B /* iManConstants.h */,
+				1174307B06AF416800CE425B /* iManConstants.m */,
+				1174302C06AF407C00CE425B /* iManDocument.h */,
 				1174307A06AF416800CE425B /* iManDocument.m */,
 				637873A311A9EA9800D34D02 /* iManHistoryQueue.h */,
 				637873A411A9EA9800D34D02 /* iManHistoryQueue.m */,
+				11046A4309FAC93A00C397CE /* iManIndexingWindowController.h */,
+				11046A4409FAC93A00C397CE /* iManIndexingWindowController.m */,
+				1174302006AF406300CE425B /* iManPreferencesController.h */,
+				1174307906AF416800CE425B /* iManPreferencesController.m */,
+				1174302B06AF407C00CE425B /* iManURLHandler.h */,
+				1174307706AF416800CE425B /* iManURLHandler.m */,
 				6378734411A9753A00D34D02 /* iManSearchResult+Description.h */,
 				6378734511A9753A00D34D02 /* iManSearchResult+Description.m */,
-				1174307B06AF416800CE425B /* iManConstants.m */,
-				11046A4409FAC93A00C397CE /* iManIndexingWindowController.m */,
-				1174307906AF416800CE425B /* iManPreferencesController.m */,
-				1174307706AF416800CE425B /* iManURLHandler.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -407,6 +410,7 @@
 				1117ECC109D1D20A00A5820F /* iMan.scriptSuite in Resources */,
 				63CEBAF50F1B0397001180EC /* dsa_pub.pem in Resources */,
 				6343C1CD11A1E2B40018D313 /* iman in Resources */,
+				63E1138111AED89500100EED /* iManInitializingDatabaseWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -601,6 +605,14 @@
 				11B7680C0719C3BB00C503A1 /* English */,
 			);
 			name = iManIndexPanel.nib;
+			sourceTree = "<group>";
+		};
+		63E1137F11AED89500100EED /* iManInitializingDatabaseWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				63E1138011AED89500100EED /* English */,
+			);
+			name = iManInitializingDatabaseWindow.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
