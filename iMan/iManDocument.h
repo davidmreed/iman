@@ -40,10 +40,15 @@ typedef enum {
 	IBOutlet NSTabView *aproposTabView;
 	IBOutlet NSTableView *aproposResultsView;
 	IBOutlet NSMenu *aproposFieldMenu;
+	
+	// Multiple-page selection sheet
+	IBOutlet NSPanel *pageSelectionSheet;
+	IBOutlet NSTableView *pageSelectionList;
 
 	// Page and navigation machinery.
     iManHistoryQueue *_history;
 	iManPage *page_;
+	NSArray *_pageChoices; 
 
 	// apropos/whatis search machinery.
 	iManSearch *search_;
@@ -94,6 +99,9 @@ typedef enum {
 - (IBAction)performSearch:(id)sender;
 - (IBAction)takeUseRegexpsFrom:(id)sender;
 - (IBAction)takeCaseSensitiveFrom:(id)sender;
+
+- (IBAction)pageSelectionSheetOK:(id)sender;
+- (IBAction)pageSelectionSheetCancel:(id)sender;
 
 @property BOOL useRegexps;
 @property BOOL caseSensitive;

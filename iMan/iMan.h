@@ -7,22 +7,29 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class iManPreferencesController;
+@class iManPreferencesController, iManPageDatabase;
 
 @interface iMan : NSObject
 {	
     iManPreferencesController *_preferencesController;
+	iManPageDatabase *_pageDatabase;
+	
+	IBOutlet NSWindow *initializingDatabaseWindow;
+	IBOutlet NSProgressIndicator *progressIndicator;
 }
 
 + (void)loadURLInNewDocument:(NSURL *)url;
 + (void)loadExternalURL:(NSURL *)url;
 
+- (iManPageDatabase *)sharedPageDatabase;
+
 - (void)loadManpage:(NSPasteboard *)pboard userData:(NSString *)userData error:(NSString **)error;
 
 - (IBAction)updateIndex:(id)sender;
 - (IBAction)emptyPageCache:(id)sender;
+- (IBAction)installCommandLineTool:(id)sender;
+- (IBAction)rescanDatabase:(id)sender;
 - (IBAction)showPreferences:(id)sender;
 - (IBAction)showHelp:(id)sender;
-- (IBAction)installCommandLineTool:(id)sender;
 
 @end
