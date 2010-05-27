@@ -176,6 +176,18 @@
 	}
 }
 
+- (IBAction)rescanDatabase:(id)sender
+{
+	[_pageDatabase release];
+	_pageDatabase = [[iManPageDatabase alloc] initWithManpaths:[[iManEnginePreferences sharedInstance] manpaths]];
+		
+	[NSBundle loadNibNamed:@"iManInitializingDatabaseWindow" owner:self];
+	[progressIndicator startAnimation:self];
+	[initializingDatabaseWindow center];
+	[NSApp beginSheet:initializingDatabaseWindow modalForWindow:nil modalDelegate:self didEndSelector:nil contextInfo:NULL];
+	[NSThread detachNewThreadSelector:@selector(_initializePageDatabase:) toTarget:self withObject:nil];
+}
+
 - (IBAction)installCommandLineTool:(id)sender
 {
 	// NOTE: this code derived from Smultron's SMLAuthenticationController.m

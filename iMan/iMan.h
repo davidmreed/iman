@@ -27,8 +27,9 @@
 
 - (IBAction)updateIndex:(id)sender;
 - (IBAction)emptyPageCache:(id)sender;
+- (IBAction)installCommandLineTool:(id)sender;
+- (IBAction)rescanDatabase:(id)sender;
 - (IBAction)showPreferences:(id)sender;
 - (IBAction)showHelp:(id)sender;
-- (IBAction)installCommandLineTool:(id)sender;
 
 @end
