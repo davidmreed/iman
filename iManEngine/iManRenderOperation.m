@@ -6,7 +6,6 @@
 //
 
 #import "iManRenderOperation.h"
-#import "iManResolveOperation.h"
 #import "NSTask+iManExtensions.h"
 #import "iManEnginePreferences.h"
 #import "iManPage.h"
@@ -23,9 +22,6 @@
 
 @end
 
-//static unichar _readUnicharFromUTF8String(const unsigned char *bytes, const unsigned char *max, unsigned char **final);
-
-
 @implementation iManRenderOperation
 
 - (iManRenderOperation *)initWithPath:(NSString *)path
@@ -35,19 +31,6 @@
 	if (self != nil) {
 		_path = [path copy];
 		_error = nil;
-		_pendingResolution = NO;
-	}
-	
-	return self;
-}
-
-- (iManRenderOperation *)initWithDeferredPath
-{
-	self = [super init];
-	
-	if (self != nil) {
-		_path = nil;
-		_pendingResolution = YES;
 	}
 	
 	return self;
@@ -56,16 +39,6 @@
 - (void)main
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
-	if (_pendingResolution) {
-		iManResolveOperation *resolveOperation = [[self dependencies] lastObject];
-		
-		if ([resolveOperation path] != nil) {
-			_path = [[resolveOperation path] copy];
-		} else {
-			_error = [[NSError alloc] initWithDomain:iManEngineErrorDomain code:iManResolveFailedError userInfo:[NSDictionary dictionaryWithObject:[resolveOperation error] forKey:NSUnderlyingErrorKey]];
-		}
-	}
 
 	if (_path != nil) {
 		NSData *data;
@@ -83,8 +56,7 @@
 			_error = [[NSError alloc] initWithDomain:iManEngineErrorDomain code:iManRenderFailedError userInfo:[NSDictionary dictionaryWithObject:taskError forKey:NSUnderlyingErrorKey]];
 	} else {
 		_page = nil;
-		if (_error == nil) // i.e., if we have not inherited an error from the resolve operation -- we then have an internal inconsistency error.
-			_error = [[NSError alloc] initWithDomain:iManEngineErrorDomain code:iManInternalInconsistencyError userInfo:nil];
+		_error = [[NSError alloc] initWithDomain:iManEngineErrorDomain code:iManInternalInconsistencyError userInfo:nil];
 	}
 	
 	[pool release];
