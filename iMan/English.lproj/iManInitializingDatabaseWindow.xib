@@ -217,7 +217,7 @@
 					<string>{{280, 553}, {395, 74}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{280, 553}, {395, 74}}</string>
-					<boolean value="YES"/>
+					<boolean value="NO"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -253,14 +253,12 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>emptyPageCache:</string>
 							<string>installCommandLineTool:</string>
-							<string>quitFromScanningWindow:</string>
 							<string>showHelp:</string>
 							<string>showPreferences:</string>
 							<string>updateIndex:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
