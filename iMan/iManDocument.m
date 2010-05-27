@@ -16,8 +16,6 @@
 #import "RegexKitLite/RegexKitLite.h"
 #import "RegexKitLiteSupport/RKLMatchEnumerator.h"
 
-// FIXME: items in Recent Documents menu are problematic and if one selects a .gz manpage it throws up an error.
-
 // Indices of tab view panes.
 enum {
     kiManPageTabIndex,
@@ -870,11 +868,15 @@ static NSString *const iManFindResultDisplayString = @"string";
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	// Release top-level nib objects. Note that those in iManDocument.nib are automatically released by the window controller.
     [accessoryView release]; // loaded from iManSavePanelAccessory.nib
+	// Release instance variables.
     [_history release];
 	[_savedSearchType release];
+	[_searchResults release];
     [_findResults release];
 	[page_ release];
+	[search_ release];
     [super dealloc];
 }
 
