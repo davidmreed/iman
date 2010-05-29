@@ -33,7 +33,7 @@
 		 [NSNumber numberWithBool:YES], iManShowPageLinks,
             [NSNumber numberWithInt:kiManHandleLinkInCurrentWindow], iManHandlePageLinks,
             [NSNumber numberWithInt:kiManHandleLinkInNewWindow], iManHandleExternalLinks,
-            [NSNumber numberWithInt:kiManHandleLinkInNewWindow], iManHandleSearchResults,
+            [NSNumber numberWithInt:kiManHandleLinkInCurrentWindow], iManHandleSearchResults,
             nil]];
 }
 
