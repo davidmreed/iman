@@ -12,9 +12,9 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="69"/>
 			<integer value="5"/>
 			<integer value="397"/>
+			<integer value="69"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -534,7 +534,7 @@
 																		<string>NeXT TIFF v4.0 pasteboard type</string>
 																	</object>
 																</object>
-																<string key="NSFrameSize">{565, 14}</string>
+																<string key="NSFrameSize">{580, 14}</string>
 																<reference key="NSSuperview" ref="868563544"/>
 																<object class="NSTextContainer" key="NSTextContainer" id="731073330">
 																	<object class="NSLayoutManager" key="NSLayoutManager">
@@ -552,7 +552,7 @@
 																		<nil key="NSDelegate"/>
 																	</object>
 																	<reference key="NSTextView" ref="521764319"/>
-																	<double key="NSWidth">565</double>
+																	<double key="NSWidth">580</double>
 																	<int key="NSTCFlags">1</int>
 																</object>
 																<object class="NSTextViewSharedData" key="NSSharedData">
@@ -618,20 +618,20 @@
 																<nil key="NSDelegate"/>
 															</object>
 														</object>
-														<string key="NSFrameSize">{565, 620}</string>
+														<string key="NSFrameSize">{580, 620}</string>
 														<reference key="NSSuperview" ref="289835772"/>
 														<reference key="NSNextKeyView" ref="521764319"/>
 														<reference key="NSDocView" ref="521764319"/>
 														<reference key="NSBGColor" ref="75937379"/>
 														<object class="NSCursor" key="NSCursor">
-															<string key="NSHotSpot">{1, -1}</string>
+															<string key="NSHotSpot">{4, 4}</string>
 															<int key="NSCursorType">0</int>
 														</object>
 														<int key="NScvFlags">4</int>
 													</object>
 													<object class="NSScroller" id="231813301">
 														<reference key="NSNextResponder" ref="289835772"/>
-														<int key="NSvFlags">256</int>
+														<int key="NSvFlags">-2147483392</int>
 														<string key="NSFrame">{{565, 0}, {15, 620}}</string>
 														<reference key="NSSuperview" ref="289835772"/>
 														<reference key="NSTarget" ref="289835772"/>
@@ -653,7 +653,7 @@
 												<string key="NSFrameSize">{580, 620}</string>
 												<reference key="NSSuperview" ref="964844693"/>
 												<reference key="NSNextKeyView" ref="868563544"/>
-												<int key="NSsFlags">16</int>
+												<int key="NSsFlags">528</int>
 												<reference key="NSVScroller" ref="231813301"/>
 												<reference key="NSHScroller" ref="443974151"/>
 												<reference key="NSContentView" ref="868563544"/>
@@ -3014,6 +3014,7 @@
 					<string>406.IBPluginDependency</string>
 					<string>46.IBPluginDependency</string>
 					<string>46.ImportedFromIB2</string>
+					<string>47.CustomClassName</string>
 					<string>47.IBPluginDependency</string>
 					<string>47.ImportedFromIB2</string>
 					<string>5.IBEditorWindowLastContentRect</string>
@@ -3185,6 +3186,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
+					<string>iManPageView</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>{{31, 131}, {580, 620}}</string>
@@ -3360,6 +3362,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBUserSource</string>
 						<string key="minorKey"/>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">iManPageView</string>
+					<string key="superclassName">NSTextView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">iManPageView.h</string>
 					</object>
 				</object>
 			</object>
