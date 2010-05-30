@@ -13,7 +13,7 @@
 
 - performDefaultImplementation
 {
-	[iMan loadExternalURL:[NSURL URLWithString:[self directParameter]]];	    
+	[[NSApp delegate] loadExternalURL:[NSURL URLWithString:[self directParameter]]];	    
     return nil;
 }
 

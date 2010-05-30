@@ -377,7 +377,7 @@ static NSString *const iManFindResultDisplayString = @"string";
     NSString *result = [[[[self search] results] objectAtIndex:[aproposResultsView clickedRow]] firstPageName];
 		
 	if ([[NSUserDefaults standardUserDefaults] integerForKey:iManHandleSearchResults] == kiManHandleLinkInNewWindow) 
-		[iMan loadURLInNewDocument:[NSURL URLWithString:[NSString stringWithFormat:@"man:%@", result]]];
+		[[NSApp delegate] loadURLInNewDocument:[NSURL URLWithString:[NSString stringWithFormat:@"man:%@", result]]];
 	else
 		[self loadPageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"man:%@", result]]];
 }
