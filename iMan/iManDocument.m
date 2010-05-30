@@ -439,13 +439,13 @@ static NSString *const iManFindResultDisplayString = @"string";
 	[sheet orderOut:self];
 	
 	if (returnCode == NSOKButton) {
-		iManIndexingWindowController *indexingWindowController =  [[iManIndexingWindowController alloc] initWithSelectedIndexes:[NSArray arrayWithObject:[(NSString *)contextInfo autorelease]]];
+		iManIndexingWindowController *indexingWindowController = [[iManIndexingWindowController alloc] initWithSelectedIndexes:[NSArray arrayWithObject:[(iManIndex *)contextInfo autorelease]]];
 		int returnCode;
 		
 		returnCode = [indexingWindowController doRunModalUpdateWindow];
 		
 		if (returnCode == NSOKButton)
-			[self performSelector:@selector(loadRequestedPage:) withObject:self afterDelay:0.01];
+			[self performSelector:@selector(performAproposSearch:) withObject:aproposField afterDelay:0.01];
 		
 		// Ignore cancel, ignore failure (indexing window will notify user of failure).
 		
@@ -542,7 +542,7 @@ static NSString *const iManFindResultDisplayString = @"string";
 						  self,
 						  @selector(shouldUpdateIndexPanelDidEnd:returnCode:contextInfo:),
 						  NULL,
-						  [type retain],
+						  [index retain],
 						  NSLocalizedString(@"The index for the search type \"%@\" needs to be updated before it can be searched. Do you want to update the index now?", nil),
 						  [iManSearch localizedNameForSearchType:type]);
 	}
