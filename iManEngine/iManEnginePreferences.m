@@ -27,6 +27,7 @@ static NSString *const iManEngineManpaths = @"iManEngineManpaths";
 
 + (void)initialize
 {
+	NSArray *manpaths = [NSArray arrayWithObjects:@"/usr/share/man", @"/usr/local/share/man", @"/usr/X11/man", @"/sw/share/man", @"/Developer/usr/share/man", nil];
     _pathDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
         @"/usr/bin/man", @"man",
         @"/usr/bin/groff", @"groff",
@@ -35,7 +36,7 @@ static NSString *const iManEngineManpaths = @"iManEngineManpaths";
         nil];
 	_prefsLock = [[NSLock alloc] init];
 	
-	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObject:[NSDictionary dictionaryWithObject:_pathDictionary forKey:iManEnginePathDictionary] forKey:iManEngineBundleIdentifier]];
+	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObject:[NSDictionary dictionaryWithObjectsAndKeys:_pathDictionary, iManEnginePathDictionary, manpaths, iManEngineManpaths, nil] forKey:iManEngineBundleIdentifier]];
 }
 
 + sharedInstance
@@ -67,7 +68,7 @@ static NSString *const iManEngineManpaths = @"iManEngineManpaths";
 	id loadedPathDictionary = nil;
 	
     [_prefsLock lock];
-	loadedPathDictionary = [[[NSUserDefaults standardUserDefaults] objectForKey:iManEngineBundleIdentifier] objectForKey:iManEnginePathDictionary];
+	loadedPathDictionary = [[self _enginePreferences] objectForKey:iManEnginePathDictionary];
 	path = [[loadedPathDictionary objectForKey:tool] retain];
     [_prefsLock unlock];
     
@@ -104,16 +105,7 @@ static NSString *const iManEngineManpaths = @"iManEngineManpaths";
 	[_prefsLock lock];
 	ret = [[[NSUserDefaults standardUserDefaults] objectForKey:iManEngineBundleIdentifier] objectForKey:iManEngineManpaths];
 	[_prefsLock unlock];
-	if (ret != nil)
-		return ret;
-	
-	dat = [NSTask invokeTool:@"manpath" arguments:[NSArray arrayWithObject:@"-q"] environment:nil error:nil];
-	
-	if (dat != nil) {
-		string = [[[NSString alloc] initWithBytes:[dat bytes] length:[dat length] - 1 encoding:[NSString defaultCStringEncoding]] autorelease];
-		ret = [string componentsSeparatedByString:@":"];
-	}
-	
+
 	return ret;
 }	
 

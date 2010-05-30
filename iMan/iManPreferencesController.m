@@ -291,8 +291,6 @@
 #pragma mark -
 #pragma mark Table View (manpath and tool path) Delegate
 
-// FIXME: there is quite a lag on first selecting the Manpath tab. (iManEnginePreferences has to call man to get it the first time).
-
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	if (tableView == pathTable)
