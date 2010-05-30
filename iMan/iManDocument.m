@@ -484,6 +484,15 @@ static NSString *const iManFindResultDisplayString = @"string";
 		paths = [database pagesWithName:pageName inSection:pageSection];
 	}
 	
+	// Try forcing lowercase if the page isn't found.
+	if ([paths count] == 0) {
+		if (pageSection == nil) {
+			paths = [database pagesWithName:[pageName lowercaseString]];
+		} else {
+			paths = [database pagesWithName:[pageName lowercaseString] inSection:[pageSection lowercaseString]];
+		}
+	}		
+	
 	if ([paths count] == 0) {
 		NSBeginAlertSheet(NSLocalizedString(@"The requested man page could not be found.", nil), NSLocalizedString(@"OK", nil), nil, nil, [self windowForSheet], self, NULL, NULL, NULL, NSLocalizedString(@"iMan was unable to find a page matching the requested title and section. Try searching to find this page.", nil));
 	} else if ([paths count] == 1) {
