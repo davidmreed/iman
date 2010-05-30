@@ -13,13 +13,14 @@
 {	
     iManPreferencesController *_preferencesController;
 	iManPageDatabase *_pageDatabase;
+	NSMutableArray *_deferredURLs;
 	
 	IBOutlet NSWindow *initializingDatabaseWindow;
 	IBOutlet NSProgressIndicator *progressIndicator;
 }
 
-+ (void)loadURLInNewDocument:(NSURL *)url;
-+ (void)loadExternalURL:(NSURL *)url;
+- (void)loadURLInNewDocument:(NSURL *)url;
+- (void)loadExternalURL:(NSURL *)url;
 
 - (iManPageDatabase *)sharedPageDatabase;
 

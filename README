@@ -13,7 +13,7 @@ Currently, iMan consists of the following major classes:
 	* iManPreferencesController
 	A fairly straightforward preference window controller. It will trigger re-scans of the page database when manpaths are edited.
 	* iManURLHandler
-	This class is invoked to handle clicks on URLs of scheme "man:" and "x-man-page:" (see iMan.scriptTerminology). It calls through to +[iMan loadExternalURL:].
+	This class is invoked to handle clicks on URLs of scheme "man:" and "x-man-page:" (see iMan.scriptTerminology). It calls through to -[iMan loadExternalURL:].
 		
 iManEngine.framework holds (among others) the following classes:
 	* iManPage

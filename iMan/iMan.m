@@ -38,32 +38,37 @@
 }
 
 #pragma mark -
-#pragma mark Convenience URL loading method
+#pragma mark Convenience URL loading methods
 
-+ (void)loadURLInNewDocument:(NSURL *)url
+- (void)loadURLInNewDocument:(NSURL *)url
 {
-	iManDocument *docToLoad = [[iManDocument alloc] init];
-	[[NSDocumentController sharedDocumentController] addDocument:docToLoad];
-	[docToLoad makeWindowControllers];
-	[docToLoad showWindows];
-	[docToLoad release];
-	
-	[[[[docToLoad windowControllers] lastObject] window] makeKeyAndOrderFront:nil];
+	iManDocument *docToLoad = [[NSDocumentController sharedDocumentController] openUntitledDocumentAndDisplay:YES error:nil];
 	[docToLoad loadPageWithURL:url];
 }	
 
-+ (void)loadExternalURL:(NSURL *)url
+- (void)loadExternalURL:(NSURL *)url
 {
 	NSDocumentController *documentController = [NSDocumentController sharedDocumentController];
 	
-	// open in current doc if possible.
-    if ([[NSUserDefaults standardUserDefaults] integerForKey:iManHandleExternalLinks] == kiManHandleLinkInCurrentWindow) {
-		[[[documentController currentDocument] windowControllers] makeObjectsPerformSelector:@selector(showWindow:)];
-		[[documentController currentDocument] loadPageWithURL:url];
+	if (_pageDatabase == nil) {
+		// if this is the case, -applicationDidFinishLaunching: has not completed yet (file-open events can be received first).
+		// If we pass the URL off to iManDocument at this time, it will not be able to find it (since _pageDatabase = nil).
+		// However, we may need to run our building-database screen in order to initialize the database, which won't (?) work properly until the run loop has started *after* that method completes.
+		// Hence, we save off this URL and -applicationDidFinishLaunching: will just resend -loadExternalURL: for all saved URLs.
+		if (_deferredURLs == nil)
+			_deferredURLs = [[NSMutableArray alloc] init];
+		
+		[_deferredURLs addObject:url];
 	} else {
-		[self loadURLInNewDocument:url];
+		// open in current doc if possible.
+		if ([[NSUserDefaults standardUserDefaults] integerForKey:iManHandleExternalLinks] == kiManHandleLinkInCurrentWindow) {
+			[[[documentController currentDocument] windowControllers] makeObjectsPerformSelector:@selector(showWindow:)];
+			[[documentController currentDocument] loadPageWithURL:url];
+		} else {
+			[self loadURLInNewDocument:url];
+		}
 	}
-}	
+}
 
 #pragma mark -
 #pragma mark NSApplication Delegate methods
@@ -85,7 +90,8 @@
 			[[NSFileManager defaultManager] removeItemAtPath:path error:NULL];
 		}
 	}
-	
+
+
 	if (_pageDatabase == nil) {
 		// Create a new page database, present a dialogue box, and spin off a thread to build the database.
 		_pageDatabase = [[iManPageDatabase alloc] initWithManpaths:[[iManEnginePreferences sharedInstance] manpaths]];
@@ -95,8 +101,24 @@
 		[initializingDatabaseWindow center];
 		[NSApp beginSheet:initializingDatabaseWindow modalForWindow:nil modalDelegate:self didEndSelector:nil contextInfo:NULL];
 		[NSThread detachNewThreadSelector:@selector(_initializePageDatabase:) toTarget:self withObject:nil];
+	} else {
+		[self _processStoredURLs];
 	}
+
 }
+
+- (void)_processStoredURLs
+{
+	// If we received requests to open URLs (which come in between -applicationWillFinishLaunching: and -applicationDidFinishLaunching: and are stored up in _deferredURLs), we can now process them.
+	if (_deferredURLs != nil) {
+		for (NSURL *url in _deferredURLs) {
+			[self loadExternalURL:url];
+		}
+		
+		[_deferredURLs release];
+		_deferredURLs = nil;
+	}
+}	
 
 - (void)_initializePageDatabase:(id)ignored
 {
@@ -114,6 +136,8 @@
 {
 	[NSApp endSheet:initializingDatabaseWindow];
 	[initializingDatabaseWindow release];
+	if (_deferredURLs != nil) 
+		[self _processStoredURLs];
 }
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender
@@ -141,7 +165,7 @@
 	
 	if (manpage != nil) {
 		[NSApp activateIgnoringOtherApps:YES];
-		[iMan loadExternalURL:[NSURL URLWithString:[[NSString stringWithFormat:@"man:%@", manpage] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+		[self loadExternalURL:[NSURL URLWithString:[[NSString stringWithFormat:@"man:%@", manpage] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 	}
 }
 
