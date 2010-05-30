@@ -55,7 +55,9 @@
 		BOOL isDir;
 
 		folder = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
-		pathComponents = [NSMutableArray arrayWithObjects:[[NSBundle bundleForClass:[iManIndex class]] bundleIdentifier], [self identifier], nil];
+		// Store index in ~/Library/Application Support/org.ktema.iman.imanengine/[application bundle ID]/[index ID].
+		// We don't lock across apps and different apps (assuming any app other than iMan ever uses the engine) may have different manpaths, so indices need to be application-local.
+		pathComponents = [NSMutableArray arrayWithObjects:[[NSBundle bundleForClass:[iManIndex class]] bundleIdentifier], [[NSBundle mainBundle] bundleIdentifier], [self identifier], nil];
 		
 		while ([pathComponents count] != 0) {
 			folder = [folder stringByAppendingPathComponent:[pathComponents objectAtIndex:0]];
