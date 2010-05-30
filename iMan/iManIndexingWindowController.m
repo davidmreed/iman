@@ -71,6 +71,7 @@ NSString *const iManIndexingCompletedNotification = @"iManIndexingCompletedNotif
 	indexing_ = YES;
 	
 	// "Morph" the window -- delete the list view, resize the window around its current center, and add the progress bar.
+	[wind setContentView:[[[NSView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth([[wind contentView] frame]), NSHeight([[wind contentView] frame]))] autorelease]];
 	[wind setFrame:NSMakeRect(NSMinX([wind frame]) + floor(deltaX / 2),
 							  NSMinY([wind frame]) + floor(deltaY / 2),
 							  NSWidth([progressView frame]),
