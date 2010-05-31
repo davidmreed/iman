@@ -21,6 +21,7 @@ NSString *const iManUnderlineStyleMakeItalic = @"iManUnderlineStyleMakeItalic";
 NSString *const iManUnderlineStyleMakeUnderline = @"iManUnderlineStyleMakeUnderline";
 NSString *const iManUnderlineStyleColor = @"iManUnderlineStyleColor";
 
+NSString *const iManShowPageSelectionPanelForDuplicates = @"iManShowPageSelectionPanelForDuplicates";
 
 NSString *const iManShowPageLinks = @"iManShowPageLinks";
 NSString *const iManHandlePageLinks = @"iManHandlePageLinks";

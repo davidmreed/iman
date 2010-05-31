@@ -20,6 +20,8 @@ extern NSString *const iManUnderlineStyleMakeItalic;
 extern NSString *const iManUnderlineStyleMakeUnderline;
 extern NSString *const iManUnderlineStyleColor;
 
+extern NSString *const iManShowPageSelectionPanelForDuplicates;
+
 extern NSString *const iManShowPageLinks;
 extern NSString *const iManHandlePageLinks;
 extern NSString *const iManHandleExternalLinks;

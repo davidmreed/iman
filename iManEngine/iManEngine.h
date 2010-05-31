@@ -15,3 +15,4 @@
 #import <iManEngine/iManSearchResult.h>
 #import <iManEngine/iManPageDatabase.h>
 #import <iManEngine/NSURL+iManExtensions.h>
+#import <iManEngine/NSString+iManPathExtensions.h>
