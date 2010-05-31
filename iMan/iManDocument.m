@@ -498,6 +498,23 @@ static NSString *const iManFindResultDisplayString = @"string";
 	} else if ([paths count] == 1) {
 		[self loadPage:[iManPage pageWithPath:[paths objectAtIndex:0]]];
 	} else {
+		// Multiple pages found. If the user has set "don't show selection panel for duplicates" in the preferences, check if this is a "duplicate" (one or more pages in different directories with identical basenames and sections).
+		if (![[NSUserDefaults standardUserDefaults] boolForKey:iManShowPageSelectionPanelForDuplicates]) {
+			BOOL areDuplicates = YES;
+			NSString *section = [[paths objectAtIndex:0] pageSection], *pageName = [[paths objectAtIndex:0] pageName];
+						
+			for (NSString *aPath in [paths subarrayWithRange:NSMakeRange(1, [paths count] - 1)]) {
+				if (![[aPath pageName] isEqualToString:pageName] || ![[aPath pageSection] isEqualToString:section]) {
+					areDuplicates = NO;
+					break;
+				}
+			}
+			
+			if (areDuplicates) {
+				[self loadPage:[iManPage pageWithPath:[paths objectAtIndex:0]]];
+				return;
+			}
+		}
 		_pageChoices = [paths retain];
 		[NSApp beginSheet:pageSelectionSheet modalForWindow:[self windowForSheet] modalDelegate:self didEndSelector:@selector(pageSelectionSheetDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 	}
@@ -914,17 +931,8 @@ static NSString *const iManFindResultDisplayString = @"string";
 {
 	if (_pageChoices) {
 		NSString *path = [_pageChoices objectAtIndex:row];
-		NSString *basename, *section;
 		
-		if ([[path pathExtension] isEqualToString:@"gz"]) {
-			basename = [[[path lastPathComponent] stringByDeletingPathExtension] stringByDeletingPathExtension];
-			section = [[path stringByDeletingPathExtension] pathExtension];
-		} else {
-			basename = [[path lastPathComponent] stringByDeletingPathExtension];
-			section = [path pathExtension];
-		}
-		
-		return [NSString stringWithFormat:@"%@(%@) — %@", basename, section, path];
+		return [NSString stringWithFormat:@"%@(%@) — %@", [path pageName], [path pageSection], path];
 	}
 	
 	return nil;

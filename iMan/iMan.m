@@ -12,6 +12,14 @@
 #import "iManIndexingWindowController.h"
 #import <iManEngine/iManEngine.h>
 
+@interface iMan (Private)
+
+- (void)_processStoredURLs;
+- (void)_initializePageDatabase:(id)ignored;
+- (void)_initializePageDatabaseDidEnd:(id)ignored;
+
+@end
+
 @implementation iMan
 
 #pragma mark -
@@ -31,9 +39,10 @@
 		 [NSNumber numberWithBool:YES], iManUnderlineStyleMakeUnderline,
 		 [NSArchiver archivedDataWithRootObject:[NSColor blackColor]], iManUnderlineStyleColor,
 		 [NSNumber numberWithBool:YES], iManShowPageLinks,
-            [NSNumber numberWithInt:kiManHandleLinkInCurrentWindow], iManHandlePageLinks,
-            [NSNumber numberWithInt:kiManHandleLinkInNewWindow], iManHandleExternalLinks,
-            [NSNumber numberWithInt:kiManHandleLinkInCurrentWindow], iManHandleSearchResults,
+		 [NSNumber numberWithInt:kiManHandleLinkInCurrentWindow], iManHandlePageLinks,
+		 [NSNumber numberWithInt:kiManHandleLinkInNewWindow], iManHandleExternalLinks,
+		 [NSNumber numberWithInt:kiManHandleLinkInCurrentWindow], iManHandleSearchResults,
+		 [NSNumber numberWithBool:NO], iManShowPageSelectionPanelForDuplicates,
             nil]];
 }
 
