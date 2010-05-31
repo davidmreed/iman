@@ -164,7 +164,7 @@
 	return data;
 }
 
-// This collection is quasi-macros makes the implementation of _attributedStringFromData: a lot less mind-boggling.
+// This collection of quasi-macros makes the implementation of _attributedStringFromData: a lot less mind-boggling.
 // Note that each checks whether the style tag it is examining *can* occur in the given space, and as such is safe to call without doing pointer arithmetic first.
 
 static inline BOOL _hasStyle(unichar *buf, unichar *end)
@@ -177,14 +177,19 @@ static inline BOOL _hasBoldMarker(unichar *buf, unichar *end)
 	return (((buf + 2) < end) && (*(buf + 1) == 0x08) && (*(buf + 2) == *buf));
 }
 
-static inline BOOL _hasAdditionalBoldMarker(unichar *buf, unichar *end)
+static inline BOOL _hasAdditionalBoldMarker(unichar *buf, unichar *end, unichar character)
 {
-	return (((buf + 1) < end) && (*buf == 0x08));
+	return (((buf + 1) < end) && (*buf == 0x08) && (*(buf + 1) == character));
 }
 
 static inline BOOL _hasUnderlineMarker(unichar *buf, unichar *end) 
 {
 	return (((buf + 2) < end) && (*buf == '_') && (*(buf + 1) == 0x08) && (*(buf + 2) != '_'));
+}
+
+static inline BOOL _hasSpuriousOverstriking(unichar *buf, unichar *end)
+{
+	return (_hasStyle(buf, end) && !_hasBoldMarker(buf, end) && !_hasUnderlineMarker(buf, end));
 }
 
 // FIXME: Underlined underscores look just like bolded ones. Do we need to care enough to heuristically guess which it should be?
@@ -239,9 +244,17 @@ static inline BOOL _hasUnderlineMarker(unichar *buf, unichar *end)
 				thisCharacter = *position;
 				thisCharacterFont |= kBoldFont;
 				position += 3;
+			} else {
+				// Sometimes we see bizarre formatting that seems to just represent literal overstriking, as when the title of a page is so long as to overlap the name/section part of the header (most Perl module manpages are examples). Typically this will be something like c 0x08 y 0x08 x, where taking the final character of each sequence yields a more-or-less cogent result.
+				while (_hasSpuriousOverstriking(position, end))
+					position +=2;
+				
+				thisCharacter = *position;
+				position++;
 			}
+
 			// Process any additional boldface markers. (as c 0x08 c 0x08 c or _ 0x08 c 0x08 c).
-			while (_hasAdditionalBoldMarker(position, end)) {
+			while (_hasAdditionalBoldMarker(position, end, thisCharacter)) {
 				thisCharacterFont |= kBoldFont;
 				position += 2;
 			}
