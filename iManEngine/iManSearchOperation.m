@@ -52,11 +52,12 @@
 		[pool release];
 		return;
 	}
-	tempLink = [[NSString stringWithCString:tempDir encoding:[NSString defaultCStringEncoding]] stringByAppendingPathComponent:@"man"];
+	tempLink = [[[NSFileManager defaultManager] stringWithFileSystemRepresentation:tempDir length:strlen(tempDir)] stringByAppendingPathComponent:@"man"];
 	if (![[NSFileManager defaultManager] createSymbolicLinkAtPath:tempLink 
 											  withDestinationPath:[aproposIndex indexPath]
 															error:&taskError]) {
 		_error = [taskError retain];
+		rmdir(&tempDir);
 		[pool release];
 		return;
 	}		
@@ -75,6 +76,7 @@
 	[[aproposIndex lock] unlock];
 	// The following method does not traverse symbolic links.
 	[[NSFileManager defaultManager] removeFileAtPath:tempLink handler:nil];
+	rmdir(&tempDir);
 	
 	if (data != nil) {
 		NSEnumerator *lines;
