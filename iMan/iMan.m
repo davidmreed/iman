@@ -27,9 +27,18 @@
 
 + (void)initialize
 {
+	// Find a default font we like. We need a monospace font with bold and italic faces (so not Andale Mono and not Monaco, the -userFixedPitchFont). Try Menlo first, then Courier, then fall back on the system's choice.
+	NSFont *defaultFont;
+	
+	defaultFont = [NSFont fontWithName:@"Menlo-Regular" size:11.0];
+	if (defaultFont == nil)
+		defaultFont = [NSFont fontWithName:@"Courier" size:11.0];
+	if (defaultFont == nil)
+		defaultFont = [NSFont userFixedPitchFontOfSize:11.0];
+	
     [[NSUserDefaults standardUserDefaults] registerDefaults:
         [NSDictionary dictionaryWithObjectsAndKeys:
-		 [NSArchiver archivedDataWithRootObject:[NSFont userFixedPitchFontOfSize:11.0]], iManDefaultStyle,
+		 [NSArchiver archivedDataWithRootObject:defaultFont], iManDefaultStyle,
 		 [NSNumber numberWithBool:YES], iManBoldStyleMakeBold,
 		 [NSNumber numberWithBool:NO], iManBoldStyleMakeItalic,
 		 [NSNumber numberWithBool:NO], iManBoldStyleMakeUnderline,
