@@ -83,85 +83,62 @@
 
 - (NSData *)_renderedDataFromGzippedPath:(NSString *)path error:(NSError **)error
 {
-    // This is a rather clunky but workable hack to deal with gzip'ed man pages.
-    // Much of this code is copied from the NSTask category, but it has had an input pipe
-    // with on-the-fly decompression added (courtesy of zlib).
+	// Decompress the gzipped file into /tmp and just return [self _renderedDataFromPath:error:]
+	char filename[] = "/tmp/iManXXXXXXXX";
+	gzFile file = NULL;
+	void *buffer;
+	int fd, bytesRead;
+	NSData *ret;
 	
-    NSTask *task = [[NSTask alloc] init];
-    NSPipe *output = [NSPipe pipe];
-    NSPipe *input = [NSPipe pipe];
-    NSString *launchPath = [[iManEnginePreferences sharedInstance] pathForTool:@"groff"];
-    NSData *data = nil;
-	NSFileHandle *readHandle;
-    int returnStatus;
-	
-    gzFile theFile = NULL;
-    voidp buf = NULL;
-    unsigned bytesRead;
-    int fd;
-	
-	// Set up the task.
-	if (launchPath != nil) {
-		[task setLaunchPath:launchPath];
-	} else {
-		[task release];
-		if (error != nil) *error = [NSError errorWithDomain:iManEngineErrorDomain code:iManToolNotConfiguredError userInfo:nil];
+	fd = mkstemp(&filename);
+	if (fd == -1) {
+		if (error != nil) *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
 		return nil;
 	}
 	
-	[task setArguments:[NSArray arrayWithObjects:
-						@"-Tutf8",		// UTF-8 grotty(1) output.
-						@"-P",			// -P sends next argument to postprocessor
-						@"-c",			// tells grotty to use old-style format codes
-						@"-S",			// safe mode (on by default, just to be sure)
-						@"-t",			// preprocess with tbl (man default).
-						@"-mandoc",		// appropriate macro package
-						@"-",			// input on stdin
-						nil]];
-	
-	[task setStandardInput:input];
-	[task setStandardOutput:output];
-	[task setStandardError:[NSFileHandle fileHandleWithNullDevice]];
-	
-	if ((theFile = gzopen([[NSFileManager defaultManager] fileSystemRepresentationWithPath:path], "rb")) == nil) {
+	if ((file = gzopen([[NSFileManager defaultManager] fileSystemRepresentationWithPath:path], "rb")) == NULL) {
 		// if errno == 0, memory allocation failed. Otherwise, errno contains the real error (file couldn't be opened)
-		if (errno == 0)
+		if (errno == 0) {
 			if (error != nil) *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOMEM userInfo:nil];
-		else
+		} else {
 			if (error != nil) *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
-		[task release];
+		}
+		close(fd);
+		unlink(filename);
 		return nil;
 	}
-	if ((buf = malloc(4096)) == nil) {
+	if ((buffer = malloc(4096)) == nil) {
 		if (error != nil) *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOMEM userInfo:nil];
-		[task release];
-		gzclose(theFile);
+		gzclose(file);
+		close(fd);
+		unlink(filename);
 		return nil;
 	}
-	
-	[task launch];
-	fd = [[input fileHandleForWriting] fileDescriptor];    
-	readHandle = [output fileHandleForReading];
-	
-	while ((bytesRead = gzread(theFile, buf, 4096)) > 0) {
-		write(fd, buf, bytesRead); // send it on to groff.
+		
+	while ((bytesRead = gzread(file, buffer, 4096)) > 0) {
+		write(fd, buffer, bytesRead);
 	}
 	
-	[[input fileHandleForWriting] closeFile];
-	gzclose(theFile);
-	data = [readHandle readDataToEndOfFile];
-	[task waitUntilExit];
-	
-	returnStatus = [task terminationStatus];
-	[task release];
-	
-	if (returnStatus != EXIT_SUCCESS) {
-		[data release];
-		data = nil;
-		if (error != nil) *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:returnStatus userInfo:nil];
+	if (bytesRead == -1) { 
+		//An error occured (0 means EOF). 
+		if (error != NULL) {
+			int errnum;
+			const char *errorString = NULL;
+			errorString = gzerror(file, &errnum);
+			if (errnum == Z_ERRNO) errnum = errno;
+			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:errnum userInfo: ((errorString == NULL) ? nil : [NSDictionary dictionaryWithObject:[NSString stringWithCString:errorString encoding:NSASCIIStringEncoding] forKey:NSLocalizedDescriptionKey])];
+		}
+		ret = nil;
+	} else {
+		ret = [self _renderedDataFromPath:[[NSFileManager defaultManager] stringWithFileSystemRepresentation:filename length:strlen(filename)] error:error];
 	}
 	
-	return data;
+	gzclose(file);
+	close(fd);
+	unlink(filename);
+	free(buffer);
+	
+	return ret;
 }
 
 // This collection of quasi-macros makes the implementation of _attributedStringFromData: a lot less mind-boggling.
