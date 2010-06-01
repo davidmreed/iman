@@ -51,28 +51,17 @@
 {
 	if ([[self class] isSubclassOfClass:[iManIndex class]]) {
 		NSString *folder;
-		NSMutableArray *pathComponents;
+		NSArray *pathComponents;
 		BOOL isDir;
 
-		folder = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
 		// Store index in ~/Library/Application Support/org.ktema.iman.imanengine/[application bundle ID]/[index ID].
 		// We don't lock across apps and different apps (assuming any app other than iMan ever uses the engine) may have different manpaths, so indices need to be application-local.
-		pathComponents = [NSMutableArray arrayWithObjects:[[NSBundle bundleForClass:[iManIndex class]] bundleIdentifier], [[NSBundle mainBundle] bundleIdentifier], [self identifier], nil];
+		pathComponents = [NSArray arrayWithObjects:[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject], [[NSBundle bundleForClass:[iManIndex class]] bundleIdentifier], [[NSBundle mainBundle] bundleIdentifier], [self identifier], nil];
 		
-		while ([pathComponents count] != 0) {
-			folder = [folder stringByAppendingPathComponent:[pathComponents objectAtIndex:0]];
-			[pathComponents removeObjectAtIndex:0];
-			
-			if (!([[NSFileManager defaultManager] fileExistsAtPath:folder isDirectory:&isDir] && isDir)) {
-				if (![[NSFileManager defaultManager] createDirectoryAtPath:folder attributes:[NSDictionary dictionary]]) {
-					NSLog(@"iManIndex: couldn't create directory \"%@\"", folder);
-					folder = nil;
-					break;
-				}
-			}
-		}
-		
-		return folder;
+		folder = [NSString pathWithComponents:pathComponents];
+
+		if ([[NSFileManager defaultManager] createDirectoryAtPath:folder withIntermediateDirectories:YES attributes:nil error:nil])
+			return folder;
 	}
 	
 	return nil;
