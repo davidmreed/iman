@@ -17,7 +17,7 @@
 @interface iManRenderOperation (Private)
 
 - (NSData *)_renderedDataFromPath:(NSString *)path error:(NSError **)error;
-- (NSData *)_renderedDataFromGzippedPath:(NSString *)path error:(NSError **)error;
+- (NSData *)_decompressPath:(NSString *)path error:(NSError **)error;
 - (NSAttributedString *)_attributedStringFromData:(NSData *)data error:(NSError **)error;
 
 @end
@@ -64,31 +64,100 @@
 
 - (NSData *)_renderedDataFromPath:(NSString *)path error:(NSError **)error
 {
-	if ([[[path lastPathComponent] pathExtension] isEqualToString:@"gz"])
-		return [self _renderedDataFromGzippedPath:path error:error];
+	NSFileManager *fm = [NSFileManager defaultManager];
+	NSString *finalPath = path;
+	NSData *ret;
+	BOOL didDecompress = NO;
 	
-	return [NSTask invokeTool:@"groff"
-					arguments:[NSArray arrayWithObjects:
+	// If we've been passed a gzipped path, decompress it to /tmp
+	if ([[[path lastPathComponent] pathExtension] isEqualToString:@"gz"]) {
+		finalPath = [self _decompressPath:path error:error];
+		didDecompress = YES;
+		if (finalPath == nil)
+			return nil;
+	}
+	
+	// Some pages consist only of the line ".so manX/page.X", which man(1) itself reads and dereferences. Duplicate that behavior.
+	// Note: running soelim(1) is not the solution; it just says "file not found", and man itself doesn't anyway.
+	// FIXME: if an un-gzipped page has a .so, this will fail.
+	NSDictionary *attributes = [fm attributesOfItemAtPath:finalPath error:NULL];
+	if (attributes != nil) {
+		// Only perform the check if the file is under 128 bytes in size (just a reasonable upper bound).
+		if ([attributes fileSize] < 128) {
+			NSData *data = [NSData dataWithContentsOfFile:finalPath];
+			NSString *contents;
+			
+			contents = [fm stringWithFileSystemRepresentation:[data bytes] length:[data length]];
+			if ([contents hasPrefix:@".so"]) {
+				// Okay, we've got a .so redirection. The paths given are *weird*; they usually appear to be relative to the base manpath, not the current (section) directory. man(1) also checks the current directory and tries interpreting the string as a relative path (I *think*, the source is an awful mess). 
+				NSMutableString *soPath = [[[contents substringFromIndex:3] mutableCopy] autorelease];
+				NSString *newPath;
+				NSArray *pathComponents, *originalPathComponents;
+				
+				CFStringTrimWhitespace((CFMutableStringRef)soPath);
+				
+				// See if we have an absolute path
+				if (([soPath hasPrefix:@"/"]) && ([fm isReadableFileAtPath:soPath])) 
+					return [self _renderedDataFromPath:soPath error:error];
+				
+				// See if we have the very common case where original path is .../manX/page.X[.gz] and file contains a line of the form .so manY/page.Y
+				pathComponents = [soPath pathComponents];
+				originalPathComponents = [path pathComponents];
+				if (([originalPathComponents count] >= 2) && [[originalPathComponents objectAtIndex:[originalPathComponents count] - 2] hasPrefix:@"man"] && ([pathComponents count] == 2) && [[pathComponents objectAtIndex:0] hasPrefix:@"man"]) {
+					newPath = [[[originalPathComponents subarrayWithRange:NSMakeRange(0, [originalPathComponents count] - 2)] arrayByAddingObjectsFromArray:pathComponents] componentsJoinedByString:@"/"];
+					if ([fm isReadableFileAtPath:newPath]) {
+						return [self _renderedDataFromPath:newPath error:error];
+					} else if ([fm isReadableFileAtPath:[newPath stringByAppendingPathExtension:@"gz"]]) {
+						return [self _renderedDataFromPath:[newPath stringByAppendingPathExtension:@"gz"] error:error];
+					}
+				}
+				
+				// See if we should just append this to the current path.
+				newPath = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:soPath];
+				if ([fm isReadableFileAtPath:newPath])
+					return [self _renderedDataFromPath:newPath error:error];
+				newPath = [newPath stringByAppendingPathExtension:@"gz"];
+				if ([fm isReadableFileAtPath:newPath])
+					return [self _renderedDataFromPath:newPath error:error];
+				
+				// Finally, try taking the last path component of the .so-path and looking for it in the directory containing the page.
+				newPath = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:[soPath lastPathComponent]];
+				if ([fm isReadableFileAtPath:newPath])
+					return [self _renderedDataFromPath:newPath error:error];
+				newPath = [newPath stringByAppendingPathExtension:@"gz"];
+				if ([fm isReadableFileAtPath:newPath])
+					return [self _renderedDataFromPath:newPath error:error];
+				
+				return nil;
+			}
+		}
+	}
+				
+	ret = [NSTask invokeTool:@"groff"
+				   arguments:[NSArray arrayWithObjects:
 							   @"-Tutf8", // UTF-8 grotty(1) output
 							   @"-P", // -P sends next argument to postprocessor
 							   @"-c", // tells grotty to use old-style format codes
 							   @"-S", // safe mode (on by default, just to be sure)
 							   @"-t", // preprocess with tbl (man default).
 							   @"-mandoc", // appropriate macro package
-							   path,
+							   finalPath,
 							   nil]
 				  environment:nil
 						error:error];
+	if (didDecompress)
+		[fm removeItemAtPath:finalPath error:nil];
+	
+	return ret;
 }
 
-- (NSData *)_renderedDataFromGzippedPath:(NSString *)path error:(NSError **)error
+- (NSData *)_decompressPath:(NSString *)path error:(NSError **)error
 {
-	// Decompress the gzipped file into /tmp and just return [self _renderedDataFromPath:error:]
+	// Decompress the gzipped file into /tmp and return the path of the decompressed file.
 	char filename[] = "/tmp/iManXXXXXXXX";
 	gzFile file = NULL;
 	void *buffer;
 	int fd, bytesRead;
-	NSData *ret;
 	
 	fd = mkstemp(&filename);
 	if (fd == -1) {
@@ -120,7 +189,7 @@
 	}
 	
 	if (bytesRead == -1) { 
-		//An error occured (0 means EOF). 
+		// An error occured (0 means EOF). 
 		if (error != NULL) {
 			int errnum;
 			const char *errorString = NULL;
@@ -128,17 +197,14 @@
 			if (errnum == Z_ERRNO) errnum = errno;
 			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:errnum userInfo: ((errorString == NULL) ? nil : [NSDictionary dictionaryWithObject:[NSString stringWithCString:errorString encoding:NSASCIIStringEncoding] forKey:NSLocalizedDescriptionKey])];
 		}
-		ret = nil;
-	} else {
-		ret = [self _renderedDataFromPath:[[NSFileManager defaultManager] stringWithFileSystemRepresentation:filename length:strlen(filename)] error:error];
+		return nil;
 	}
 	
 	gzclose(file);
 	close(fd);
-	unlink(filename);
 	free(buffer);
 	
-	return ret;
+	return [[NSFileManager defaultManager] stringWithFileSystemRepresentation:filename length:strlen(filename)];
 }
 
 // This collection of quasi-macros makes the implementation of _attributedStringFromData: a lot less mind-boggling.
