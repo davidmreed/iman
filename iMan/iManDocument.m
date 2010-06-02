@@ -326,6 +326,10 @@ static NSString *const iManFindResultDisplayString = @"string";
 	[[aproposField cell] setSearchMenuTemplate:aproposFieldMenu];
 }
 
+static NSString *const iManPageNameWithParenthesesRegex = @"^(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)$";
+static NSString *const iManPageNameAndSectionRegex = @"^(\\S+)\\s+([0-9n][a-zA-Z]*)$";
+static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$";
+
 - (IBAction)loadRequestedPage:(id)sender
 {
 	// Determine what the user has requested.
@@ -339,18 +343,18 @@ static NSString *const iManFindResultDisplayString = @"string";
 		if ([input hasPrefix:@"man:"]) {
 			// Treat input as man: URL.
 			[self loadPageWithURL:[NSURL URLWithString:input]];
-		} else if ([input isMatchedByRegex:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)"]) {
+		} else if ([input isMatchedByRegex:iManPageNameWithParenthesesRegex]) {
 			// Treat input as "groff(1) (ignoring spaces).
-			[self loadPageWithName:[input stringByMatching:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)" capture:1]
-						   section:[input stringByMatching:@"(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)" capture:2]];
-		} else if ([input isMatchedByRegex:@"(\\S+)\\s+([0-9n][a-zA-Z]*)"]) {
+			[self loadPageWithName:[input stringByMatching:iManPageNameWithParenthesesRegex capture:1]
+						   section:[input stringByMatching:iManPageNameWithParenthesesRegex capture:2]];
+		} else if ([input isMatchedByRegex:iManPageNameAndSectionRegex]) {
 			// Treat input as "groff 1"
-			[self loadPageWithName:[input stringByMatching:@"(\\S+)\\s+([0-9n][a-zA-Z]*)" capture:1]
-						   section:[input stringByMatching:@"(\\S+)\\s+([0-9n][a-zA-Z]*)" capture:2]];
-		} else if ([input isMatchedByRegex:@"([0-9n][a-zA-Z]*)\\s+(\\S+)"]) {
+			[self loadPageWithName:[input stringByMatching:iManPageNameAndSectionRegex capture:1]
+						   section:[input stringByMatching:iManPageNameAndSectionRegex capture:2]];
+		} else if ([input isMatchedByRegex:iManSectionAndNameRegex]) {
 			// Treat input as "1 groff"
-			[self loadPageWithName:[input stringByMatching:@"([0-9n][a-zA-Z]*)\\s+(\\S+)" capture:2]
-						   section:[input stringByMatching:@"([0-9n][a-zA-Z]*)\\s+(\\S+)" capture:1]];
+			[self loadPageWithName:[input stringByMatching:iManSectionAndNameRegex capture:2]
+						   section:[input stringByMatching:iManSectionAndNameRegex capture:1]];
 		} else {
 			// Treat the whole input as the page name.
 			[self loadPageWithName:input section:nil];
