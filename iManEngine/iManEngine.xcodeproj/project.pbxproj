@@ -26,20 +26,20 @@
 		6342BF6410B77136006995CA /* iManRenderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6342BF6210B77136006995CA /* iManRenderOperation.m */; };
 		6342BFDE10B797AB006995CA /* iManSearchOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 6342BFDC10B797AB006995CA /* iManSearchOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6342BFDF10B797AB006995CA /* iManSearchOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6342BFDD10B797AB006995CA /* iManSearchOperation.m */; };
-		634BCCD711B2D26800104304 /* NSString+iManPathExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 634BCCD511B2D26800104304 /* NSString+iManPathExtensions.h */; };
+		634BCCD711B2D26800104304 /* NSString+iManPathExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 634BCCD511B2D26800104304 /* NSString+iManPathExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		634BCCD811B2D26800104304 /* NSString+iManPathExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 634BCCD611B2D26800104304 /* NSString+iManPathExtensions.m */; };
 		635B7AA90F169DBA0043FFEF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7AA50F169DBA0043FFEF /* RegexKitLite.m */; };
 		635B7AAB0F169DBA0043FFEF /* RKLMatchEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7AA70F169DBA0043FFEF /* RKLMatchEnumerator.m */; };
 		635B7BB10F16A23A0043FFEF /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 635B7BB00F16A23A0043FFEF /* libicucore.dylib */; };
 		6378730F11A96C0500D34D02 /* iManRWLock.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378730D11A96C0500D34D02 /* iManRWLock.m */; };
-		6385CECF11AF006B003E2EAE /* NSURL+iManExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 6385CECD11AF006B003E2EAE /* NSURL+iManExtensions.h */; };
+		6385CECF11AF006B003E2EAE /* NSURL+iManExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 6385CECD11AF006B003E2EAE /* NSURL+iManExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6385CED011AF006B003E2EAE /* NSURL+iManExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6385CECE11AF006B003E2EAE /* NSURL+iManExtensions.m */; };
 		638AA93610DAD6E000A8BF2F /* iManMakewhatisOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 638AA93410DAD6E000A8BF2F /* iManMakewhatisOperation.m */; };
-		63C27DB611A5A7CD0073538B /* iManSearchResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C27DB411A5A7CD0073538B /* iManSearchResult.h */; };
+		63C27DB611A5A7CD0073538B /* iManSearchResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C27DB411A5A7CD0073538B /* iManSearchResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		63C27DB711A5A7CD0073538B /* iManSearchResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C27DB511A5A7CD0073538B /* iManSearchResult.m */; };
-		63D688AE10D9C72F008F63E6 /* iManErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 63D688AC10D9C72F008F63E6 /* iManErrors.h */; };
+		63D688AE10D9C72F008F63E6 /* iManErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 63D688AC10D9C72F008F63E6 /* iManErrors.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		63D688AF10D9C72F008F63E6 /* iManErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D688AD10D9C72F008F63E6 /* iManErrors.m */; };
-		63E5A99811AB575F00EE3F24 /* iManPageDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 63E5A99611AB575F00EE3F24 /* iManPageDatabase.h */; };
+		63E5A99811AB575F00EE3F24 /* iManPageDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 63E5A99611AB575F00EE3F24 /* iManPageDatabase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		63E5A99911AB575F00EE3F24 /* iManPageDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5A99711AB575F00EE3F24 /* iManPageDatabase.m */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
