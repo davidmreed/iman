@@ -17,7 +17,7 @@
 @interface iManRenderOperation (Private)
 
 - (NSData *)_renderedDataFromPath:(NSString *)path error:(NSError **)error;
-- (NSData *)_decompressPath:(NSString *)path error:(NSError **)error;
+- (NSString *)_decompressPath:(NSString *)path error:(NSError **)error;
 - (NSAttributedString *)_attributedStringFromData:(NSData *)data error:(NSError **)error;
 
 @end
@@ -79,7 +79,6 @@
 	
 	// Some pages consist only of the line ".so manX/page.X", which man(1) itself reads and dereferences. Duplicate that behavior.
 	// Note: running soelim(1) is not the solution; it just says "file not found", and man itself doesn't anyway.
-	// FIXME: if an un-gzipped page has a .so, this will fail.
 	NSDictionary *attributes = [fm attributesOfItemAtPath:finalPath error:NULL];
 	if (attributes != nil) {
 		// Only perform the check if the file is under 128 bytes in size (just a reasonable upper bound).
@@ -151,7 +150,7 @@
 	return ret;
 }
 
-- (NSData *)_decompressPath:(NSString *)path error:(NSError **)error
+- (NSString *)_decompressPath:(NSString *)path error:(NSError **)error
 {
 	// Decompress the gzipped file into /tmp and return the path of the decompressed file.
 	char filename[] = "/tmp/iManXXXXXXXX";
@@ -263,7 +262,7 @@ static inline BOOL _hasSpuriousOverstriking(unichar *buf, unichar *end)
 	string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	if (string == nil) return nil;
 
-	// Parsing requires so much lookahead that it is hard to do without a simple buffer. Get the data back out of our NSString in UTF-16 form. FIXME: this is a silly way to do encoding conversion.
+	// Parsing requires so much lookahead that it is hard to do without a simple buffer. Get the data back out of our NSString in UTF-16 form.
 	buffer = malloc(sizeof(unichar) * [string length]);
 	[string getCharacters:buffer range:NSMakeRange(0, [string length])];
 	end = buffer + [string length];
