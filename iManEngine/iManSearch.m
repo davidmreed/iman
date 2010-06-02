@@ -133,7 +133,7 @@ NSOperationQueue *_iManSearchQueue;
 
 - (void)dealloc
 {
-	// Occasionally when several search operations are initiated by the same document very quickly, we get deallocated before our search operation finishes. Make sure we are removed as an observer.  FIXME: make our operations killable.
+	// Occasionally when several search operations are initiated by the same document very quickly, we get deallocated before our search operation finishes. Make sure we are removed as an observer.
 	if (operation_ != nil) {
 		[operation_ removeObserver:self forKeyPath:@"isFinished"];
 		[operation_ release];
