@@ -37,6 +37,7 @@
 		635B7A870F1698CA0043FFEF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7A830F1698CA0043FFEF /* RegexKitLite.m */; };
 		635B7A890F1698CA0043FFEF /* RKLMatchEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7A850F1698CA0043FFEF /* RKLMatchEnumerator.m */; };
 		635B7AE70F16A19A0043FFEF /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 635B7AE60F16A19A0043FFEF /* libicucore.dylib */; };
+		6370BC6011B6BE6800030CB8 /* iManAproposSearchIcon.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 6370BC5E11B6BE6800030CB8 /* iManAproposSearchIcon.tiff */; };
 		6378734711A9753A00D34D02 /* iManSearchResult+Description.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378734511A9753A00D34D02 /* iManSearchResult+Description.m */; };
 		637873A611A9EA9800D34D02 /* iManHistoryQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 637873A411A9EA9800D34D02 /* iManHistoryQueue.m */; };
 		6399503511AF4401000728C6 /* iManPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6399503411AF4401000728C6 /* iManPageView.m */; };
@@ -125,6 +126,7 @@
 		635B7A840F1698CA0043FFEF /* RKLMatchEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKLMatchEnumerator.h; sourceTree = "<group>"; };
 		635B7A850F1698CA0043FFEF /* RKLMatchEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RKLMatchEnumerator.m; sourceTree = "<group>"; };
 		635B7AE60F16A19A0043FFEF /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
+		6370BC5F11B6BE6800030CB8 /* English */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = English; path = English.lproj/iManAproposSearchIcon.tiff; sourceTree = "<group>"; };
 		6378734411A9753A00D34D02 /* iManSearchResult+Description.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "iManSearchResult+Description.h"; sourceTree = "<group>"; };
 		6378734511A9753A00D34D02 /* iManSearchResult+Description.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "iManSearchResult+Description.m"; sourceTree = "<group>"; };
 		637873A311A9EA9800D34D02 /* iManHistoryQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManHistoryQueue.h; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 				1174310906AF430B00CE425B /* iManDocument.icns */,
 				1174311B06AF430B00CE425B /* iManSearchIcon.tiff */,
 				1175BF6E0708B3B1009B6D58 /* iManToolbarItemReload.tiff */,
+				6370BC5E11B6BE6800030CB8 /* iManAproposSearchIcon.tiff */,
 				1174310F06AF430B00CE425B /* iManToolbarItemBack.tiff */,
 				1174312106AF430B00CE425B /* iManToolbarItemForward.tiff */,
 			);
@@ -412,6 +415,7 @@
 				63CEBAF50F1B0397001180EC /* dsa_pub.pem in Resources */,
 				6343C1CD11A1E2B40018D313 /* iman in Resources */,
 				63E1138111AED89500100EED /* iManInitializingDatabaseWindow.xib in Resources */,
+				6370BC6011B6BE6800030CB8 /* iManAproposSearchIcon.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -607,6 +611,14 @@
 				11B7680C0719C3BB00C503A1 /* English */,
 			);
 			name = iManIndexPanel.nib;
+			sourceTree = "<group>";
+		};
+		6370BC5E11B6BE6800030CB8 /* iManAproposSearchIcon.tiff */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6370BC5F11B6BE6800030CB8 /* English */,
+			);
+			name = iManAproposSearchIcon.tiff;
 			sourceTree = "<group>";
 		};
 		63E1137F11AED89500100EED /* iManInitializingDatabaseWindow.xib */ = {

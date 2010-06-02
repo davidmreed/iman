@@ -87,6 +87,7 @@ typedef enum {
 - (void)exportPanelDidEnd:(NSSavePanel *)savePanel returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 
 - (IBAction)toggleFindDrawer:(id)sender;
+- (IBAction)toggleAproposDrawer:(id)sender;
 - (IBAction)back:(id)sender;
 - (IBAction)forward:(id)sender;
 - (IBAction)reload:(id)sender;
