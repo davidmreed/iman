@@ -10,6 +10,7 @@
 #import "iManErrors.h"
 #import "iManEnginePreferences.h"
 #import "iManRenderOperation.h"
+#import "NSString+iManPathExtensions.h"
 #import "RegexKitLite.h"
 
 @interface iManPage (Private)
@@ -77,23 +78,16 @@ static NSOperationQueue *_iManPageRenderingQueue;
 
 - (NSString *)pageName
 {
-	if ([[[self path] pathExtension] isEqualToString:@"gz"]) 
-		return [[[[self path] lastPathComponent] stringByDeletingPathExtension] stringByDeletingPathExtension];
-	
-	return [[[self path] lastPathComponent] stringByDeletingPathExtension];
+	return [[self path] pageName]; 
 }
 
 - (NSString *)pageSection
 {	
-	if ([[[[self path] lastPathComponent] pathExtension] isEqualToString:@"gz"])
-		return [[[[self path] lastPathComponent] stringByDeletingPathExtension] pathExtension];
-
-	return [[[self path] lastPathComponent] pathExtension];
+	return [[self path] pageSection];
 }
 
 - (NSAttributedString *)page
 {
-	// FIXME: make property KVO-compliant.
 	return [[page_ copy] autorelease];
 }
 
@@ -187,8 +181,10 @@ static NSOperationQueue *_iManPageRenderingQueue;
 - (void)reload
 {
 	if ([self isLoaded] && ![self isLoading]) {
+		[self willChangeValueForKey:@"page"];
 		[page_ release];
 		page_ = nil;
+		[self didChangeValueForKey:@"page"];
 		[self load];
 	}
 }
@@ -196,14 +192,12 @@ static NSOperationQueue *_iManPageRenderingQueue;
 - (void)_handleRenderOperationFinished:(iManRenderOperation *)operation
 {
 	// This method called on main thread when KVO notification tells us (on *worker* thread, because that's where the KVO notification is posted) that the operation is finished.
+	[self willChangeValueForKey:@"page"];
 	[page_ release];
-	[path_ release];
 	page_ = nil;
-	path_ = nil;
 	
 	if ([_renderOperation page] != nil) {
 		page_ = [[_renderOperation page] copy];
-		path_ = [[_renderOperation path] copy];
 		[[NSNotificationCenter defaultCenter] postNotificationName:iManPageLoadDidCompleteNotification object:self userInfo:nil];
 	} else {
 		[[NSNotificationCenter defaultCenter] postNotificationName:iManPageLoadDidFailNotification object:self userInfo:[NSDictionary dictionaryWithObject:[operation error] forKey:iManErrorKey]];
@@ -211,6 +205,7 @@ static NSOperationQueue *_iManPageRenderingQueue;
 	[_renderOperation removeObserver:self forKeyPath:@"isFinished"];
 	[_renderOperation release];
 	_renderOperation = nil;
+	[self didChangeValueForKey:@"page"];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -224,7 +219,7 @@ static NSOperationQueue *_iManPageRenderingQueue;
 
 - (void)dealloc
 {
-	// It is not impossible (although unlikely due to caching) for us to be deallocated before our operations complete, resulting in -observeValueForKeyPath: messages being sent to a freed object. Remove observers here. FIXME: kill the operations.
+	// It is not impossible (although unlikely due to caching) for us to be deallocated before our operations complete, resulting in -observeValueForKeyPath: messages being sent to a freed object. Remove observers here.
 	if (_renderOperation != nil) {
 		[_renderOperation removeObserver:self forKeyPath:@"isFinished"];
 		[_renderOperation release];
