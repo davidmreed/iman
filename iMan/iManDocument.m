@@ -192,7 +192,26 @@ static NSString *const iManFindResultDisplayString = @"string";
 
 - (IBAction)toggleFindDrawer:(id)sender
 {
-	[findDrawer toggle:sender];
+	if (([findDrawer state] == NSDrawerOpeningState) || ([findDrawer state] == NSDrawerOpenState)) {
+		[findDrawer close];
+	} else {
+		if (([aproposDrawer state] == NSDrawerOpeningState) || ([aproposDrawer state] == NSDrawerOpenState))
+			[aproposDrawer close];
+	
+		[findDrawer open];
+	}
+}
+
+- (IBAction)toggleAproposDrawer:(id)sender
+{
+	if (([aproposDrawer state] == NSDrawerOpeningState) || ([aproposDrawer state] == NSDrawerOpenState)) {
+		[aproposDrawer close];
+	} else {
+		if (([findDrawer state] == NSDrawerOpeningState) || ([findDrawer state] == NSDrawerOpenState))
+			[findDrawer close];
+		
+		[aproposDrawer open];
+	}
 }
 
 - (IBAction)export:(id)sender
