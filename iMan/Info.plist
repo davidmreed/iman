@@ -26,7 +26,7 @@
 				<string>gz</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>iMacDocument.icns</string>
+			<string>iManDocument.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>man page</string>
 			<key>CFBundleTypeRole</key>
