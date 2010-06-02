@@ -60,8 +60,15 @@
 
 - (void)loadURLInNewDocument:(NSURL *)url
 {
-	iManDocument *docToLoad = [[NSDocumentController sharedDocumentController] openUntitledDocumentAndDisplay:YES error:nil];
-	[docToLoad loadPageWithURL:url];
+	iManDocument *currentDocument = [[NSDocumentController sharedDocumentController] currentDocument];
+	
+	// If we have a document open which is not displaying a page, use it rather than opening a new document.
+	if ((currentDocument != nil) && ([currentDocument documentState] == iManDocumentStateNone)) {
+		[currentDocument loadPageWithURL:url];
+	} else {
+		iManDocument *docToLoad = [[NSDocumentController sharedDocumentController] openUntitledDocumentAndDisplay:YES error:nil];
+		[docToLoad loadPageWithURL:url];
+	}
 }	
 
 - (void)loadExternalURL:(NSURL *)url
