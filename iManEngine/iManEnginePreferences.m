@@ -27,7 +27,7 @@ static NSString *const iManEngineManpaths = @"iManEngineManpaths";
 
 + (void)initialize
 {
-	NSArray *manpaths = [NSArray arrayWithObjects:@"/usr/share/man", @"/usr/local/share/man", @"/usr/X11/man", @"/sw/share/man", @"/Developer/usr/share/man", nil];
+	NSArray *manpaths = [NSArray arrayWithObjects:@"/usr/share/man", @"/usr/local/share/man", @"/usr/X11/man", @"/usr/X11R6/man", @"/sw/share/man", @"/Developer/usr/share/man", nil];
     _pathDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
         @"/usr/bin/man", @"man",
         @"/usr/bin/groff", @"groff",
