@@ -12,9 +12,9 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="381"/>
-			<integer value="397"/>
+			<integer value="221"/>
 			<integer value="69"/>
+			<integer value="397"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -68,7 +68,6 @@
 							<string>6D870C55-5203-43A3-8911-B25731586DA5</string>
 							<string>E1E0E316-2D5A-4112-B19A-4EED90B33A94</string>
 							<string>E6E16E6F-F2F0-4029-9D98-C3CE20A144ED</string>
-							<string>F555FC46-C1CB-4FAF-94A0-68A2DC7F9DD9</string>
 							<string>NSToolbarCustomizeToolbarItem</string>
 							<string>NSToolbarFlexibleSpaceItem</string>
 							<string>NSToolbarPrintItem</string>
@@ -307,28 +306,6 @@
 								<bool key="NSToolbarIsUserRemovable">YES</bool>
 								<int key="NSToolbarItemVisibilityPriority">0</int>
 							</object>
-							<object class="NSToolbarItem" id="596474089">
-								<object class="NSMutableString" key="NSToolbarItemIdentifier">
-									<characters key="NS.bytes">F555FC46-C1CB-4FAF-94A0-68A2DC7F9DD9</characters>
-								</object>
-								<string key="NSToolbarItemLabel">Export</string>
-								<string key="NSToolbarItemPaletteLabel">Export</string>
-								<string key="NSToolbarItemToolTip"/>
-								<nil key="NSToolbarItemView"/>
-								<object class="NSCustomResource" key="NSToolbarItemImage">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">iManToolbarItemExport</string>
-								</object>
-								<nil key="NSToolbarItemTarget"/>
-								<nil key="NSToolbarItemAction"/>
-								<string key="NSToolbarItemMinSize">{0, 0}</string>
-								<string key="NSToolbarItemMaxSize">{0, 0}</string>
-								<bool key="NSToolbarItemEnabled">YES</bool>
-								<bool key="NSToolbarItemAutovalidates">YES</bool>
-								<int key="NSToolbarItemTag">-1</int>
-								<bool key="NSToolbarIsUserRemovable">YES</bool>
-								<int key="NSToolbarItemVisibilityPriority">0</int>
-							</object>
 							<object class="NSToolbarItem" id="326212396">
 								<string key="NSToolbarItemIdentifier">NSToolbarCustomizeToolbarItem</string>
 								<string key="NSToolbarItemLabel">Customize</string>
@@ -468,7 +445,6 @@
 						<reference ref="316921509"/>
 						<reference ref="458868453"/>
 						<reference ref="571105982"/>
-						<reference ref="596474089"/>
 						<reference ref="821136563"/>
 						<reference ref="1039473490"/>
 						<reference ref="391597066"/>
@@ -1825,14 +1801,6 @@
 					<int key="connectionID">264</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">export:</string>
-						<reference key="source" ref="140011258"/>
-						<reference key="destination" ref="596474089"/>
-					</object>
-					<int key="connectionID">265</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">findResultsView</string>
 						<reference key="source" ref="140011258"/>
@@ -2363,7 +2331,6 @@
 							<reference ref="316921509"/>
 							<reference ref="458868453"/>
 							<reference ref="571105982"/>
-							<reference ref="596474089"/>
 							<reference ref="821136563"/>
 							<reference ref="1039473490"/>
 							<reference ref="391597066"/>
@@ -2408,11 +2375,6 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">237</int>
 						<reference key="object" ref="571105982"/>
-						<reference key="parent" ref="816132839"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">250</int>
-						<reference key="object" ref="596474089"/>
 						<reference key="parent" ref="816132839"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -2925,7 +2887,6 @@
 					<string>235.IBPluginDependency</string>
 					<string>236.IBPluginDependency</string>
 					<string>237.IBPluginDependency</string>
-					<string>250.IBPluginDependency</string>
 					<string>251.IBPluginDependency</string>
 					<string>278.IBEditorWindowLastContentRect</string>
 					<string>278.IBPluginDependency</string>
@@ -3084,7 +3045,6 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>{{13, 524}, {616, 227}}</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
