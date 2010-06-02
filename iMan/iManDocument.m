@@ -72,22 +72,16 @@ static NSString *const iManFindResultDisplayString = @"string";
 {
     NSScrollView *scrollView = (NSScrollView *)[[manpageView superview] superview];
     NSTextContainer *textContainer = [manpageView textContainer];
-	
-    [super windowControllerDidLoadNib:windowController];
-	
-    // Set the scroll view, text container, and text view up to behave properly.
+		
+    // Set the scroll view, text container, and text view up to behave properly (no wrapping).
     // This is largely derived from Apple's TextSizingExample code.
     // Note: 1.0e7 is the "LargeNumberForText" used there, it should not be changed.
-	// FIXME: is this necessary these days?
-    [scrollView setHasVerticalScroller:YES];
-    [scrollView setHasHorizontalScroller:YES];
-    [[scrollView contentView] setAutoresizesSubviews:YES];
-	
+    
     [textContainer setWidthTracksTextView:NO];
     [textContainer setHeightTracksTextView:NO];
     [textContainer setContainerSize:NSMakeSize(1.0e7, 1.0e7)];
 	
-    [manpageView setMinSize:[scrollView contentSize]];
+	[manpageView setMinSize:[scrollView contentSize]];
     [manpageView setMaxSize:NSMakeSize(1.0e7, 1.0e7)];
     [manpageView setHorizontallyResizable:YES];
     [manpageView setVerticallyResizable:YES];
