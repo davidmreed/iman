@@ -8,7 +8,6 @@
 #import "NSURL+iManExtensions.h"
 #import "RegexKitLite.h"
 
-// FIXME: are these section regexes appropriate? what about TCL?
 // grohtml style: man://groff/1. Regex: \/{0,2}([^[:space:]/]+)\/([0-9n][a-zA-Z]*)\/? 
 static NSString *const grohtmlStyleURL = @"\\/{0,2}([^[:space:]/]+)\\/([0-9n][a-zA-Z]*)\\/?";
 // The old iMan style: man:groff(1). Regex: ([^[:space:](]+)\(([0-9n][a-zA-Z]*)\)
