@@ -153,17 +153,10 @@ static NSString *const iManFindResultDisplayString = @"string";
 
     // Check undo manager for these.
     if (action == @selector(back:))
-        return ([[self history] canGoBack] && ([self documentState] != iManDocumentStateLoadingPage));
+        return ([[self history] canGoBack]);
     if (action == @selector(forward:))
-        return ([[self history] canGoForward] && ([self documentState] != iManDocumentStateLoadingPage));
-	
-    // Make sure, if we are loading, that another load request doesn't happen, nor should the window close.
-    if ((action == @selector(loadRequestedPage:)) ||
-		(action == @selector(reload:)) ||
-		(action == @selector(performClose:))) {
-		return ([self documentState] != iManDocumentStateLoadingPage);
-	}
-	
+        return ([[self history] canGoForward]);
+		
     return [super validateUserInterfaceItem:anItem];
 }
 
@@ -287,8 +280,8 @@ static NSString *const iManFindResultDisplayString = @"string";
 
 - (IBAction)back:(id)sender
 {
-	if ([self page] == nil) {
-		// We failed to load a page, sending us to the No Page tab. The history queue still has the last good page on the top, so we cannot go "back" -- we'll end up two pages ago. Just reset ourselves to the top of the queue.
+	if ([self documentState] != iManDocumentStateDisplayingPage) {
+		// We failed to load a page, sending us to the No Page tab, or we are loading a page. The history queue still has the last good page on the top, so we cannot go "back" -- we'll end up two pages ago. Just reset ourselves to the top of the queue.
 		[self setPage:[[[self history] history] objectAtIndex:[[self history] historyIndex]]];
 	} else {
 		[self setPage:[[self history] back]];
@@ -585,11 +578,10 @@ static NSString *const iManFindResultDisplayString = @"string";
 			break;
 		case iManDocumentStateDisplayingPage:
 			[tabView selectTabViewItemAtIndex:kiManPageTabIndex];
-			// It's important for this to come before we change the value of addressField (below), otherwise we'll get a second -loadRequestedPage: when the addressField loses first responder and, because of the way pages are cached, it won't be caught as the same page if the first was just a page name without section. FIXME: This should be repaired permanently by offering the user all available pages with a given title rather than having iManPage just pass the name alone to man -w.
+			[addressField setStringValue:[NSString stringWithFormat:@"%@(%@)", [[self page] pageName], [[self page] pageSection]]];
 			[[windowController window] makeFirstResponder:manpageView];
 			[[manpageView textStorage] setAttributedString:[[self page] pageWithStyle:[self displayStringOptions]]];
 			[manpageView moveToBeginningOfDocument:self];
-			[addressField setStringValue:[NSString stringWithFormat:@"%@(%@)", [[self page] pageName], [[self page] pageSection]]];
 			[[[windowController window] toolbar] validateVisibleItems];			
 			break;
 		case iManDocumentStateLoadingPage:
@@ -694,8 +686,6 @@ static NSString *const iManFindResultDisplayString = @"string";
 	[aproposTabView selectTabViewItemAtIndex:iManAproposTabDisplaying];
 }
 
-// FIXME: make sure if -close is called all our tasks get cancelled.
-
 - (void)displayFontDidChange:(NSNotification *)notification
 {
     if ([self page] != nil)
@@ -718,7 +708,6 @@ static NSString *const iManFindResultDisplayString = @"string";
 
 - (void)setPage:(iManPage *)page
 {
-	// FIXME: we really only need to be registered for these when an asynchronous load operation is going on.
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:iManPageLoadDidCompleteNotification object:page_];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:iManPageLoadDidFailNotification object:page_];
 
