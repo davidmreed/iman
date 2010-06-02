@@ -12,10 +12,10 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="313"/>
-			<integer value="397"/>
-			<integer value="5"/>
 			<integer value="69"/>
+			<integer value="5"/>
+			<integer value="397"/>
+			<integer value="313"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -129,11 +129,9 @@
 								<string key="NSToolbarItemPaletteLabel">Page</string>
 								<nil key="NSToolbarItemToolTip"/>
 								<object class="NSTextField" key="NSToolbarItemView" id="322718438">
-									<reference key="NSNextResponder"/>
+									<nil key="NSNextResponder"/>
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{0, 14}, {96, 22}}</string>
-									<reference key="NSSuperview"/>
-									<reference key="NSWindow"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSTextFieldCell" key="NSCell" id="724788930">
 										<int key="NSCellFlags">-1804468671</int>
@@ -570,7 +568,7 @@
 												<string key="NSFrameSize">{580, 620}</string>
 												<reference key="NSSuperview" ref="964844693"/>
 												<reference key="NSNextKeyView" ref="868563544"/>
-												<int key="NSsFlags">528</int>
+												<int key="NSsFlags">560</int>
 												<reference key="NSVScroller" ref="231813301"/>
 												<reference key="NSHScroller" ref="443974151"/>
 												<reference key="NSContentView" ref="868563544"/>
