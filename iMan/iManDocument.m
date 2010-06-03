@@ -150,7 +150,7 @@ static NSString *const iManFindResultDisplayString = @"string";
         return ([[self history] canGoBack]);
     if (action == @selector(forward:))
         return ([[self history] canGoForward]);
-		
+			
     return [super validateUserInterfaceItem:anItem];
 }
 
@@ -531,6 +531,8 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 			}
 		}
 		_pageChoices = [paths retain];
+		[pageSelectionList reloadData];
+		[pageSelectionList selectRow:0 byExtendingSelection:NO];
 		[NSApp beginSheet:pageSelectionSheet modalForWindow:[self windowForSheet] modalDelegate:self didEndSelector:@selector(pageSelectionSheetDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 	}
 }

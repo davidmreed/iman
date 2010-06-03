@@ -12,10 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="69"/>
-			<integer value="5"/>
 			<integer value="397"/>
-			<integer value="313"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -402,7 +399,7 @@
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<string key="NSWindowContentMinSize">{345, 220}</string>
 				<object class="NSView" key="NSWindowView" id="122430155">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -449,7 +446,7 @@
 																		<string>NeXT TIFF v4.0 pasteboard type</string>
 																	</object>
 																</object>
-																<string key="NSFrameSize">{580, 14}</string>
+																<string key="NSFrameSize">{580, 29}</string>
 																<reference key="NSSuperview" ref="868563544"/>
 																<object class="NSTextContainer" key="NSTextContainer" id="731073330">
 																	<object class="NSLayoutManager" key="NSLayoutManager">
@@ -698,7 +695,6 @@
 						</object>
 					</object>
 					<string key="NSFrameSize">{580, 620}</string>
-					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
 				<string key="NSMinSize">{345, 298}</string>
@@ -716,7 +712,7 @@
 				<nil key="NSDelegate"/>
 			</object>
 			<object class="NSCustomView" id="1006618259">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">256</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -823,7 +819,7 @@
 							<object class="NSScroller" id="591578883">
 								<reference key="NSNextResponder" ref="856246163"/>
 								<int key="NSvFlags">256</int>
-								<string key="NSFrame">{{174, 1}, {15, 269}}</string>
+								<string key="NSFrame">{{174, 1}, {15, 283}}</string>
 								<reference key="NSSuperview" ref="856246163"/>
 								<reference key="NSTarget" ref="856246163"/>
 								<string key="NSAction">_doScroller:</string>
@@ -912,7 +908,6 @@
 					</object>
 				</object>
 				<string key="NSFrameSize">{190, 327}</string>
-				<reference key="NSSuperview"/>
 				<string key="NSClassName">NSView</string>
 				<string key="NSExtension">NSResponder</string>
 			</object>
@@ -1057,7 +1052,7 @@
 				</object>
 			</object>
 			<object class="NSCustomView" id="217651697">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">256</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1456,7 +1451,6 @@
 					</object>
 				</object>
 				<string key="NSFrameSize">{228, 416}</string>
-				<reference key="NSSuperview"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 			<object class="NSDrawer" id="608523978">
@@ -1577,7 +1571,7 @@
 											<reference key="NSBackgroundColor" ref="75937379"/>
 											<reference key="NSGridColor" ref="787473776"/>
 											<double key="NSRowHeight">17</double>
-											<int key="NSTvFlags">440434688</int>
+											<int key="NSTvFlags">37781504</int>
 											<reference key="NSDelegate"/>
 											<reference key="NSDataSource"/>
 											<int key="NSColumnAutoresizingStyle">1</int>
@@ -3206,7 +3200,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">418</int>
+			<int key="maxID">419</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3226,12 +3220,16 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>aproposSearchForSelection:</string>
 							<string>back:</string>
 							<string>changeExportFormat:</string>
 							<string>clearHistory:</string>
 							<string>export:</string>
 							<string>forward:</string>
 							<string>loadRequestedPage:</string>
+							<string>openLink:</string>
+							<string>openLinkInNewWindow:</string>
+							<string>openPageFromSelection:</string>
 							<string>openSearchResultPage:</string>
 							<string>pageSelectionSheetCancel:</string>
 							<string>pageSelectionSheetOK:</string>
@@ -3246,6 +3244,10 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
