@@ -89,12 +89,10 @@
 			contents = [fm stringWithFileSystemRepresentation:[data bytes] length:[data length]];
 			if ([contents hasPrefix:@".so"]) {
 				// Okay, we've got a .so redirection. The paths given are *weird*; they usually appear to be relative to the base manpath, not the current (section) directory. man(1) also checks the current directory and tries interpreting the string as a relative path (I *think*, the source is an awful mess). 
-				NSMutableString *soPath = [[[contents substringFromIndex:3] mutableCopy] autorelease];
+				NSString *soPath = [[contents substringFromIndex:3] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 				NSString *newPath;
 				NSArray *pathComponents, *originalPathComponents;
-				
-				CFStringTrimWhitespace((CFMutableStringRef)soPath);
-				
+								
 				// See if we have an absolute path
 				if (([soPath hasPrefix:@"/"]) && ([fm isReadableFileAtPath:soPath])) 
 					return [self _renderedDataFromPath:soPath error:error];
