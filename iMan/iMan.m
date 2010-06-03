@@ -154,6 +154,15 @@
 	
 	[self performSelectorOnMainThread:@selector(_initializePageDatabaseDidEnd:) withObject:nil waitUntilDone:NO];
 	
+	// Write the database to disk.
+	NSString *directory = [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"iMan"];
+	
+	if (![[NSFileManager defaultManager] fileExistsAtPath:directory]) {
+		[[NSFileManager defaultManager] createDirectoryAtPath:directory attributes:nil];
+	}
+	
+	[NSArchiver archiveRootObject:_pageDatabase toFile:[directory stringByAppendingPathComponent:@"iManPageDatabase"]];	
+	
 	[pool release];
 }
 
@@ -168,17 +177,6 @@
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender
 {
     return YES;
-}
-
-- (void)applicationWillTerminate:(NSNotification *)notification
-{
-	NSString *directory = [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"iMan"];
-	
-	if (![[NSFileManager defaultManager] fileExistsAtPath:directory]) {
-		[[NSFileManager defaultManager] createDirectoryAtPath:directory attributes:nil];
-	}
-	
-	[NSArchiver archiveRootObject:_pageDatabase toFile:[directory stringByAppendingPathComponent:@"iManPageDatabase"]];
 }
 
 #pragma mark -
