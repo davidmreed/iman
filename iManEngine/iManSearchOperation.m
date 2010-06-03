@@ -89,19 +89,14 @@
 			// The format of each line is always pageName(n)[, pageName2(n), ...] - description.
 			// Let's parse it.
 			NSArray *array = [line componentsSeparatedByString:@" - "];
-			NSMutableString *whichPage, *desc;
+			NSString *whichPage, *desc;
 			
 			if ([array count] == 2) {
-				whichPage = [[array objectAtIndex:0] mutableCopy];
-				CFStringTrimWhitespace((CFMutableStringRef)whichPage);
-				desc = [[array objectAtIndex:1] mutableCopy];
-				CFStringTrimWhitespace((CFMutableStringRef)desc);
+				whichPage = [[array objectAtIndex:0] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+				desc = [[array objectAtIndex:1] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 				
 				// -componentsSeparatedByString returns the whole string if there are no separators.
 				[_results addObject:[iManSearchResult searchResultWithPageNames:[whichPage componentsSeparatedByString:@", "] description:desc]];
-				
-				[whichPage release];
-				[desc release];
 			}
 		}
 	} else {
