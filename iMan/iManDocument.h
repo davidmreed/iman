@@ -53,7 +53,6 @@ typedef enum {
 	// apropos/whatis search machinery.
 	iManSearch *search_;
 	NSString *_savedSearchType;
-    NSArray *_searchResults;
 	
 	// In-page search machinery.
     NSMutableArray *_findResults;
@@ -75,6 +74,7 @@ typedef enum {
 - (void)setDocumentState:(iManDocumentState)documentState;
 
 - (void)performSearchForTerm:(NSString *)term type:(NSString *)type;
+- (void)loadPageWithStringInput:(NSString *)string;
 - (void)loadPageWithName:(NSString *)pageName section:(NSString *)pageSection;
 - (void)loadPageWithURL:(NSURL *)url;
 - (void)loadPage:(iManPage *)page;
@@ -103,6 +103,11 @@ typedef enum {
 
 - (IBAction)pageSelectionSheetOK:(id)sender;
 - (IBAction)pageSelectionSheetCancel:(id)sender;
+
+- (IBAction)openLink:(id)sender;
+- (IBAction)openLinkInNewWindow:(id)sender;
+- (IBAction)openPageFromSelection:(id)sender;
+- (IBAction)aproposSearchForSelection:(id)sender;
 
 @property BOOL useRegexps;
 @property BOOL caseSensitive;

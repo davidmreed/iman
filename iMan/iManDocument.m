@@ -339,40 +339,9 @@ static NSString *const iManFindResultDisplayString = @"string";
 	[[aproposField cell] setSearchMenuTemplate:aproposFieldMenu];
 }
 
-static NSString *const iManPageNameWithParenthesesRegex = @"^(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)$";
-static NSString *const iManPageNameAndSectionRegex = @"^(\\S+)\\s+([0-9n][a-zA-Z]*)$";
-static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$";
-
 - (IBAction)loadRequestedPage:(id)sender
 {
-	// Determine what the user has requested.
-	// 1) if the input looks like a URL (i.e., begins with man:), treat it as appropriate.
-	// 2) if the input looks like a page name and section, or a bare page name, attempt to locate that page.
-	NSMutableString *input = [[[sender stringValue] mutableCopy] autorelease];
-
-	// Trim whitespace
-	CFStringTrimWhitespace((CFMutableStringRef)input);
-	if ([input length] > 0) {
-		if ([input hasPrefix:@"man:"]) {
-			// Treat input as man: URL.
-			[self loadPageWithURL:[NSURL URLWithString:input]];
-		} else if ([input isMatchedByRegex:iManPageNameWithParenthesesRegex]) {
-			// Treat input as "groff(1) (ignoring spaces).
-			[self loadPageWithName:[input stringByMatching:iManPageNameWithParenthesesRegex capture:1]
-						   section:[input stringByMatching:iManPageNameWithParenthesesRegex capture:2]];
-		} else if ([input isMatchedByRegex:iManPageNameAndSectionRegex]) {
-			// Treat input as "groff 1"
-			[self loadPageWithName:[input stringByMatching:iManPageNameAndSectionRegex capture:1]
-						   section:[input stringByMatching:iManPageNameAndSectionRegex capture:2]];
-		} else if ([input isMatchedByRegex:iManSectionAndNameRegex]) {
-			// Treat input as "1 groff"
-			[self loadPageWithName:[input stringByMatching:iManSectionAndNameRegex capture:2]
-						   section:[input stringByMatching:iManSectionAndNameRegex capture:1]];
-		} else {
-			// Treat the whole input as the page name.
-			[self loadPageWithName:input section:nil];
-		}
-	}
+	[self loadPageWithStringInput:[sender stringValue]];
 }
 
 - (IBAction)reload:(id)sender
@@ -478,6 +447,42 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 #pragma mark -
 #pragma mark UI Methods
 
+static NSString *const iManPageNameWithParenthesesRegex = @"^(\\S+)\\s*\\(([0-9n][a-zA-Z]*)\\)$";
+static NSString *const iManPageNameAndSectionRegex = @"^(\\S+)\\s+([0-9n][a-zA-Z]*)$";
+static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$";
+
+- (void)loadPageWithStringInput:(NSString *)string
+{
+	// Determine what the user has requested.
+	// 1) if the input looks like a URL (i.e., begins with man:), treat it as appropriate.
+	// 2) if the input looks like a page name and section, or a bare page name, attempt to locate that page.
+	NSMutableString *input = [[string mutableCopy] autorelease];
+	
+	// Trim whitespace
+	CFStringTrimWhitespace((CFMutableStringRef)input);
+	if ([input length] > 0) {
+		if ([input hasPrefix:@"man:"]) {
+			// Treat input as man: URL.
+			[self loadPageWithURL:[NSURL URLWithString:input]];
+		} else if ([input isMatchedByRegex:iManPageNameWithParenthesesRegex]) {
+			// Treat input as "groff(1) (ignoring spaces).
+			[self loadPageWithName:[input stringByMatching:iManPageNameWithParenthesesRegex capture:1]
+						   section:[input stringByMatching:iManPageNameWithParenthesesRegex capture:2]];
+		} else if ([input isMatchedByRegex:iManPageNameAndSectionRegex]) {
+			// Treat input as "groff 1"
+			[self loadPageWithName:[input stringByMatching:iManPageNameAndSectionRegex capture:1]
+						   section:[input stringByMatching:iManPageNameAndSectionRegex capture:2]];
+		} else if ([input isMatchedByRegex:iManSectionAndNameRegex]) {
+			// Treat input as "1 groff"
+			[self loadPageWithName:[input stringByMatching:iManSectionAndNameRegex capture:2]
+						   section:[input stringByMatching:iManSectionAndNameRegex capture:1]];
+		} else {
+			// Treat the whole input as the page name.
+			[self loadPageWithName:input section:nil];
+		}
+	}
+}
+
 - (void)loadPageWithURL:(NSURL *)url
 {
 	[self loadPageWithName:[url pageName] section:[url pageSection]];
@@ -561,10 +566,7 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 	
 	if ([index isValid]) {
 		iManSearch *search = [iManSearch searchWithTerm:term searchType:type];
-		if (_searchResults != nil) {
-			[_searchResults release];
-			_searchResults = nil;
-		}
+
 		[self setSearch:search];
 		[aproposTabView selectTabViewItemAtIndex:iManAproposTabSearching];
 		[aproposDrawer open:self];
@@ -663,8 +665,18 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 
 - (void)searchDidComplete:(NSNotification *)notification
 {
-	[_searchResults release];
-	_searchResults = [[[[self search] results] sortedArrayUsingSelector:@selector(compare:)] retain];
+	// Bindings take care of updating the table view. Update the rest of the UI. (It's possible for searches to be triggered programmatically).
+	[aproposField setStringValue:[[self search] term]];
+	// Set the search type in the menu.
+	for (NSMenuItem *menuItem in [aproposFieldMenu itemArray]) {
+		if ([menuItem action] == @selector(setAproposFieldSearchType:))
+			[menuItem setState:NSOffState];
+		if ([[menuItem representedObject] isEqualToString:[[self search] searchType]])
+			[menuItem setState:NSOnState];
+	}
+	
+	[[aproposField cell] setSearchMenuTemplate:aproposFieldMenu];
+	
 	[aproposTabView selectTabViewItemAtIndex:iManAproposTabDisplaying];
 	[aproposDrawer open:self]; // Re-open when the search completes, just in case it's been closed.
 }
@@ -909,7 +921,7 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 }
 
 #pragma mark -
-#pragma mark NSTextView Delegate Link Handling
+#pragma mark NSTextView Delegate
 
 - (BOOL)textView:(NSTextView *)textView clickedOnLink:(id)link atIndex:(NSUInteger)charIndex
 {
@@ -921,6 +933,91 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 	// URLs will be passed off to the application-wide handler if appropriate, which will open in a new window.
 	return NO;
 }
+
+- (NSMenu *)textView:(NSTextView *)view menu:(NSMenu *)menu forEvent:(NSEvent *)event atIndex:(NSUInteger)charIndex
+{
+	NSMenu *newMenu = [[NSMenu alloc] init];
+	NSMenuItem *item;
+
+	if ([[[view textStorage] attributesAtIndex:charIndex effectiveRange:NULL] objectForKey:NSLinkAttributeName] != nil) {
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Open Link", @"Item title for context menu") action:@selector(openLink:) keyEquivalent:@""];
+		[item setTarget:self];
+		[item setRepresentedObject:[[[view textStorage] attributesAtIndex:charIndex effectiveRange:NULL] objectForKey:NSLinkAttributeName]];
+		[newMenu addItem:item];
+		[item release];
+		
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Open Link in New Window", @"Item title for context menu") action:@selector(openLinkInNewWindow:) keyEquivalent:@""];
+		[item setTarget:self];
+		[item setRepresentedObject:[[[view textStorage] attributesAtIndex:charIndex effectiveRange:NULL] objectForKey:NSLinkAttributeName]];
+		[newMenu addItem:item];
+		[item release];
+	}
+
+	// Check to see if there is a non-space selection
+	NSArray *selection = [manpageView selectedRanges];
+	
+	if ((selection != nil) && ([selection count] > 0)) {
+		NSRange range = [[selection objectAtIndex:0] rangeValue];
+		NSMutableString *selectedText;
+		
+		selectedText = [[[[[self page] page] string] substringWithRange:range] mutableCopy];
+		CFStringTrimWhitespace((CFMutableStringRef)selectedText);
+		if ([selectedText length] > 0) {
+			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Open Page with this Title", @"Item title for context menu") action:@selector(openPageFromSelection:) keyEquivalent:@""];
+			[item setTarget:self];	
+			[newMenu addItem:item];
+			[item release];
+			
+			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Apropos Search for Selection", @"Item title for context menu") action:@selector(aproposSearchForSelection:) keyEquivalent:@""];
+			[item setTarget:self];	
+			[newMenu addItem:item];
+			[item release];
+			
+			[newMenu addItem:[NSMenuItem separatorItem]];
+		}
+		[selectedText release];
+	}
+	
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Copy", @"Item title for context menu") action:@selector(copy:) keyEquivalent:@""];
+	[item setTarget:nil];	
+	[newMenu addItem:item];
+	[item release];	
+	
+	return [newMenu autorelease];
+}
+
+- (IBAction)openLink:(id)sender
+{
+	[self loadPageWithURL:[sender representedObject]];
+}
+
+- (IBAction)openLinkInNewWindow:(id)sender
+{
+	[[NSApp delegate] loadURLInNewDocument:[sender representedObject]];
+}
+
+- (IBAction)openPageFromSelection:(id)sender
+{
+	NSArray *selection = [manpageView selectedRanges];
+	
+	if ((selection != nil) && ([selection count] > 0)) {
+		NSRange range = [[selection objectAtIndex:0] rangeValue];
+		
+		[self loadPageWithStringInput:[[[[self page] page] string] substringWithRange:range]];
+	}	
+}
+
+- (IBAction)aproposSearchForSelection:(id)sender
+{
+	NSArray *selection = [manpageView selectedRanges];
+	
+	if ((selection != nil) && ([selection count] > 0)) {
+		NSRange range = [[selection objectAtIndex:0] rangeValue];
+		
+		[self performSearchForTerm:[[[[self page] page] string] substringWithRange:range] type:iManSearchTypeApropos];
+	}
+}
+
 
 #pragma mark -
 #pragma mark Page Selection Sheet Data Source
@@ -974,7 +1071,6 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 	// Release instance variables.
     [_history release];
 	[_savedSearchType release];
-	[_searchResults release];
     [_findResults release];
 	[page_ release];
 	[search_ release];
