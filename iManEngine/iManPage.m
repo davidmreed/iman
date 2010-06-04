@@ -10,6 +10,7 @@
 #import "iManErrors.h"
 #import "iManEnginePreferences.h"
 #import "iManRenderOperation.h"
+#import "iManPageCache.h"
 #import "NSString+iManPathExtensions.h"
 #import "RegexKitLite.h"
 
@@ -21,31 +22,16 @@
 
 @implementation iManPage
 
-static NSMutableDictionary *_iManPageCache;
 static NSOperationQueue *_iManPageRenderingQueue;
 
 + (void)initialize
 {
-	_iManPageCache = [[NSMutableDictionary alloc] init];
 	_iManPageRenderingQueue = [[NSOperationQueue alloc] init];
 }
 
-+ (void)clearCache
-{
-	[_iManPageCache removeAllObjects];
-}	
-
 + pageWithPath:(NSString *)path
 {
-	iManPage *ret;
-	
-	if (ret = [_iManPageCache objectForKey:path])
-		return ret;
-	
-	ret = [[iManPage alloc] initWithPath:path];
-	[_iManPageCache setObject:ret forKey:path];
-	
-	return [ret autorelease];
+	return [[[iManPage alloc] initWithPath:path] autorelease];
 }
 
 - initWithPath:(NSString *)path
@@ -53,17 +39,47 @@ static NSOperationQueue *_iManPageRenderingQueue;
 	self = [super init];
 	
 	if (self) {
-		if ([_iManPageCache objectForKey:path] != nil) {
+		if ([[iManPageCache sharedCache] isPageCachedWithPath:path] &&
+			([[iManPageCache sharedCache] cachedPageWithPath:path] != nil)) {
 			// If there is a cached instance for this path, substitute it.
 			[self dealloc];
-			return [_iManPageCache objectForKey:path];
+			return [[iManPageCache sharedCache] cachedPageWithPath:path];
 		} else {
 			path_ = [path retain];
 			_renderOperation = nil;
+			[[iManPageCache sharedCache] cachePage:self];
 		}
 	}
 	
 	return self;
+}
+
+- initWithCoder:(NSCoder *)coder
+{
+	self = [super init];
+	
+	if (self) {
+		if ([coder allowsKeyedCoding]) {
+			path_ = [[coder decodeObjectForKey:@"path"] retain];
+			page_ = [[coder decodeObjectForKey:@"page"] retain];
+		} else {
+			path_ = [[coder decodeObject] retain];
+			page_ = [[coder decodeObject] retain];
+		}
+	} 
+	
+	return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+	if ([coder allowsKeyedCoding]) {
+		[coder encodeObject:[self path] forKey:@"path"];
+		[coder encodeObject:[self page] forKey:@"page"];
+	} else {
+		[coder encodeObject:[self path]];
+		[coder encodeObject:[self page]];
+	}
 }
 
 - (NSString *)description

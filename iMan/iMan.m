@@ -218,7 +218,7 @@
 						NSLocalizedString(@"OK", nil),
 						NSLocalizedString(@"Cancel", nil),
 						nil) == NSOKButton) {
-		[iManPage clearCache];
+		[[iManPageCache sharedCache] clearCache];
 		[[[NSDocumentController sharedDocumentController] documents] makeObjectsPerformSelector:@selector(clearHistory:) withObject:self];
 	}
 }

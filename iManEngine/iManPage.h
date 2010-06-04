@@ -9,13 +9,11 @@
 
 @class iManRenderOperation;
 
-@interface iManPage : NSObject {
+@interface iManPage : NSObject <NSCoding> {
 	NSAttributedString *page_;
 	NSString *path_;
 	iManRenderOperation *_renderOperation;
 }
-
-+ (void)clearCache;
 
 + pageWithPath:(NSString *)path;
 - initWithPath:(NSString *)path;
