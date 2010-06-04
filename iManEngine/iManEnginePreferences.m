@@ -6,55 +6,44 @@
 //
 
 #import "iManEnginePreferences.h"
-#import "NSTask+iManExtensions.h"
-
-@interface iManEnginePreferences (EnginePreferencesPrivate)
-
-- (NSMutableDictionary *)_enginePreferences;
-- (void)_setEnginePreferences:(NSDictionary *)enginePreferences;
-
-@end
 
 @implementation iManEnginePreferences
 
-static iManEnginePreferences *_sharedInstance;
 static NSDictionary *_pathDictionary;
-static NSLock *_prefsLock;
 
-static NSString *const iManEngineBundleIdentifier = @"org.ktema.iman.imanengine";
-static NSString *const iManEnginePathDictionary = @"iManEnginePathDictionary";
-static NSString *const iManEngineManpaths = @"iManEngineManpaths";
+NSString *const iManEngineManpaths = @"org.ktema.iman.imanengine:MANPATH";
+NSString *const iManEngineToolPathMan = @"org.ktema.iman.imanengine:Path:man";
+NSString *const iManEngineToolPathGroff = @"org.ktema.iman.imanengine:Path:groff";
+NSString *const iManEngineToolPathMakewhatis = @"org.ktema.iman.imanengine:Path:makewhatis";
+NSString *const iManEngineUseDiskCache = @"org.ktema.iman.imanengine:UseDiskCache";
+NSString *const iManEngineUseMemoryCache = @"org.ktema.iman.imanengine:UseMemCache";
 
 + (void)initialize
 {
-	NSArray *manpaths = [NSArray arrayWithObjects:@"/usr/share/man", @"/usr/local/share/man", @"/usr/X11/man", @"/usr/X11R6/man", @"/sw/share/man", @"/Developer/usr/share/man", nil];
     _pathDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
         @"/usr/bin/man", @"man",
         @"/usr/bin/groff", @"groff",
-		@"/usr/bin/manpath", @"manpath",
 		@"/usr/libexec/makewhatis", @"makewhatis",
         nil];
-	_prefsLock = [[NSLock alloc] init];
 	
-	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObject:[NSDictionary dictionaryWithObjectsAndKeys:_pathDictionary, iManEnginePathDictionary, manpaths, iManEngineManpaths, nil] forKey:iManEngineBundleIdentifier]];
+	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
+			[NSArray arrayWithObjects:@"/usr/share/man", @"/usr/local/share/man", @"/usr/X11/man", @"/usr/X11R6/man", @"/sw/share/man", @"/Developer/usr/share/man", nil], iManEngineManpaths,
+			@"/usr/bin/man", iManEngineToolPathMan,
+			@"/usr/bin/groff", iManEngineToolPathGroff,
+			@"/usr/libexec/makewhatis", iManEngineToolPathMakewhatis,
+			[NSNumber numberWithBool:YES], iManEngineUseDiskCache,
+			[NSNumber numberWithBool:YES], iManEngineUseMemoryCache,
+															 nil]];
 }
 
 + sharedInstance
 {
+	static iManEnginePreferences *_sharedInstance = nil;
+
 	if (_sharedInstance == nil)
 		_sharedInstance = [[iManEnginePreferences alloc] init];
 	
 	return _sharedInstance;
-}
-
-- (NSMutableDictionary *)_enginePreferences
-{
-	return [[[[NSUserDefaults standardUserDefaults] objectForKey:iManEngineBundleIdentifier] mutableCopy] autorelease];
-}
-
-- (void)_setEnginePreferences:(NSDictionary *)enginePreferences
-{
-	[[NSUserDefaults standardUserDefaults] setObject:enginePreferences forKey:iManEngineBundleIdentifier];
 }
 
 - (NSArray *)tools
@@ -64,65 +53,57 @@ static NSString *const iManEngineManpaths = @"iManEngineManpaths";
 
 - (NSString *)pathForTool:(NSString *)tool
 {
-    NSString *path = nil;
-	id loadedPathDictionary = nil;
+    NSString *path = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"org.ktema.iman.imanengine:Path:%@", tool]];
 	
-    [_prefsLock lock];
-	loadedPathDictionary = [[self _enginePreferences] objectForKey:iManEnginePathDictionary];
-	path = [[loadedPathDictionary objectForKey:tool] retain];
-    [_prefsLock unlock];
-    
-    if ((path == nil) || (![[NSFileManager defaultManager] isExecutableFileAtPath:path]))
-        path = [[_pathDictionary objectForKey:tool] retain];
+    if (![[NSFileManager defaultManager] isExecutableFileAtPath:path])
+        path = [_pathDictionary objectForKey:tool];
 	
-    if ((path == nil) || (![[NSFileManager defaultManager] isExecutableFileAtPath:path]))
+    if (![[NSFileManager defaultManager] isExecutableFileAtPath:path])
         return nil;
 	
-    return [path autorelease];
+    return path;
 }
 
 - (void)setPath:(NSString *)path forTool:(NSString *)tool
 {
-	NSMutableDictionary *prefs;
-	NSMutableDictionary *pathDict;
-	
-    [_prefsLock lock];
-	prefs = [self _enginePreferences];
-	pathDict = [[prefs objectForKey:iManEnginePathDictionary] mutableCopy];
-	[pathDict setObject:path forKey:tool];
-	[prefs setObject:pathDict forKey:iManEnginePathDictionary];
-	[self _setEnginePreferences:prefs];
-	[pathDict release];
-    [_prefsLock unlock];
+	if ([_pathDictionary objectForKey:tool] != nil) {
+		[[NSUserDefaults standardUserDefaults] setObject:path forKey:[NSString stringWithFormat:@"org.ktema.iman.imanengine:Path:%@", tool]];
+	}
 }
 
 - (NSArray *)manpaths
-{
-	NSArray *ret;
-	NSData *dat;
-	NSString * string;
-	
-	[_prefsLock lock];
-	ret = [[[NSUserDefaults standardUserDefaults] objectForKey:iManEngineBundleIdentifier] objectForKey:iManEngineManpaths];
-	[_prefsLock unlock];
-
-	return ret;
+{	
+	return [[NSUserDefaults standardUserDefaults] objectForKey:iManEngineManpaths];
 }	
 
 - (void)setManpaths:(NSArray *)manpaths
 {
-	NSMutableDictionary *prefs;
-	
-	[_prefsLock lock];
-	prefs = [self _enginePreferences];
-	[prefs setObject:manpaths forKey:iManEngineManpaths];
-	[self _setEnginePreferences:prefs];
-	[_prefsLock unlock];
+	[[NSUserDefaults standardUserDefaults] setObject:manpaths forKey:iManEngineManpaths];
 }
 
 - (NSString *)manpathString
 {
 	return [[self manpaths] componentsJoinedByString:@":"];
 }
-	
+
+- (BOOL)useDiskCache
+{
+	return [[NSUserDefaults standardUserDefaults] boolForKey:iManEngineUseDiskCache];
+}
+
+- (void)setUseDiskCache:(BOOL)diskCache
+{
+	[[NSUserDefaults standardUserDefaults] setBool:diskCache forKey:iManEngineUseDiskCache];
+}
+
+- (BOOL)useMemoryCache
+{
+	return [[NSUserDefaults standardUserDefaults] boolForKey:iManEngineUseMemoryCache];
+}
+
+- (void)setUseMemoryCache:(BOOL)memCache
+{
+	[[NSUserDefaults standardUserDefaults] setBool:memCache forKey:iManEngineUseMemoryCache];
+}
+
 @end

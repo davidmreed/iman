@@ -10,7 +10,7 @@
 /*!
  @class iManEnginePreferences
  @abstract Interface to engine-specific configuration.
- @discussion iManEnginePreferences is a singleton class that provides an interface to the engine framework's configuration. This class is thread-safe.
+ @discussion iManEnginePreferences is a singleton class that provides an interface to the engine framework's configuration. This class is thread-safe, as it covers on NSUserDefaults
  */
 
 @interface iManEnginePreferences : NSObject {
@@ -55,4 +55,17 @@
  */
 - (NSString *)manpathString;
 
+- (BOOL)useDiskCache;
+- (void)setUseDiskCache:(BOOL)diskCache;
+- (BOOL)useMemoryCache;
+- (void)setUseMemoryCache:(BOOL)memCache;
+
+
 @end
+
+extern NSString *const iManEngineManpaths;
+extern NSString *const iManEngineToolPathMan;
+extern NSString *const iManEngineToolPathGroff;
+extern NSString *const iManEngineToolPathMakewhatis;
+extern NSString *const iManEngineUseDiskCache;
+extern NSString *const iManEngineUseMemoryCache;
