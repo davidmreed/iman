@@ -8,6 +8,7 @@
 #import <iManEngine/iManPage.h>
 #import <iManEngine/iManSearch.h>
 #import <iManEngine/iManIndex.h>
+#import <iManEngine/iManPageCache.h>
 #import <iManEngine/iManEnginePreferences.h>
 #import <iManEngine/iManErrors.h>
 #import <iManEngine/iManSearchOperation.h>
@@ -16,3 +17,4 @@
 #import <iManEngine/iManPageDatabase.h>
 #import <iManEngine/NSURL+iManExtensions.h>
 #import <iManEngine/NSString+iManPathExtensions.h>
+#import <iManEngine/NSOperationQueue+iManEngine.h>

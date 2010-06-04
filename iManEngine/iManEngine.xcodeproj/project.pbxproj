@@ -41,6 +41,10 @@
 		63D688AF10D9C72F008F63E6 /* iManErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D688AD10D9C72F008F63E6 /* iManErrors.m */; };
 		63E5A99811AB575F00EE3F24 /* iManPageDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 63E5A99611AB575F00EE3F24 /* iManPageDatabase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		63E5A99911AB575F00EE3F24 /* iManPageDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5A99711AB575F00EE3F24 /* iManPageDatabase.m */; };
+		63E6D56311B93A4E0003F52E /* iManPageCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 63E6D56111B93A4E0003F52E /* iManPageCache.h */; };
+		63E6D56411B93A4E0003F52E /* iManPageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E6D56211B93A4E0003F52E /* iManPageCache.m */; };
+		63E6D58011B95CD00003F52E /* NSOperationQueue+iManEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 63E6D57E11B95CD00003F52E /* NSOperationQueue+iManEngine.h */; };
+		63E6D58111B95CD00003F52E /* NSOperationQueue+iManEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E6D57F11B95CD00003F52E /* NSOperationQueue+iManEngine.m */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
@@ -90,6 +94,10 @@
 		63D688AD10D9C72F008F63E6 /* iManErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManErrors.m; sourceTree = "<group>"; };
 		63E5A99611AB575F00EE3F24 /* iManPageDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManPageDatabase.h; sourceTree = "<group>"; };
 		63E5A99711AB575F00EE3F24 /* iManPageDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManPageDatabase.m; sourceTree = "<group>"; };
+		63E6D56111B93A4E0003F52E /* iManPageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManPageCache.h; sourceTree = "<group>"; };
+		63E6D56211B93A4E0003F52E /* iManPageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManPageCache.m; sourceTree = "<group>"; };
+		63E6D57E11B95CD00003F52E /* NSOperationQueue+iManEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSOperationQueue+iManEngine.h"; sourceTree = "<group>"; };
+		63E6D57F11B95CD00003F52E /* NSOperationQueue+iManEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSOperationQueue+iManEngine.m"; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -154,6 +162,8 @@
 				11BABB0809D1DF2C00A3D6B1 /* iManEngine.h */,
 				63E5A99611AB575F00EE3F24 /* iManPageDatabase.h */,
 				63E5A99711AB575F00EE3F24 /* iManPageDatabase.m */,
+				63E6D56111B93A4E0003F52E /* iManPageCache.h */,
+				63E6D56211B93A4E0003F52E /* iManPageCache.m */,
 				63D688AC10D9C72F008F63E6 /* iManErrors.h */,
 				63D688AD10D9C72F008F63E6 /* iManErrors.m */,
 				6342BFDC10B797AB006995CA /* iManSearchOperation.h */,
@@ -174,6 +184,8 @@
 				6385CECE11AF006B003E2EAE /* NSURL+iManExtensions.m */,
 				634BCCD511B2D26800104304 /* NSString+iManPathExtensions.h */,
 				634BCCD611B2D26800104304 /* NSString+iManPathExtensions.m */,
+				63E6D57E11B95CD00003F52E /* NSOperationQueue+iManEngine.h */,
+				63E6D57F11B95CD00003F52E /* NSOperationQueue+iManEngine.m */,
 			);
 			name = "Public Classes";
 			sourceTree = "<group>";
@@ -260,6 +272,8 @@
 				63E5A99811AB575F00EE3F24 /* iManPageDatabase.h in Headers */,
 				6385CECF11AF006B003E2EAE /* NSURL+iManExtensions.h in Headers */,
 				634BCCD711B2D26800104304 /* NSString+iManPathExtensions.h in Headers */,
+				63E6D56311B93A4E0003F52E /* iManPageCache.h in Headers */,
+				63E6D58011B95CD00003F52E /* NSOperationQueue+iManEngine.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,6 +352,8 @@
 				63E5A99911AB575F00EE3F24 /* iManPageDatabase.m in Sources */,
 				6385CED011AF006B003E2EAE /* NSURL+iManExtensions.m in Sources */,
 				634BCCD811B2D26800104304 /* NSString+iManPathExtensions.m in Sources */,
+				63E6D56411B93A4E0003F52E /* iManPageCache.m in Sources */,
+				63E6D58111B95CD00003F52E /* NSOperationQueue+iManEngine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
