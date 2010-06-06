@@ -156,7 +156,7 @@
 	void *buffer;
 	int fd, bytesRead;
 	
-	fd = mkstemp(&filename);
+	fd = mkstemp(filename);
 	if (fd == -1) {
 		if (error != nil) *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
 		return nil;

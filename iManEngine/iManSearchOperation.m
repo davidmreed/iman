@@ -47,7 +47,7 @@
 	}	
 	
 	// We'll create a temporary directory with a symlink inside that points to our Application Support index folder. This obviates the need to workaround shell scripts breaking because of the space in "Application Support", or international characters which might or might not exist in the path to that folder.
-	if (mkdtemp(&tempDir) == NULL) {
+	if (mkdtemp(tempDir) == NULL) {
 		_error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
 		[pool release];
 		return;
@@ -57,7 +57,7 @@
 											  withDestinationPath:[aproposIndex indexPath]
 															error:&taskError]) {
 		_error = [taskError retain];
-		rmdir(&tempDir);
+		rmdir(tempDir);
 		[pool release];
 		return;
 	}		
@@ -76,7 +76,7 @@
 	[[aproposIndex lock] unlock];
 	// The following method does not traverse symbolic links.
 	[[NSFileManager defaultManager] removeFileAtPath:tempLink handler:nil];
-	rmdir(&tempDir);
+	rmdir(tempDir);
 	
 	if (data != nil) {
 		NSEnumerator *lines;
