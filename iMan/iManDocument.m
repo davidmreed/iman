@@ -6,6 +6,7 @@
 //
 
 #import "iManDocument.h"
+#import "iManFindResult.h"
 #import <iManEngine/iManEngine.h>
 #import <unistd.h>
 #import "iMan.h"
@@ -33,10 +34,6 @@ enum {
 	kiManMatchCaseMenuItemTag = 10,
 	kiManUseRegularExpressionsMenuItemTag
 };
-
-// Local constants for this file only.
-static NSString *const iManFindResultRange = @"range";
-static NSString *const iManFindResultDisplayString = @"string";
 
 @implementation iManDocument
 
@@ -247,7 +244,7 @@ static NSString *const iManFindResultDisplayString = @"string";
         enumerator = [string matchEnumeratorWithRegex:[findDrawerSearchField stringValue] options: (caseSensitive ? RKLNoOptions : RKLNoOptions | RKLCaseless)];
 
         while ((match = [enumerator nextObject]) != nil) {  
-			[results addObject:[NSDictionary dictionaryWithObjectsAndKeys:match, iManFindResultRange, [self findResultFromRange:[match rangeValue]], iManFindResultDisplayString, nil]];
+			[results addObject:[iManFindResult findResultWithRange:[match rangeValue] inAttributedString:[manpageView textStorage]]];
             
         }
     } else {
@@ -268,7 +265,7 @@ static NSString *const iManFindResultDisplayString = @"string";
 
                 rangePtr = CFArrayGetValueAtIndex(ranges, index);
                 range = NSMakeRange(rangePtr->location, rangePtr->length);
-				[results addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSValue valueWithRange:range], iManFindResultRange, [self findResultFromRange:range], iManFindResultDisplayString, nil]];
+				[results addObject:[iManFindResult findResultWithRange:range inAttributedString:[manpageView textStorage]]];
             }
         }
     }
@@ -456,10 +453,8 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 	// Determine what the user has requested.
 	// 1) if the input looks like a URL (i.e., begins with man:), treat it as appropriate.
 	// 2) if the input looks like a page name and section, or a bare page name, attempt to locate that page.
-	NSMutableString *input = [[string mutableCopy] autorelease];
+	NSString *input = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	
-	// Trim whitespace
-	CFStringTrimWhitespace((CFMutableStringRef)input);
 	if ([input length] > 0) {
 		if ([input hasPrefix:@"man:"]) {
 			// Treat input as man: URL.
@@ -613,6 +608,50 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 	}
 	// Our -displayName changes each time a new page is loaded.
 	[windowController synchronizeWindowTitleWithDocumentName];
+}
+
+- (NSDictionary *)displayStringOptions
+{
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSFontManager *fm = [NSFontManager sharedFontManager];
+	NSMutableDictionary *defaultStyle, *boldStyle, *italicStyle, *boldItalicStyle;
+	NSFont *font = [defaults archivedObjectForKey:iManDefaultStyle];
+	
+	defaultStyle = [NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName];
+	boldStyle = [[defaultStyle mutableCopy] autorelease];
+	italicStyle = [[defaultStyle mutableCopy] autorelease];
+	
+	if ([defaults boolForKey:iManBoldStyleMakeBold])
+		[boldStyle setObject:[fm convertFont:[boldStyle objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask] forKey:NSFontAttributeName];
+	if ([defaults boolForKey:iManBoldStyleMakeItalic])
+		[boldStyle setObject:[fm convertFont:[boldStyle objectForKey:NSFontAttributeName] toHaveTrait:NSItalicFontMask] forKey:NSFontAttributeName];
+	if ([defaults boolForKey:iManBoldStyleMakeUnderline]) 
+		[boldStyle setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
+	[boldStyle setObject:[defaults archivedObjectForKey:iManBoldStyleColor] forKey:NSForegroundColorAttributeName];
+	
+	boldItalicStyle = [[boldStyle mutableCopy] autorelease];
+	
+	if ([defaults boolForKey:iManUnderlineStyleMakeBold]) {
+		[italicStyle setObject:[fm convertFont:[italicStyle objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask] forKey:NSFontAttributeName];
+		[boldItalicStyle setObject:[fm convertFont:[boldItalicStyle objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask] forKey:NSFontAttributeName];
+	}
+	if ([defaults boolForKey:iManUnderlineStyleMakeItalic]) {
+		[italicStyle setObject:[fm convertFont:[italicStyle objectForKey:NSFontAttributeName] toHaveTrait:NSItalicFontMask] forKey:NSFontAttributeName];
+		[boldItalicStyle setObject:[fm convertFont:[boldItalicStyle objectForKey:NSFontAttributeName] toHaveTrait:NSItalicFontMask] forKey:NSFontAttributeName];
+	}
+	if ([defaults boolForKey:iManUnderlineStyleMakeUnderline]) {
+		[italicStyle setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
+		[boldItalicStyle setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
+	}
+	[italicStyle setObject:[defaults archivedObjectForKey:iManUnderlineStyleColor] forKey:NSForegroundColorAttributeName];
+	
+	return [NSDictionary dictionaryWithObjectsAndKeys:
+			defaultStyle, iManPageDefaultStyle,
+			boldStyle, iManPageBoldStyle,
+			italicStyle, iManPageUnderlineStyle,
+			boldItalicStyle, iManPageBoldUnderlineStyle,
+			[[NSUserDefaults standardUserDefaults] objectForKey:iManShowPageLinks], iManPageUnderlineLinks,
+			nil];
 }
 
 #pragma mark -
@@ -803,126 +842,6 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 }
 
 #pragma mark -
-#pragma mark Display Handlers
-
-- (NSAttributedString *)findResultFromRange:(NSRange)range
-{
-	// FIXME: ideally, we should supply a chunk of (alphanumerical) context on each side of the matched text; this way yields a lot of spaces.
-    NSMutableAttributedString *ret;
-    static NSAttributedString *greyEllipses;
-    unsigned leftMargin, rightMargin, length, resLength;
-	unichar theChar;
-    const int marginSize = 10;
-    
-    if (greyEllipses == nil)
-        greyEllipses = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"...", nil)
-													   attributes:[NSDictionary dictionaryWithObject:[NSColor disabledControlTextColor] forKey:NSForegroundColorAttributeName]];
-    
-    resLength = range.length;
-    length = [[[manpageView textStorage] string] length];
-	
-    if (range.location < marginSize) {
-        leftMargin = range.location;
-        range.length += range.location;
-        range.location = 0;
-    } else {
-        leftMargin = marginSize;
-        range.length += marginSize;
-        range.location -= marginSize;
-    }
-	
-    rightMargin = MIN(marginSize, length - NSMaxRange(range));
-    range.length += rightMargin;
-	
-    ret = [[[manpageView textStorage] attributedSubstringFromRange:range] mutableCopy];
-	
-	// Highlight the find result in red.
-	[ret addAttribute:NSForegroundColorAttributeName
-				value:[NSColor redColor]
-				range:NSMakeRange(leftMargin, resLength)];
-	
-	// Add ellipses if not at beginning/end of line.
-	if (range.location > 0) {
-		theChar = [[[manpageView textStorage] string] characterAtIndex:range.location - 1];
-		if ((theChar != 0x000D) && (theChar != 0x000A))
-			[ret insertAttributedString:greyEllipses atIndex:0];
-	}
-	
-	if (NSMaxRange(range) < [[manpageView textStorage] length]) {
-		theChar = [[[manpageView textStorage] string] characterAtIndex:NSMaxRange(range) + 1];
-		if ((theChar != 0x000D) && (theChar != 0x000A))
-			[ret appendAttributedString:greyEllipses];
-	}
-	
-	// Use CF functions to remove CR/LF & co.
-	{
-		CFCharacterSetRef characters = CFCharacterSetGetPredefined(kCFCharacterSetWhitespaceAndNewline);
-		CFRange range = CFRangeMake(0, [ret length]), result;
-		CFStringRef stringRef = (CFStringRef)[ret string];
-		NSRange junk;
-		
-		while (CFStringFindCharacterFromSet(stringRef,
-											characters,
-											range,
-											0,
-											&result)) {
-			NSAttributedString *repl = [[NSAttributedString alloc] initWithString:@" " attributes:[ret attributesAtIndex:result.location effectiveRange:&junk]];
-			[ret replaceCharactersInRange:NSMakeRange(result.location, result.length)
-					 withAttributedString:repl];
-			[repl release];
-			range = CFRangeMake(result.location + 1, [ret length] - (result.location + 1));
-		}
-	}
-	
-	
-    return [ret autorelease];
-}
-
-- (NSDictionary *)displayStringOptions
-{
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	NSFontManager *fm = [NSFontManager sharedFontManager];
-	NSMutableDictionary *defaultStyle, *boldStyle, *italicStyle, *boldItalicStyle;
-	NSFont *font = [defaults archivedObjectForKey:iManDefaultStyle];
-	
-	defaultStyle = [NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName];
-	boldStyle = [[defaultStyle mutableCopy] autorelease];
-	italicStyle = [[defaultStyle mutableCopy] autorelease];
-	
-	if ([defaults boolForKey:iManBoldStyleMakeBold])
-		[boldStyle setObject:[fm convertFont:[boldStyle objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask] forKey:NSFontAttributeName];
-	if ([defaults boolForKey:iManBoldStyleMakeItalic])
-		[boldStyle setObject:[fm convertFont:[boldStyle objectForKey:NSFontAttributeName] toHaveTrait:NSItalicFontMask] forKey:NSFontAttributeName];
-	if ([defaults boolForKey:iManBoldStyleMakeUnderline]) 
-		[boldStyle setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
-	[boldStyle setObject:[defaults archivedObjectForKey:iManBoldStyleColor] forKey:NSForegroundColorAttributeName];
-
-	boldItalicStyle = [[boldStyle mutableCopy] autorelease];
-	
-	if ([defaults boolForKey:iManUnderlineStyleMakeBold]) {
-		[italicStyle setObject:[fm convertFont:[italicStyle objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask] forKey:NSFontAttributeName];
-		[boldItalicStyle setObject:[fm convertFont:[boldItalicStyle objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask] forKey:NSFontAttributeName];
-	}
-	if ([defaults boolForKey:iManUnderlineStyleMakeItalic]) {
-		[italicStyle setObject:[fm convertFont:[italicStyle objectForKey:NSFontAttributeName] toHaveTrait:NSItalicFontMask] forKey:NSFontAttributeName];
-		[boldItalicStyle setObject:[fm convertFont:[boldItalicStyle objectForKey:NSFontAttributeName] toHaveTrait:NSItalicFontMask] forKey:NSFontAttributeName];
-	}
-	if ([defaults boolForKey:iManUnderlineStyleMakeUnderline]) {
-		[italicStyle setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
-		[boldItalicStyle setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
-	}
-	[italicStyle setObject:[defaults archivedObjectForKey:iManUnderlineStyleColor] forKey:NSForegroundColorAttributeName];
-
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-		defaultStyle, iManPageDefaultStyle,
-		boldStyle, iManPageBoldStyle,
-		italicStyle, iManPageUnderlineStyle,
-		boldItalicStyle, iManPageBoldUnderlineStyle,
-		[[NSUserDefaults standardUserDefaults] objectForKey:iManShowPageLinks], iManPageUnderlineLinks,
-		nil];
-}
-
-#pragma mark -
 #pragma mark NSTextView Delegate
 
 - (BOOL)textView:(NSTextView *)textView clickedOnLink:(id)link atIndex:(NSUInteger)charIndex
@@ -960,10 +879,10 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 	
 	if ((selection != nil) && ([selection count] > 0)) {
 		NSRange range = [[selection objectAtIndex:0] rangeValue];
-		NSMutableString *selectedText;
+		NSString *selectedText;
 		
-		selectedText = [[[[[self page] page] string] substringWithRange:range] mutableCopy];
-		CFStringTrimWhitespace((CFMutableStringRef)selectedText);
+		selectedText = [[[[[self page] page] string] substringWithRange:range] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
 		if ([selectedText length] > 0) {
 			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Open Page with this Title", @"Item title for context menu") action:@selector(openPageFromSelection:) keyEquivalent:@""];
 			[item setTarget:self];	
@@ -1055,9 +974,10 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 {
 	if ([notification object] == findResultsView) {
 		if ([findResultsView selectedRow] != -1) {
-			NSRange range = [[[[self findResults] objectAtIndex:[findResultsView selectedRow]] objectForKey:iManFindResultRange] rangeValue];
+			NSRange range = [[[self findResults] objectAtIndex:[findResultsView selectedRow]] range];
 			[manpageView setSelectedRange:range];
 			[manpageView scrollRangeToVisible:range];
+			[manpageView showFindIndicatorForRange:range];
 		}
 	}
 }

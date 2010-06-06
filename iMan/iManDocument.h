@@ -112,8 +112,6 @@ typedef enum {
 @property BOOL useRegexps;
 @property BOOL caseSensitive;
 
-- (NSAttributedString *)findResultFromRange:(NSRange)range;
-
 - (void)displayFontDidChange:(NSNotification *)notification;
 - (NSDictionary *)displayStringOptions;
 
