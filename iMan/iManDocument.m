@@ -14,7 +14,7 @@
 #import "iManIndexingWindowController.h"
 #import "iManHistoryQueue.h"
 #import "NSUserDefaults+DMRArchiving.h"
-#import "RegexKitLite/RegexKitLite.h"
+#import "RegexKitLite.h"
 #import "RegexKitLiteSupport/RKLMatchEnumerator.h"
 
 // Indices of tab view panes.

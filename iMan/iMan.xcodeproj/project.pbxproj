@@ -290,7 +290,7 @@
 				6302D5D010B83AF1000051DB /* NSUserDefaults+DMRArchiving.h */,
 				6302D5D110B83AF1000051DB /* NSUserDefaults+DMRArchiving.m */,
 				637FAC200F1A64D70080BA28 /* RegexKitLiteSupport */,
-				635B7A810F1698AB0043FFEF /* RegexKitLite */,
+				635B7A810F1698AB0043FFEF /* RegexKitLite-4.0 */,
 			);
 			name = "External Code";
 			path = ..;
@@ -323,13 +323,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		635B7A810F1698AB0043FFEF /* RegexKitLite */ = {
+		635B7A810F1698AB0043FFEF /* RegexKitLite-4.0 */ = {
 			isa = PBXGroup;
 			children = (
 				635B7A820F1698CA0043FFEF /* RegexKitLite.h */,
 				635B7A830F1698CA0043FFEF /* RegexKitLite.m */,
 			);
-			path = RegexKitLite;
+			path = "RegexKitLite-4.0";
 			sourceTree = "<group>";
 		};
 		637FAC200F1A64D70080BA28 /* RegexKitLiteSupport */ = {
