@@ -14,5 +14,3 @@
 - (iManRWLock *)lock;
 
 @end
-
-extern NSOperationQueue *_iManSearchQueue;

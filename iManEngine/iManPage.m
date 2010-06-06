@@ -13,6 +13,7 @@
 #import "iManPageCache.h"
 #import "NSString+iManPathExtensions.h"
 #import "RegexKitLite.h"
+#import "NSOperationQueue+iManEngine.h"
 
 @interface iManPage (Private)
 
@@ -21,13 +22,6 @@
 @end
 
 @implementation iManPage
-
-static NSOperationQueue *_iManPageRenderingQueue;
-
-+ (void)initialize
-{
-	_iManPageRenderingQueue = [[NSOperationQueue alloc] init];
-}
 
 + pageWithPath:(NSString *)path
 {
@@ -43,7 +37,7 @@ static NSOperationQueue *_iManPageRenderingQueue;
 			([[iManPageCache sharedCache] cachedPageWithPath:path] != nil)) {
 			// If there is a cached instance for this path, substitute it.
 			[self dealloc];
-			return [[iManPageCache sharedCache] cachedPageWithPath:path];
+			return [[[iManPageCache sharedCache] cachedPageWithPath:path] retain];
 		} else {
 			path_ = [path retain];
 			_renderOperation = nil;
@@ -190,7 +184,7 @@ static NSOperationQueue *_iManPageRenderingQueue;
 	if (![self isLoaded] && ![self isLoading]) {		
 		_renderOperation = [[iManRenderOperation alloc] initWithPath:[self path]];
 		[_renderOperation addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
-		[_iManPageRenderingQueue addOperation:_renderOperation];
+		[[NSOperationQueue iManEngineOperationQueue] addOperation:_renderOperation];
 	}
 }
 

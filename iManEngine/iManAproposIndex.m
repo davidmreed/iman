@@ -11,6 +11,7 @@
 #import "iManMakewhatisOperation.h"
 #import "iManRWLock.h"
 #import "iManErrors.h"
+#import "NSOperationQueue+iManEngine.h"
 
 @implementation iManAproposIndex
 
@@ -35,7 +36,7 @@
 		_operation = [[iManMakewhatisOperation alloc] initWithPath:[[self indexPath] stringByAppendingPathComponent:@"whatis"]];
 		
 		[_operation addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
-		[_iManSearchQueue addOperation:_operation];
+		[[NSOperationQueue iManEngineOperationQueue] addOperation:_operation];
 	} else {
 		[[NSNotificationCenter defaultCenter] postNotificationName:iManIndexDidFailUpdateNotification
 															object:self
