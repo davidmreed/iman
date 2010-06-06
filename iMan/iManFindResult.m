@@ -114,4 +114,12 @@
 	return [ret autorelease];
 }
 
+- (void)dealloc
+{
+	[_source release];
+	[_match release];
+	[_matchWithContext release];
+	[super dealloc];
+}
+
 @end
