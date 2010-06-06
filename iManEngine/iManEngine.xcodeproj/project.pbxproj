@@ -213,7 +213,7 @@
 			isa = PBXGroup;
 			children = (
 				637FAC610F1A67830080BA28 /* RegexKitLiteSupport */,
-				635B7AA20F169DA00043FFEF /* RegexKitLite */,
+				635B7AA20F169DA00043FFEF /* RegexKitLite-4.0 */,
 			);
 			name = "External Code";
 			path = ..;
@@ -235,13 +235,13 @@
 			name = "Private Classes";
 			sourceTree = "<group>";
 		};
-		635B7AA20F169DA00043FFEF /* RegexKitLite */ = {
+		635B7AA20F169DA00043FFEF /* RegexKitLite-4.0 */ = {
 			isa = PBXGroup;
 			children = (
 				635B7AA40F169DBA0043FFEF /* RegexKitLite.h */,
 				635B7AA50F169DBA0043FFEF /* RegexKitLite.m */,
 			);
-			path = RegexKitLite;
+			path = "RegexKitLite-4.0";
 			sourceTree = "<group>";
 		};
 		637FAC610F1A67830080BA28 /* RegexKitLiteSupport */ = {
