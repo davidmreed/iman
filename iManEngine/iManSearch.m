@@ -12,14 +12,13 @@
 #import "iManSearchOperation.h"
 #import "NSTask+iManExtensions.h"
 #import "iManErrors.h"
+#import "NSOperationQueue+iManEngine.h"
 
 NSString *const iManSearchTypeApropos = @"apropos";
 NSString *const iManSearchTypeWhatis = @"whatis";
 
 NSString *const iManSearchDidCompleteNotification = @"iManSearchDidCompleteNotification";
 NSString *const iManSearchDidFailNotification = @"iManSearchDidFailNotification";
-
-NSOperationQueue *_iManSearchQueue;
 
 @interface iManSearch (iManSearchPrivate)
 
@@ -28,11 +27,6 @@ NSOperationQueue *_iManSearchQueue;
 @end
 
 @implementation iManSearch
-
-+ (void)initialize
-{
-	_iManSearchQueue = [[NSOperationQueue alloc] init];
-}
 
 + (NSArray *)searchTypes
 {
@@ -86,7 +80,7 @@ NSOperationQueue *_iManSearchQueue;
 	if (![self isSearching]) {
 		operation_ = [[iManSearchOperation alloc] initWithTerm:[self term] searchType:[self searchType]];		
 		[operation_ addObserver:self forKeyPath:@"isFinished" options:0 context:NULL];
-		[_iManSearchQueue addOperation:operation_];
+		[[NSOperationQueue iManEngineOperationQueue] addOperation:operation_];
 	}
 }
 
