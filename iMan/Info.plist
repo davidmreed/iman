@@ -25,6 +25,8 @@
 				<string>3n</string>
 				<string>3pm</string>
 				<string>3ssl</string>
+				<string>n</string>
+				<string>ntcl</string>
 				<string>gz</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
