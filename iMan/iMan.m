@@ -125,7 +125,8 @@
 		[progressIndicator startAnimation:self];
 		[initializingDatabaseWindow center];
 		[NSApp beginSheet:initializingDatabaseWindow modalForWindow:nil modalDelegate:self didEndSelector:nil contextInfo:NULL];
-		[NSThread detachNewThreadSelector:@selector(_initializePageDatabase:) toTarget:self withObject:nil];
+		[[NSOperationQueue iManEngineOperationQueue] addOperation:[[[NSInvocationOperation alloc] initWithTarget:self selector:@selector(_initializePageDatabase:) object:nil] autorelease]];
+		//		[NSThread detachNewThreadSelector:@selector(_initializePageDatabase:) toTarget:self withObject:nil];
 	} else {
 		[self _processStoredURLs];
 	}
@@ -232,7 +233,9 @@
 	[progressIndicator startAnimation:self];
 	[initializingDatabaseWindow center];
 	[NSApp beginSheet:initializingDatabaseWindow modalForWindow:nil modalDelegate:self didEndSelector:nil contextInfo:NULL];
-	[NSThread detachNewThreadSelector:@selector(_initializePageDatabase:) toTarget:self withObject:nil];
+	[[NSOperationQueue iManEngineOperationQueue] addOperation:[[[NSInvocationOperation alloc] initWithTarget:self selector:@selector(_initializePageDatabase:) object:nil] autorelease]];
+
+	//	[NSThread detachNewThreadSelector:@selector(_initializePageDatabase:) toTarget:self withObject:nil];
 }
 
 - (IBAction)installCommandLineTool:(id)sender
