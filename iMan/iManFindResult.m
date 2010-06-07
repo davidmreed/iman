@@ -6,12 +6,25 @@
 //
 
 #import "iManFindResult.h"
-#import <CoreFoundation/CoreFoundation.h>
 #import <iManEngine/iManPage.h>
 #import "iManConstants.h"
 #import "NSUserDefaults+DMRArchiving.h"
 
 @implementation iManFindResult
+
+static NSAttributedString *_iManFindResultEllipses;
+static NSAttributedString *_iManFindResultNewlineReplacementCharacter;
+
++ (void)initialize
+{
+	unichar character;
+	
+	character = 0x2026; // Unicode HORIZONTAL ELLIPSIS MARK (option-semicolon)
+	_iManFindResultEllipses = [[NSAttributedString alloc] initWithString:[NSString stringWithCharacters:&character length:1] attributes:[NSDictionary dictionaryWithObject:[NSColor disabledControlTextColor] forKey:NSForegroundColorAttributeName]];
+	character = 0x23CE; // Unicode RETURN SYMBOL
+	_iManFindResultNewlineReplacementCharacter = [[NSAttributedString alloc] initWithString:[NSString stringWithCharacters:&character length:1] attributes:[NSDictionary dictionaryWithObject:[NSColor disabledControlTextColor] forKey:NSForegroundColorAttributeName]];
+}
+	
 
 + findResultWithRange:(NSRange)range inAttributedString:(NSAttributedString *)string
 {
@@ -44,7 +57,6 @@
 - (NSAttributedString *)matchWithContext
 {
 	NSMutableAttributedString *ret;
-	static NSAttributedString *greyEllipses;
 	NSRange range = [self range];
 	unsigned leftMargin, rightMargin, length, resLength;
 	unichar theChar;
@@ -52,11 +64,7 @@
 	
 	if (_matchWithContext != nil)
 		return _matchWithContext;
-	
-	if (greyEllipses == nil)
-		greyEllipses = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"...", nil)
-													   attributes:[NSDictionary dictionaryWithObject:[NSColor disabledControlTextColor] forKey:NSForegroundColorAttributeName]];
-	
+		
 	resLength = range.length;
 	length = [[_source string] length];
 	
@@ -84,28 +92,27 @@
 	if (range.location > 0) {
 		theChar = [[_source string] characterAtIndex:range.location - 1];
 		if ((theChar != 0x000D) && (theChar != 0x000A))
-			[ret insertAttributedString:greyEllipses atIndex:0];
+			[ret insertAttributedString:_iManFindResultEllipses atIndex:0];
 	}
 	
 	if (NSMaxRange(range) < [_source length]) {
 		theChar = [[_source string] characterAtIndex:NSMaxRange(range) + 1];
 		if ((theChar != 0x000D) && (theChar != 0x000A))
-			[ret appendAttributedString:greyEllipses];
+			[ret appendAttributedString:_iManFindResultEllipses];
 	}
 	
-	// Use CF functions to remove CR/LF & co.
+	// Remove CR/LF & co.
 	{
-		CFCharacterSetRef characters = CFCharacterSetGetPredefined(kCFCharacterSetWhitespaceAndNewline);
-		CFRange range = CFRangeMake(0, [ret length]), result;
-		CFStringRef stringRef = (CFStringRef)[ret string];
-		NSRange junk;
+		NSCharacterSet *characterSet = [NSCharacterSet newlineCharacterSet];
+		NSRange result;
+		NSString *string = [ret string];
 		
-		while (CFStringFindCharacterFromSet(stringRef, characters, range, 0, &result)) {
-			NSAttributedString *repl = [[NSAttributedString alloc] initWithString:@" " attributes:[ret attributesAtIndex:result.location effectiveRange:&junk]];
+		result = [string rangeOfCharacterFromSet:characterSet];
+		
+		while (result.location != NSNotFound) {
 			[ret replaceCharactersInRange:NSMakeRange(result.location, result.length)
-					 withAttributedString:repl];
-			[repl release];
-			range = CFRangeMake(result.location + 1, [ret length] - (result.location + 1));
+					 withAttributedString:_iManFindResultNewlineReplacementCharacter];
+			result = [string rangeOfCharacterFromSet:characterSet];
 		}
 	}
 	
