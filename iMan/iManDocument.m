@@ -527,7 +527,7 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 		}
 		_pageChoices = [paths retain];
 		[pageSelectionList reloadData];
-		[pageSelectionList selectRow:0 byExtendingSelection:NO];
+		[pageSelectionList selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
 		[NSApp beginSheet:pageSelectionSheet modalForWindow:[self windowForSheet] modalDelegate:self didEndSelector:@selector(pageSelectionSheetDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 	}
 }
@@ -758,8 +758,10 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 
 - (void)displayFontDidChange:(NSNotification *)notification
 {
-    if ([self page] != nil)
+    if ([self page] != nil) {
         [[manpageView textStorage] setAttributedString:[[self page] pageWithStyle:[self displayStringOptions]]];
+		[findResultsView reloadData];
+	}
 }
 
 - (void)drawerDidOpen:(NSNotification *)notification
