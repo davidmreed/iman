@@ -334,6 +334,10 @@ enum {
 	}
 	
 	[[aproposField cell] setSearchMenuTemplate:aproposFieldMenu];
+	
+	// If there is a search open, and the text in the search field has not changed since that search was run, go ahead and re-run the search with the new options.
+	if (([self search] != nil) && [[[self search] term] isEqualToString:[aproposField stringValue]])
+		[self performAproposSearch:aproposField];
 }
 
 - (IBAction)loadRequestedPage:(id)sender
