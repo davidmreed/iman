@@ -1664,12 +1664,16 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>aproposSearchForSelection:</string>
 							<string>back:</string>
 							<string>changeExportFormat:</string>
 							<string>clearHistory:</string>
 							<string>export:</string>
 							<string>forward:</string>
 							<string>loadRequestedPage:</string>
+							<string>openLink:</string>
+							<string>openLinkInNewWindow:</string>
+							<string>openPageFromSelection:</string>
 							<string>openSearchResultPage:</string>
 							<string>pageSelectionSheetCancel:</string>
 							<string>pageSelectionSheetOK:</string>
@@ -1679,10 +1683,16 @@
 							<string>setAproposFieldSearchType:</string>
 							<string>takeCaseSensitiveFrom:</string>
 							<string>takeUseRegexpsFrom:</string>
+							<string>toggleAproposDrawer:</string>
 							<string>toggleFindDrawer:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
