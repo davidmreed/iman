@@ -86,7 +86,8 @@
 		[_deferredURLs addObject:url];
 	} else {
 		// open in current doc if possible.
-		if ([[NSUserDefaults standardUserDefaults] integerForKey:iManHandleExternalLinks] == kiManHandleLinkInCurrentWindow) {
+		if (([[NSUserDefaults standardUserDefaults] integerForKey:iManHandleExternalLinks] == kiManHandleLinkInCurrentWindow) &&
+			([documentController currentDocument] != nil)) {
 			[[[documentController currentDocument] windowControllers] makeObjectsPerformSelector:@selector(showWindow:)];
 			[[documentController currentDocument] loadPageWithURL:url];
 		} else {
