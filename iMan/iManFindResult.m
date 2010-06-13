@@ -166,8 +166,10 @@ static NSAttributedString *_iManFindResultNewlineReplacementCharacter;
 {
 	// Font information in the underlying page has been changed by the user.
 	// Release our cached styled result; it will be regenerated automatically by -matchWithContext if needed.
-	[_matchWithContext release];
-	_matchWithContext = nil;
+	if (_matchWithContext != nil) {
+		[_matchWithContext release];
+		_matchWithContext = nil;
+	}
 }
 
 - (void)dealloc
