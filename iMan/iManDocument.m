@@ -279,6 +279,9 @@ enum {
 	[self setUseRegexps:![sender state]];
 	[[findDrawerSearchFieldMenu itemWithTag:kiManUseRegularExpressionsMenuItemTag] setState:[self useRegexps]];
 	[[findDrawerSearchField cell] setSearchMenuTemplate:findDrawerSearchFieldMenu];
+	
+	// Re-run the search.
+	[self performSearch:findDrawerSearchField];
 }
 
 - (IBAction)takeCaseSensitiveFrom:(id)sender
@@ -286,6 +289,9 @@ enum {
 	[self setCaseSensitive:![sender state]];
 	[[findDrawerSearchFieldMenu itemWithTag:kiManMatchCaseMenuItemTag] setState:[self caseSensitive]];
 	[[findDrawerSearchField cell] setSearchMenuTemplate:findDrawerSearchFieldMenu];
+
+	// Re-run the search.
+	[self performSearch:findDrawerSearchField];
 }
 
 - (IBAction)back:(id)sender
