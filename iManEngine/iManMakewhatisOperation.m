@@ -44,7 +44,6 @@
 	}
 
 	[NSTask invokeTool:@"makewhatis" arguments:[NSArray arrayWithObjects:@"-o", [self path], nil] environment:[NSDictionary dictionaryWithObject:[[iManEnginePreferences sharedInstance] manpathString] forKey:@"MANPATH"] error:&taskError];
-	// FIXME: is this locale-aware? That is, how will locale subdirectories be handled? (Also, does man or groff handle rendering manpages in non-UTF-8 encodings *into* UTF-8, for after we fix the parser to handle that encoding?)
 	
 	[pool release];
 }
