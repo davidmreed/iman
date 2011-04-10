@@ -96,6 +96,7 @@ typedef enum {
 - (IBAction)setAproposFieldSearchType:(id)sender;
 - (IBAction)openSearchResultPage:(id)sender;
 - (IBAction)clearHistory:(id)sender;
+- (IBAction)goToPageField:(id)sender;
 
 - (IBAction)performSearch:(id)sender;
 - (IBAction)takeUseRegexpsFrom:(id)sender;

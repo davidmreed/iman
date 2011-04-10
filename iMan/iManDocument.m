@@ -202,6 +202,7 @@ enum {
 			[findDrawer close];
 		
 		[aproposDrawer open];
+		[aproposField becomeFirstResponder];
 	}
 }
 
@@ -319,6 +320,11 @@ enum {
 	[[[[self windowControllers] lastObject] toolbar] validateVisibleItems];
 }
 
+- (IBAction)goToPageField:(id)sender
+{
+	[addressField becomeFirstResponder];
+}
+	 
 - (IBAction)performAproposSearch:(id)sender
 {
 	if (![[sender stringValue] length] == 0) {		
@@ -360,8 +366,14 @@ enum {
 
 - (IBAction)openSearchResultPage:(id)sender
 {
-    NSString *result = [[[[self search] results] objectAtIndex:[aproposResultsView clickedRow]] firstPageName];
-		
+	NSString *result;
+	
+	if ([aproposResultsView clickedRow] != -1) { // Send on double-click
+		result = [[[[self search] results] objectAtIndex:[aproposResultsView clickedRow]] firstPageName];
+	} else { // sent on enter.
+		result = [[[[self search] results] objectAtIndex:[[aproposResultsView selectedRowIndexes] firstIndex]] firstPageName];
+	}
+
 	if ([[NSUserDefaults standardUserDefaults] integerForKey:iManHandleSearchResults] == kiManHandleLinkInNewWindow) 
 		[[NSApp delegate] loadURLInNewDocument:[NSURL URLWithString:[NSString stringWithFormat:@"man:%@", result]]];
 	else
