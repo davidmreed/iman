@@ -103,6 +103,67 @@
 {
 	[NSApp setServicesProvider:self];
 	
+	// If we don't have a custom MANPATH set, we'll need to develop one from the system.
+	if ([[[iManEnginePreferences sharedInstance] manpaths] count] == 0) {
+		NSMutableArray *defaultManpath = [[NSMutableArray alloc] init];
+	
+		// If we're running on Leopard, there will be a /etc/manpaths (1 path per line) and a directory /etc/manpaths.d whose contents each contain 1 path per line.
+		// Just try to read the files and use a reasonable default if there's an exception or no paths are found.
+		// see http://hea-www.harvard.edu/~fine/OSX/path_helper.html for assistance with this oddness.
+		
+		@try {
+			NSData *data = [[NSData alloc] initWithContentsOfFile:@"/etc/manpaths"];
+			
+			if (data != nil) {
+				NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+				
+				for (NSString *path in [string componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]) {
+					if ([[path stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length] > 0) {
+						[defaultManpath addObject:[path stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+					}
+				}
+				
+				[string release];
+				[data release];
+			}
+			
+			NSDirectoryEnumerator *enumerator = [[NSFileManager defaultManager] enumeratorAtPath:@"/etc/manpaths.d"];
+			
+			if (enumerator != nil) {
+				for (NSString *file in enumerator) {
+					if ([[enumerator fileAttributes] fileType] == NSFileTypeRegular) {
+						NSData *data = [[NSData alloc] initWithContentsOfFile:[@"/etc/manpaths.d" stringByAppendingPathComponent:file]];
+						
+						if (data != nil) {
+							NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+							
+							for (NSString *path in [string componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]) {
+								if ([[path stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length] > 0) {
+									[defaultManpath addObject:[path stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+								}
+							}
+							
+							[string release];
+							[data release];
+						}
+					}
+				}
+			}
+		}
+		@catch (NSException *e) {
+			// Do nothing.
+		}
+		@finally {
+			if ([defaultManpath count] == 0) {
+				// Either we're not running on 10.5+ or something blew up. Use a reasonable default MANPATH.
+				[defaultManpath addObjectsFromArray:[NSArray arrayWithObjects:@"/usr/share/man", @"/usr/local/share/man", @"/usr/local/man", @"/usr/X11/man", @"/usr/X11R6/man", @"/sw/share/man", @"/Developer/usr/share/man", nil]];
+			}
+		}
+			
+		[[iManEnginePreferences sharedInstance] setManpaths:defaultManpath];
+		[defaultManpath release];
+	}
+	
 	// Set up our page database and make sure that it is initialized.
 	// Initialize from saved data if possible.
 	
@@ -121,7 +182,7 @@
 	if (_pageDatabase == nil) {
 		// Create a new page database, present a dialogue box, and spin off a thread to build the database.
 		_pageDatabase = [[iManPageDatabase alloc] initWithManpaths:[[iManEnginePreferences sharedInstance] manpaths]];
-				
+		
 		[NSBundle loadNibNamed:@"iManInitializingDatabaseWindow" owner:self];
 		[progressIndicator startAnimation:self];
 		[initializingDatabaseWindow center];
