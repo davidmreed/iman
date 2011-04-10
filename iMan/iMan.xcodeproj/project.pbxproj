@@ -372,7 +372,14 @@
 			isa = PBXProject;
 			buildConfigurationList = 119D4D210A9914D900D25E74 /* Build configuration list for PBXProject "iMan" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 2A37F4AAFDCFA73011CA2CEA /* iMan */;
 			projectDirPath = "";
 			projectReferences = (
