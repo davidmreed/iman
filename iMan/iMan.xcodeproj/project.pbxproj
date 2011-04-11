@@ -27,6 +27,7 @@
 		11A1B38A0A9CB69600115362 /* iManEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 119D4DE70A99475E00D25E74 /* iManEngine.framework */; };
 		11A1B38B0A9CB69E00115362 /* iManEngine.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 119D4DE70A99475E00D25E74 /* iManEngine.framework */; };
 		6302D5D310B83AF1000051DB /* NSUserDefaults+DMRArchiving.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302D5D110B83AF1000051DB /* NSUserDefaults+DMRArchiving.m */; };
+		630B0FD31352965000E37CE5 /* iManDocumentWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630B0FD21352965000E37CE5 /* iManDocumentWindowController.m */; };
 		6343C1CD11A1E2B40018D313 /* iman in Resources */ = {isa = PBXBuildFile; fileRef = 6343C1CC11A1E2B40018D313 /* iman */; };
 		635B7A870F1698CA0043FFEF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7A830F1698CA0043FFEF /* RegexKitLite.m */; };
 		635B7A890F1698CA0043FFEF /* RKLMatchEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7A850F1698CA0043FFEF /* RKLMatchEnumerator.m */; };
@@ -117,6 +118,8 @@
 		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		6302D5D010B83AF1000051DB /* NSUserDefaults+DMRArchiving.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSUserDefaults+DMRArchiving.h"; path = "Snippets/NSUserDefaults+DMRArchiving.h"; sourceTree = "<group>"; };
 		6302D5D110B83AF1000051DB /* NSUserDefaults+DMRArchiving.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSUserDefaults+DMRArchiving.m"; path = "Snippets/NSUserDefaults+DMRArchiving.m"; sourceTree = "<group>"; };
+		630B0FD11352965000E37CE5 /* iManDocumentWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManDocumentWindowController.h; sourceTree = "<group>"; };
+		630B0FD21352965000E37CE5 /* iManDocumentWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManDocumentWindowController.m; sourceTree = "<group>"; };
 		6343C1CC11A1E2B40018D313 /* iman */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = iman; sourceTree = "<group>"; };
 		635B7A820F1698CA0043FFEF /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		635B7A830F1698CA0043FFEF /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
@@ -285,6 +288,8 @@
 				63A8404A135175E900018A30 /* NSTableViewActionOnReturn.m */,
 				6399503311AF4401000728C6 /* iManPageView.h */,
 				6399503411AF4401000728C6 /* iManPageView.m */,
+				630B0FD11352965000E37CE5 /* iManDocumentWindowController.h */,
+				630B0FD21352965000E37CE5 /* iManDocumentWindowController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -478,6 +483,7 @@
 				6399503511AF4401000728C6 /* iManPageView.m in Sources */,
 				63E6D51111B83BAA0003F52E /* iManFindResult.m in Sources */,
 				63A8404B135175E900018A30 /* NSTableViewActionOnReturn.m in Sources */,
+				630B0FD31352965000E37CE5 /* iManDocumentWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

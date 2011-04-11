@@ -21,6 +21,7 @@ extern NSString *const iManUnderlineStyleMakeUnderline;
 extern NSString *const iManUnderlineStyleColor;
 
 extern NSString *const iManShowPageSelectionPanelForDuplicates;
+extern NSString *const iManLastViewingWindowSize;
 
 extern NSString *const iManShowPageLinks;
 extern NSString *const iManHandlePageLinks;
