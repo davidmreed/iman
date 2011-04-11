@@ -11,6 +11,7 @@
 #import <unistd.h>
 #import "iMan.h"
 #import "iManConstants.h"
+#import "iManDocumentWindowController.h"
 #import "iManIndexingWindowController.h"
 #import "iManHistoryQueue.h"
 #import "NSUserDefaults+DMRArchiving.h"
@@ -119,9 +120,12 @@ enum {
 	[self synchronizeUIWithDocumentState];
 }
 
-- (NSString *)windowNibName
+- (void)makeWindowControllers
 {
-    return @"iManDocument";
+	iManDocumentWindowController *wc = [[iManDocumentWindowController alloc] initWithWindowNibName:@"iManDocument" owner:self];
+	
+	[self addWindowController:wc];
+	[wc release];
 }
 
 - (BOOL)readFromFile:(NSString *)fileName ofType:(NSString *)type
@@ -962,7 +966,6 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 		[self performSearchForTerm:[[[[self page] page] string] substringWithRange:range] type:iManSearchTypeApropos];
 	}
 }
-
 
 #pragma mark -
 #pragma mark Page Selection Sheet Data Source
