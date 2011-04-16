@@ -22,15 +22,11 @@
 
 - (NSArray *)manpaths;
 - (NSArray *)sections;
-- (NSArray *)pagesInSection:(NSString *)category underManpath:(NSString *)manpath;
-- (NSArray *)pagesInSection:(NSString *)category;
 
 - (NSArray *)pagesWithName:(NSString *)basename;
 - (NSArray *)pagesWithName:(NSString *)basename inSection:(NSString *)category;
+- (NSArray *)pagesInSection:(NSString *)category;
 
-- (void)scanPagesInSection:(NSString *)category underManpath:(NSString *)manpath;
-- (void)scanPagesInSection:(NSString *)category;
 - (void)scanAllPages;
-
 
 @end
