@@ -27,12 +27,12 @@ NSString *const iManEngineUseMemoryCache = @"org.ktema.iman.imanengine:UseMemCac
         nil];
 	
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
-			[NSArray arrayWithObjects:@"/usr/share/man", @"/usr/local/share/man", @"/usr/local/man", @"/usr/X11/man", @"/usr/X11R6/man", @"/sw/share/man", @"/Developer/usr/share/man", nil], iManEngineManpaths,
-			@"/usr/bin/man", iManEngineToolPathMan,
-			@"/usr/bin/groff", iManEngineToolPathGroff,
-			@"/usr/libexec/makewhatis", iManEngineToolPathMakewhatis,
-			[NSNumber numberWithBool:YES], iManEngineUseDiskCache,
-			[NSNumber numberWithBool:YES], iManEngineUseMemoryCache,
+															 @"/usr/bin/man", iManEngineToolPathMan,
+															 @"/usr/bin/groff", iManEngineToolPathGroff,
+															 @"/usr/libexec/makewhatis", iManEngineToolPathMakewhatis,
+															 [NSNumber numberWithBool:YES], iManEngineUseDiskCache,
+															 [NSNumber numberWithBool:YES], iManEngineUseMemoryCache,
+															 [NSArray array], iManEngineManpaths,
 															 nil]];
 }
 
