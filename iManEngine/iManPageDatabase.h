@@ -16,6 +16,7 @@
 	NSMutableDictionary *_basenameDatabase;
 	NSMutableDictionary *_directoryListings;
 	iManRWLock *_lock;
+	NSArray *_tree;
 }
 
 - initWithManpaths:(NSArray *)paths;
@@ -28,5 +29,7 @@
 - (NSArray *)pagesInSection:(NSString *)category;
 
 - (void)scanAllPages;
+
+- (NSArray *)databaseTree;
 
 @end
