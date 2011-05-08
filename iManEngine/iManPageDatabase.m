@@ -27,6 +27,7 @@
 		_sectionDatabase = [[NSMutableDictionary alloc] init];
 		_basenameDatabase = [[NSMutableDictionary alloc] init];
 		_directoryListings = [[NSMutableDictionary alloc] init];
+		_sections = [[NSMutableSet alloc] init];
 		_lock = [[iManRWLock alloc] init];
 	}
 	
@@ -48,6 +49,9 @@
 			_directoryListings = [[coder decodeObject] retain];
 			_manpaths = [[coder decodeObject] retain];			
 		}
+		_sections = [[NSMutableSet alloc] init];
+		[_sections addObjectsFromArray:[_sectionDatabase allKeys]];
+		[self _updateTree];
 	}
 	
 	return self;
@@ -129,7 +133,39 @@
 	for (NSString *path in [self manpaths]) {
 		[self _scanManpath:path];
 	}
+	[self willChangeValueForKey:@"databaseTree"];
+	[self _updateTree];
+	[self didChangeValueForKey:@"databaseTree"];
 }
+
+- (void)_updateTree
+{
+	NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:[[self sections] count]];
+	
+	for (NSString *sect in [self sections]) {
+		NSArray *pagesInSection = [self pagesInSection:sect];
+		NSMutableArray *pageArray = [[NSMutableArray alloc] initWithCapacity:[pagesInSection count]];
+		
+		for (NSString *pg in pagesInSection) {
+			NSString *basename = [pg lastPathComponent];
+			
+			if ([[basename pathExtension] isEqualToString:@"gz"]) {
+				basename = [[basename stringByDeletingPathExtension] stringByDeletingPathExtension];
+			} else {
+				basename = [basename stringByDeletingPathExtension];
+			}
+
+			[pageArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:basename, @"title", pg, @"path", nil]];
+		}
+		
+		[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(sect, nil), @"title", [[pageArray copy] autorelease], @"contents", nil]];
+		[pageArray release];
+	}
+	
+	[_tree release];
+	_tree = [array copy];
+	[array release];
+}	
 
 - (void)_scanManpath:(NSString *)manpath
 {
@@ -188,8 +224,8 @@
 	nameWithCategory = [basename stringByAppendingPathExtension:section]; 			
 	
 	[_lock writeLock];
-	// Make sure the list of sections contains both the proper section (e.g., 3ssl) and the directory's section (e.g., 3).
-	[_sections addObject:section];
+	// Make sure the list of sections contains both the proper section (e.g., 3ssl) and the directory's section (e.g., 3). FIXME: this needs to be stored in the database on disk.
+	//[_sections addObject:section];
 	[_sections addObject:[properFilename pathExtension]];
 	
 	// Add to the global basename database
@@ -217,8 +253,14 @@
 	[_lock unlock];
 }	
 
+- (NSArray *)databaseTree
+{	
+	return _tree;
+}
+
 - (void)dealloc
 {
+	[_tree release];
 	[_sections release];
 	[_basenameDatabase release];
 	[_sectionDatabase release];

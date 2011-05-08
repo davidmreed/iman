@@ -38,7 +38,7 @@ enum {
 
 @implementation iManDocument
 
-@synthesize useRegexps, caseSensitive;
+@synthesize useRegexps, caseSensitive, browserTree = _browserTree;
 
 #pragma mark -
 #pragma mark NSDocument Overrides
@@ -52,9 +52,32 @@ enum {
 		_history = [[iManHistoryQueue alloc] init];
 		[self setCaseSensitive:NO];
 		[self setUseRegexps:NO];
+		[self setBrowserTree:[[[NSApp delegate] sharedPageDatabase] databaseTree]];
+		[NSApp addObserver:self forKeyPath:@"delegate.sharedPageDatabase.databaseTree" options:0 context:NULL];
 	}
 	
 	return self;
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([keyPath isEqualToString:@"delegate.sharedPageDatabase.databaseTree"]) {
+		NSArray *oldTree = [[[NSApp delegate] sharedPageDatabase] databaseTree];
+		NSMutableArray *newTree = [[NSMutableArray alloc] initWithCapacity:[oldTree count]];
+		
+		for (NSDictionary *entry in oldTree) {
+			NSMutableDictionary *newEntry = [entry mutableCopy];
+			[newEntry setObject:NSLocalizedStringFromTable([entry objectForKey:@"title"], @"SectionNames", nil) forKey:@"title"];
+			[newTree addObject:newEntry];
+			[newEntry release];
+		}
+		
+		[self setBrowserTree:[[newTree copy] autorelease]];
+		[newTree release];
+	} else {
+		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+	}
+
 }
 
 - (NSURL *)fileURL
@@ -84,6 +107,9 @@ enum {
     [manpageView setHorizontallyResizable:YES];
     [manpageView setVerticallyResizable:YES];
     [manpageView setAutoresizingMask:NSViewNotSizable];
+	
+	// Set up the sort descriptors for the browser
+	[browserController setSortDescriptors:[NSArray arrayWithObject:[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES] autorelease]]];
 	
 	// Setup the search field menu. 
 	for (id anObject in [iManSearch searchTypes]) {
@@ -1015,6 +1041,7 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSApp removeObserver:self];
 	// Release top-level nib objects. Note that those in iManDocument.nib are automatically released by the window controller.
     [accessoryView release]; // loaded from iManSavePanelAccessory.nib
 	// Release instance variables.
@@ -1023,6 +1050,7 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
     [_findResults release];
 	[page_ release];
 	[search_ release];
+	[_browserTree release];
     [super dealloc];
 }
 

@@ -60,6 +60,10 @@ typedef enum {
 	
 	// Current document state.
 	iManDocumentState _documentState;
+	
+	// Browser data.
+	IBOutlet NSTreeController *browserController;
+	NSArray *_browserTree;
 }
 
 - (iManPage *)page;
@@ -112,6 +116,7 @@ typedef enum {
 
 @property BOOL useRegexps;
 @property BOOL caseSensitive;
+@property (readwrite, retain) NSArray *browserTree;
 
 - (void)displayFontDidChange:(NSNotification *)notification;
 - (NSDictionary *)displayStringOptions;

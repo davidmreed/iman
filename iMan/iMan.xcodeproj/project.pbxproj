@@ -36,6 +36,7 @@
 		63750BE511BB35EF0046200F /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63750BE411BB35EF0046200F /* CoreFoundation.framework */; };
 		6378734711A9753A00D34D02 /* iManSearchResult+Description.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378734511A9753A00D34D02 /* iManSearchResult+Description.m */; };
 		637873A611A9EA9800D34D02 /* iManHistoryQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 637873A411A9EA9800D34D02 /* iManHistoryQueue.m */; };
+		639024A113628E79004E399C /* SectionNames.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6390249F13628E79004E399C /* SectionNames.strings */; };
 		6399503511AF4401000728C6 /* iManPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6399503411AF4401000728C6 /* iManPageView.m */; };
 		63A8404B135175E900018A30 /* NSTableViewActionOnReturn.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A8404A135175E900018A30 /* NSTableViewActionOnReturn.m */; };
 		63C5883D11C5657400D649D5 /* iManIndexPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63C5883B11C5657400D649D5 /* iManIndexPanel.xib */; };
@@ -132,6 +133,7 @@
 		6378734511A9753A00D34D02 /* iManSearchResult+Description.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "iManSearchResult+Description.m"; sourceTree = "<group>"; };
 		637873A311A9EA9800D34D02 /* iManHistoryQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManHistoryQueue.h; sourceTree = "<group>"; };
 		637873A411A9EA9800D34D02 /* iManHistoryQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManHistoryQueue.m; sourceTree = "<group>"; };
+		639024A013628E79004E399C /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = ../../iMan/iMan/English.lproj/SectionNames.strings; sourceTree = SOURCE_ROOT; };
 		6399503311AF4401000728C6 /* iManPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManPageView.h; sourceTree = "<group>"; };
 		6399503411AF4401000728C6 /* iManPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManPageView.m; sourceTree = "<group>"; };
 		63A84049135175E900018A30 /* NSTableViewActionOnReturn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTableViewActionOnReturn.h; sourceTree = "<group>"; };
@@ -309,6 +311,7 @@
 		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6390249F13628E79004E399C /* SectionNames.strings */,
 				63CEBAF40F1B0397001180EC /* dsa_pub.pem */,
 				6343C1CC11A1E2B40018D313 /* iman */,
 				8D15AC360486D014006FF6A4 /* Info.plist */,
@@ -442,6 +445,7 @@
 				63C5884911C565D100D649D5 /* iManPreferences.xib in Resources */,
 				63C5884D11C565EA00D649D5 /* iManPathEditor.xib in Resources */,
 				63C5885111C565FB00D649D5 /* iManSavePanelAccessory.xib in Resources */,
+				639024A113628E79004E399C /* SectionNames.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -600,6 +604,14 @@
 				6370BC5F11B6BE6800030CB8 /* English */,
 			);
 			name = iManAproposSearchIcon.tiff;
+			sourceTree = "<group>";
+		};
+		6390249F13628E79004E399C /* SectionNames.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				639024A013628E79004E399C /* English */,
+			);
+			name = SectionNames.strings;
 			sourceTree = "<group>";
 		};
 		63C5883B11C5657400D649D5 /* iManIndexPanel.xib */ = {

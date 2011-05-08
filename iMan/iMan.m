@@ -170,12 +170,14 @@
 	NSString *path = [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"iMan/iManPageDatabase"];
 	
 	if ([[NSFileManager defaultManager] isReadableFileAtPath:path]) {
+		[self willChangeValueForKey:@"sharedPageDatabase"];
 		_pageDatabase = [NSUnarchiver unarchiveObjectWithFile:path];
 		if (_pageDatabase != nil) {
 			[_pageDatabase retain];
 		} else {
 			[[NSFileManager defaultManager] removeItemAtPath:path error:NULL];
 		}
+		[self didChangeValueForKey:@"sharedPageDatabase"];
 	}
 
 	// Make sure that our current manpath is congruent with that for which the database was generated.
@@ -187,7 +189,9 @@
 
 	if (_pageDatabase == nil) {
 		// Create a new page database, present a dialogue box, and spin off a thread to build the database.
+		[self willChangeValueForKey:@"sharedPageDatabase"];
 		_pageDatabase = [[iManPageDatabase alloc] initWithManpaths:[[iManEnginePreferences sharedInstance] manpaths]];
+		[self didChangeValueForKey:@"sharedPageDatabase"];
 		
 		[NSBundle loadNibNamed:@"iManInitializingDatabaseWindow" owner:self];
 		[progressIndicator startAnimation:self];
@@ -294,9 +298,11 @@
 
 - (IBAction)rescanDatabase:(id)sender
 {
+	[self willChangeValueForKey:@"sharedPageDatabase"];
 	[_pageDatabase release];
 	_pageDatabase = [[iManPageDatabase alloc] initWithManpaths:[[iManEnginePreferences sharedInstance] manpaths]];
-		
+	[self didChangeValueForKey:@"sharedPageDatabase"];
+	
 	[NSBundle loadNibNamed:@"iManInitializingDatabaseWindow" owner:self];
 	[progressIndicator startAnimation:self];
 	[initializingDatabaseWindow center];
