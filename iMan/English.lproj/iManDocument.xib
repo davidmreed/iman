@@ -407,7 +407,7 @@
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSBrowser" id="347703584">
 									<reference key="NSNextResponder" ref="831396497"/>
-									<int key="NSvFlags">319</int>
+									<int key="NSvFlags">274</int>
 									<string key="NSFrameSize">{580, 152}</string>
 									<reference key="NSSuperview" ref="831396497"/>
 									<bool key="NSEnabled">YES</bool>
@@ -2198,6 +2198,14 @@
 					</object>
 					<int key="connectionID">437</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">pageBrowser</string>
+						<reference key="source" ref="140011258"/>
+						<reference key="destination" ref="347703584"/>
+					</object>
+					<int key="connectionID">438</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -3329,7 +3337,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">437</int>
+			<int key="maxID">438</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3544,6 +3552,7 @@
 							<string>formatMenu</string>
 							<string>loadingMessageLabel</string>
 							<string>manpageView</string>
+							<string>pageBrowser</string>
 							<string>pageSelectionList</string>
 							<string>pageSelectionSheet</string>
 							<string>progressIndicator</string>
@@ -3566,6 +3575,7 @@
 							<string>NSPopUpButton</string>
 							<string>NSTextField</string>
 							<string>NSTextView</string>
+							<string>NSBrowser</string>
 							<string>NSTableView</string>
 							<string>NSPanel</string>
 							<string>NSProgressIndicator</string>
@@ -3591,6 +3601,7 @@
 							<string>formatMenu</string>
 							<string>loadingMessageLabel</string>
 							<string>manpageView</string>
+							<string>pageBrowser</string>
 							<string>pageSelectionList</string>
 							<string>pageSelectionSheet</string>
 							<string>progressIndicator</string>
@@ -3657,6 +3668,10 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">manpageView</string>
 								<string key="candidateClassName">NSTextView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">pageBrowser</string>
+								<string key="candidateClassName">NSBrowser</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">pageSelectionList</string>

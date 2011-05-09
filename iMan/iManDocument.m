@@ -67,6 +67,7 @@ enum {
 		
 		for (NSDictionary *entry in oldTree) {
 			NSMutableDictionary *newEntry = [entry mutableCopy];
+			[newEntry setObject:[entry objectForKey:@"title"] forKey:@"section"];
 			[newEntry setObject:NSLocalizedStringFromTable([entry objectForKey:@"title"], @"SectionNames", nil) forKey:@"title"];
 			[newTree addObject:newEntry];
 			[newEntry release];
@@ -108,8 +109,10 @@ enum {
     [manpageView setVerticallyResizable:YES];
     [manpageView setAutoresizingMask:NSViewNotSizable];
 	
-	// Set up the sort descriptors for the browser
+	// Set up the sort descriptors and double-click action for the browser
 	[browserController setSortDescriptors:[NSArray arrayWithObject:[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES] autorelease]]];
+	[pageBrowser setTarget:self];
+	[pageBrowser setDoubleAction:@selector(browserGoToPage:)];
 	
 	// Setup the search field menu. 
 	for (id anObject in [iManSearch searchTypes]) {
@@ -385,6 +388,15 @@ enum {
 - (IBAction)loadRequestedPage:(id)sender
 {
 	[self loadPageWithStringInput:[sender stringValue]];
+}
+
+- (IBAction)browserGoToPage:(id)sender
+{
+	NSDictionary *entry;
+	
+	entry = [[[pageBrowser selectedCell] representedObject] representedObject];
+	if ((entry != nil) && ([entry objectForKey:@"path"] != nil))
+		[self loadPage:[iManPage pageWithPath:[entry objectForKey:@"path"]]];
 }
 
 - (IBAction)reload:(id)sender
@@ -1041,7 +1053,7 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[NSApp removeObserver:self];
+	[NSApp removeObserver:self forKeyPath:@"delegate.sharedPageDatabase.databaseTree"];
 	// Release top-level nib objects. Note that those in iManDocument.nib are automatically released by the window controller.
     [accessoryView release]; // loaded from iManSavePanelAccessory.nib
 	// Release instance variables.
