@@ -63,6 +63,7 @@ typedef enum {
 	
 	// Browser data.
 	IBOutlet NSTreeController *browserController;
+	IBOutlet NSBrowser *pageBrowser;
 	NSArray *_browserTree;
 }
 
