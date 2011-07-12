@@ -157,6 +157,12 @@
 			if ([defaultManpath count] == 0) {
 				// Either we're not running on 10.5+ or something blew up. Use a reasonable default MANPATH.
 				[defaultManpath addObjectsFromArray:[NSArray arrayWithObjects:@"/usr/share/man", @"/usr/local/share/man", @"/usr/local/man", @"/usr/X11/man", @"/usr/X11R6/man", @"/sw/share/man", @"/Developer/usr/share/man", nil]];
+			} else {
+				// Fink does not correctly use /etc/manpaths.d. If /sw/share/man exists, add it to the manpath.
+				BOOL isDir = NO;
+				if (![defaultManpath containsObject:@"/sw/share/man"] && [[NSFileManager defaultManager] fileExistsAtPath:@"/sw/share/man" isDirectory:&isDir] && isDir) {
+					[defaultManpath addObject:@"/sw/share/man"];
+				}
 			}
 		}
 			
