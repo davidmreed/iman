@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Classes</key>
+	<dict>
+		<key>iManApp</key>
+		<dict>
+			<key>Description</key>
+			<string>iMan application</string>
+			<key>Name</key>
+			<string>application</string>
+			<key>PluralName</key>
+			<string>applications</string>
+		</dict>
+	</dict>
+	<key>Commands</key>
+	<dict>
+		<key>GetURL</key>
+		<dict>
+			<key>Description</key>
+			<string>Open a man: or x-man-page: URL</string>
+			<key>Name</key>
+			<string>getURL</string>
+		</dict>
+	</dict>
+	<key>Description</key>
+	<string>iMan classes and commands.</string>
+	<key>Name</key>
+	<string>iMan Suite</string>
+</dict>
+</plist>
