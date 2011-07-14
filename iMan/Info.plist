@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>LSMinimumSystemVersion</key>
-	<string>10.5.0</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDocumentTypes</key>
@@ -41,20 +39,6 @@
 			<string>iManDocument</string>
 		</dict>
 	</array>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLName</key>
-			<string>Man page URL</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>man</string>
-				<string>x-man-page</string>
-			</array>
-		</dict>
-	</array>
 	<key>CFBundleExecutable</key>
 	<string>iMan</string>
 	<key>CFBundleIconFile</key>
@@ -63,22 +47,34 @@
 	<string>org.ktema.iman</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
-	<key>SUFeedURL</key>
-	<string>http://iman-macosx.sourceforge.net/updates.xml</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLName</key>
+			<string>Man page URL</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>man</string>
+				<string>x-man-page</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
-	<string>0.4b3</string>
-	<key>SUPublicDSAKeyFile</key>
-	<string>dsa_pub.pem</string>
+	<string>0.4</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.5.0</string>
+	<key>NSAppleScriptEnabled</key>
+	<true/>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>NSAppleScriptEnabled</key>
-	<true/>
 	<key>NSServices</key>
 	<array>
 		<dict>
@@ -102,5 +98,9 @@
 			</array>
 		</dict>
 	</array>
+	<key>SUFeedURL</key>
+	<string>http://iman-macosx.sourceforge.net/updates.xml</string>
+	<key>SUPublicDSAKeyFile</key>
+	<string>dsa_pub.pem</string>
 </dict>
 </plist>
