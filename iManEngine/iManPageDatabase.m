@@ -151,6 +151,10 @@ static NSInteger kCurrentDatabaseVersion = 4;
 						} else {
 							realExtension = [objectFullPath pathExtension];
 						}
+						
+						// Skip files which have an extension that isn't either .<section> or .<section><subsection>
+						// Some obnoxious software installs PDFs and Texinfo files in man directories.
+						if (![realExtension isEqualToString:category] && ![realExtension hasPrefix:category]) continue;
 
 						// Check to see if this page belongs in this category or in a subcategory.
 						[_lock writeLock];
