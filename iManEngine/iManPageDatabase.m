@@ -40,11 +40,12 @@ static NSInteger kCurrentDatabaseVersion = 4;
 	self = [super init];
 	if (self) {
 		if ([coder allowsKeyedCoding]) {
-			if ([coder decodeIntegerForKey:@"Version"] != kCurrentDatabaseVersion) {
+			if ([coder decodeIntegerForKey:@"Version"] == kCurrentDatabaseVersion) {
 				_basenameDatabase = [[coder decodeObjectForKey:@"BasenameDatabase"] retain];
 				_manpaths = [[coder decodeObjectForKey:@"Manpaths"] retain];
 				_sectionDatabase = [[coder decodeObjectForKey:@"SectionDatabase"] retain];
 				_sections = [[coder decodeObjectForKey:@"Sections"] retain];
+				_lock = [[iManRWLock alloc] init];
 			} else {
 				[self dealloc];
 				return nil;
@@ -68,6 +69,7 @@ static NSInteger kCurrentDatabaseVersion = 4;
 		[coder encodeObject:_sectionDatabase forKey:@"SectionDatabase"];
 		[coder encodeObject:_sections forKey:@"Sections"];
 	} else {
+		[_lock unlock];
 		[NSException raise:NSInternalInconsistencyException format:@"iManPageDatabase does not support non-keyed archiving."];
 	}
 	[_lock unlock];
@@ -114,9 +116,15 @@ static NSInteger kCurrentDatabaseVersion = 4;
 
 - (void)scanAllPages
 {
+	[self willChangeValueForKey:@"sections"];
+	[_lock writeLock];
 	for (NSString *path in [self manpaths]) {
 		[self _scanManpath:path];
 	}
+	[_lock unlock];
+	[self didChangeValueForKey:@"sections"];
+	
+
 }	
 
 - (void)_scanManpath:(NSString *)manpath
@@ -157,7 +165,6 @@ static NSInteger kCurrentDatabaseVersion = 4;
 						if (![realExtension isEqualToString:category] && ![realExtension hasPrefix:category]) continue;
 
 						// Check to see if this page belongs in this category or in a subcategory.
-						[_lock writeLock];
 						section = [_sectionDatabase objectForKey:realExtension];
 						if (section != nil) {
 							[[section mutableArrayValueForKey:@"pages"] addObject:objectFullPath];
@@ -167,10 +174,8 @@ static NSInteger kCurrentDatabaseVersion = 4;
 							
 							if (mainSection == nil) {
 								mainSection = [[iManSection alloc] initWithName:category];
-								[self willChangeValueForKey:@"sections"];
 								[_sections addObject:mainSection];
 								[_sectionDatabase setObject:mainSection forKey:category];
-								[self didChangeValueForKey:@"sections"];
 								[mainSection autorelease];
 							}
 							
@@ -184,7 +189,6 @@ static NSInteger kCurrentDatabaseVersion = 4;
 							}
 							[self _registerPageAtPath:objectFullPath inSection:category];
 						}
-						[_lock unlock];
 					}
 				}
 			}
