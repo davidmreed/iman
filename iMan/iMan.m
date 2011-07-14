@@ -171,7 +171,11 @@
 	
 	if ([[NSFileManager defaultManager] isReadableFileAtPath:path]) {
 		[self willChangeValueForKey:@"sharedPageDatabase"];
-		_pageDatabase = [NSUnarchiver unarchiveObjectWithFile:path];
+		@try {
+			_pageDatabase = [NSUnarchiver unarchiveObjectWithFile:path];
+		} @catch (id e) {
+			_pageDatabase = nil;
+		}
 		if (_pageDatabase != nil) {
 			[_pageDatabase retain];
 		} else {
@@ -182,7 +186,7 @@
 
 	// Make sure that our current manpath is congruent with that for which the database was generated.
 	// In testing this has gotten out of sync; it's not clear that this would ever happen in real-world usage.
-	if (![[_pageDatabase manpaths] isEqualToArray:[[iManEnginePreferences sharedInstance] manpaths]]) {
+	if ((_pageDatabase != nil) && ![[_pageDatabase manpaths] isEqualToArray:[[iManEnginePreferences sharedInstance] manpaths]]) {
 		[_pageDatabase release];
 		_pageDatabase = nil;
 	}

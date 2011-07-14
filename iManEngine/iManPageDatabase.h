@@ -12,24 +12,20 @@
 @interface iManPageDatabase : NSObject <NSCoding> {
 	NSArray *_manpaths;
 	NSMutableSet *_sections;
-	NSMutableDictionary *_sectionDatabase;
 	NSMutableDictionary *_basenameDatabase;
-	NSMutableDictionary *_directoryListings;
+	NSMutableDictionary *_sectionDatabase;
 	iManRWLock *_lock;
-	NSArray *_tree;
 }
 
 - initWithManpaths:(NSArray *)paths;
 
 - (NSArray *)manpaths;
+
 - (NSArray *)sections;
 
 - (NSArray *)pagesWithName:(NSString *)basename;
 - (NSArray *)pagesWithName:(NSString *)basename inSection:(NSString *)category;
-- (NSArray *)pagesInSection:(NSString *)category;
 
 - (void)scanAllPages;
-
-- (NSArray *)databaseTree;
 
 @end
