@@ -48,9 +48,13 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-	[aCoder encodeObject:self.name forKey:@"name"];
-	[aCoder encodeObject:self.pages forKey:@"page"];
-	[aCoder encodeObject:self.subsections forKey:@"subsections"];
+	if ([aCoder allowsKeyedCoding]) {
+		[aCoder encodeObject:self.name forKey:@"name"];
+		[aCoder encodeObject:self.pages forKey:@"pages"];
+		[aCoder encodeObject:self.subsections forKey:@"subsections"];
+	} else {
+		@throw NSInternalInconsistencyException;
+	}
 }
 
 - (NSArray *)contents
@@ -61,6 +65,8 @@
 - (void)dealloc
 {
 	[name release];
+	[pages release];
+	[subsections release];
 	[super dealloc];
 }
 
