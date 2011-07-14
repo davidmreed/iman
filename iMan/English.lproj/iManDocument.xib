@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="434"/>
+			<integer value="422"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -402,7 +402,7 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSSplitView" id="831396497">
 							<reference key="NSNextResponder" ref="122430155"/>
-							<int key="NSvFlags">256</int>
+							<int key="NSvFlags">274</int>
 							<object class="NSMutableArray" key="NSSubviews">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSBrowser" id="347703584">
@@ -1516,14 +1516,15 @@
 			<object class="NSTreeController" id="39408996">
 				<object class="NSMutableArray" key="NSDeclaredKeys">
 					<bool key="EncodedWithXMLCoder">YES</bool>
-					<string>title</string>
+					<string>iManPageBrowserTitle</string>
 				</object>
-				<string key="NSObjectClassName">NSDictionary</string>
+				<string key="NSObjectClassName">NSObject</string>
 				<object class="_NSManagedProxy" key="_NSManagedProxy"/>
 				<bool key="NSAvoidsEmptySelection">YES</bool>
 				<bool key="NSPreservesSelection">YES</bool>
 				<bool key="NSSelectsInsertedObjects">YES</bool>
-				<string key="NSTreeContentChildrenKey">contents</string>
+				<string key="NSTreeContentChildrenKey">iManPageBrowserContents</string>
+				<string key="NSTreeContentLeafKey">iManPageBrowserIsLeaf</string>
 			</object>
 			<object class="NSWindowTemplate" id="943233310">
 				<int key="NSWindowStyleMask">3</int>
@@ -2154,21 +2155,37 @@
 					<int key="connectionID">426</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">browserController</string>
+						<reference key="source" ref="140011258"/>
+						<reference key="destination" ref="39408996"/>
+					</object>
+					<int key="connectionID">437</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">pageBrowser</string>
+						<reference key="source" ref="140011258"/>
+						<reference key="destination" ref="347703584"/>
+					</object>
+					<int key="connectionID">438</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">contentValues: arrangedObjects.title</string>
+						<string key="label">contentValues: arrangedObjects.iManPageBrowserTitle</string>
 						<reference key="source" ref="347703584"/>
 						<reference key="destination" ref="39408996"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="347703584"/>
 							<reference key="NSDestination" ref="39408996"/>
-							<string key="NSLabel">contentValues: arrangedObjects.title</string>
+							<string key="NSLabel">contentValues: arrangedObjects.iManPageBrowserTitle</string>
 							<string key="NSBinding">contentValues</string>
-							<string key="NSKeyPath">arrangedObjects.title</string>
+							<string key="NSKeyPath">arrangedObjects.iManPageBrowserTitle</string>
 							<reference key="NSPreviousConnector" ref="610582160"/>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">428</int>
+					<int key="connectionID">441</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -2188,23 +2205,7 @@
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">436</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">browserController</string>
-						<reference key="source" ref="140011258"/>
-						<reference key="destination" ref="39408996"/>
-					</object>
-					<int key="connectionID">437</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">pageBrowser</string>
-						<reference key="source" ref="140011258"/>
-						<reference key="destination" ref="347703584"/>
-					</object>
-					<int key="connectionID">438</int>
+					<int key="connectionID">445</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3292,9 +3293,9 @@
 					<string>iManPageView</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
-					<string>{{344, 57}, {580, 620}}</string>
+					<string>{{112, 97}, {580, 620}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{344, 57}, {580, 620}}</string>
+					<string>{{112, 97}, {580, 620}}</string>
 					<boolean value="YES"/>
 					<boolean value="YES"/>
 					<string>{345, 220}</string>
@@ -3337,7 +3338,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">438</int>
+			<int key="maxID">445</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

@@ -117,7 +117,7 @@ typedef enum {
 
 @property BOOL useRegexps;
 @property BOOL caseSensitive;
-@property (readwrite, retain) NSArray *browserTree;
+@property (readwrite, copy) NSArray *browserTree;
 
 - (void)displayFontDidChange:(NSNotification *)notification;
 - (NSDictionary *)displayStringOptions;

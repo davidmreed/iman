@@ -7,6 +7,7 @@
 
 #import "iManDocument.h"
 #import "iManFindResult.h"
+#import "iManPageBrowserSortDescriptor.h"
 #import <iManEngine/iManEngine.h>
 #import <unistd.h>
 #import "iMan.h"
@@ -50,10 +51,10 @@ enum {
 	if (self != nil) {
 		_documentState = iManDocumentStateNone;
 		_history = [[iManHistoryQueue alloc] init];
+		[self setBrowserTree:[[[NSApp delegate] sharedPageDatabase] sections]];
+		[NSApp addObserver:self forKeyPath:@"delegate.sharedPageDatabase.sections" options:0 context:NULL];
 		[self setCaseSensitive:NO];
 		[self setUseRegexps:NO];
-		[self setBrowserTree:[[[NSApp delegate] sharedPageDatabase] databaseTree]];
-		[NSApp addObserver:self forKeyPath:@"delegate.sharedPageDatabase.databaseTree" options:0 context:NULL];
 	}
 	
 	return self;
@@ -61,20 +62,8 @@ enum {
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	if ([keyPath isEqualToString:@"delegate.sharedPageDatabase.databaseTree"]) {
-		NSArray *oldTree = [[[NSApp delegate] sharedPageDatabase] databaseTree];
-		NSMutableArray *newTree = [[NSMutableArray alloc] initWithCapacity:[oldTree count]];
-		
-		for (NSDictionary *entry in oldTree) {
-			NSMutableDictionary *newEntry = [entry mutableCopy];
-			[newEntry setObject:[entry objectForKey:@"title"] forKey:@"section"];
-			[newEntry setObject:NSLocalizedStringFromTable([entry objectForKey:@"title"], @"SectionNames", nil) forKey:@"title"];
-			[newTree addObject:newEntry];
-			[newEntry release];
-		}
-		
-		[self setBrowserTree:[[newTree copy] autorelease]];
-		[newTree release];
+	if ([keyPath isEqualToString:@"delegate.sharedPageDatabase.sections"]) {
+		[self setBrowserTree:[[[NSApp delegate] sharedPageDatabase] sections]];
 	} else {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 	}
@@ -99,7 +88,7 @@ enum {
     // This is largely derived from Apple's TextSizingExample code.
     // Note: 1.0e7 is the "LargeNumberForText" used there, it should not be changed.
     
-    [textContainer setWidthTracksTextView:NO];
+	[textContainer setWidthTracksTextView:NO];
     [textContainer setHeightTracksTextView:NO];
     [textContainer setContainerSize:NSMakeSize(1.0e7, 1.0e7)];
 	
@@ -110,7 +99,7 @@ enum {
     [manpageView setAutoresizingMask:NSViewNotSizable];
 	
 	// Set up the sort descriptors and double-click action for the browser
-	[browserController setSortDescriptors:[NSArray arrayWithObject:[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES] autorelease]]];
+	[browserController setSortDescriptors:[NSArray arrayWithObject:[[[iManPageBrowserSortDescriptor alloc] initWithKey:@"iManPageBrowserTitle" ascending:YES] autorelease]]];
 	[pageBrowser setTarget:self];
 	[pageBrowser setDoubleAction:@selector(browserGoToPage:)];
 	
@@ -395,8 +384,8 @@ enum {
 	NSDictionary *entry;
 	
 	entry = [[[pageBrowser selectedCell] representedObject] representedObject];
-	if ((entry != nil) && ([entry objectForKey:@"path"] != nil))
-		[self loadPage:[iManPage pageWithPath:[entry objectForKey:@"path"]]];
+	if ((entry != nil) && ([entry isKindOfClass:[NSString class]]))
+		[self loadPage:[iManPage pageWithPath:entry]];
 }
 
 - (IBAction)reload:(id)sender
@@ -1053,16 +1042,16 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[NSApp removeObserver:self forKeyPath:@"delegate.sharedPageDatabase.databaseTree"];
+	[NSApp removeObserver:self forKeyPath:@"delegate.sharedPageDatabase.sections"];
 	// Release top-level nib objects. Note that those in iManDocument.nib are automatically released by the window controller.
     [accessoryView release]; // loaded from iManSavePanelAccessory.nib
 	// Release instance variables.
     [_history release];
 	[_savedSearchType release];
     [_findResults release];
+	[_browserTree release];
 	[page_ release];
 	[search_ release];
-	[_browserTree release];
     [super dealloc];
 }
 
