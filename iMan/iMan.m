@@ -172,7 +172,7 @@
 	if ([[NSFileManager defaultManager] isReadableFileAtPath:path]) {
 		[self willChangeValueForKey:@"sharedPageDatabase"];
 		@try {
-			_pageDatabase = [NSUnarchiver unarchiveObjectWithFile:path];
+			_pageDatabase = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
 		} @catch (id e) {
 			_pageDatabase = nil;
 		}
@@ -238,7 +238,7 @@
 		[[NSFileManager defaultManager] createDirectoryAtPath:directory attributes:nil];
 	}
 	
-	[NSArchiver archiveRootObject:_pageDatabase toFile:[directory stringByAppendingPathComponent:@"iManPageDatabase"]];	
+	[NSKeyedArchiver archiveRootObject:_pageDatabase toFile:[directory stringByAppendingPathComponent:@"iManPageDatabase"]];	
 	
 	[pool release];
 }

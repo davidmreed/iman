@@ -68,7 +68,7 @@
 			NSData *data = [NSData dataWithContentsOfFile:cachePath];
 				
 			if (data != nil) {
-				iManPage *page = [NSUnarchiver unarchiveObjectWithData:data];
+				iManPage *page = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 				return page;
 			}
 		}
@@ -101,7 +101,7 @@
 	if (path != nil) {
 		// Attempt to create the directory. Ignore errors -- just let the write fail, no big deal.
 		[fm createDirectoryAtPath:[path stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:nil];
-		data = [NSArchiver archivedDataWithRootObject:page];
+		data = [NSKeyedArchiver archivedDataWithRootObject:page];
 		if (data != nil) {
 			[data writeToFile:path atomically:YES];
 		}
