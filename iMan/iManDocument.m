@@ -18,6 +18,8 @@
 #import "NSUserDefaults+DMRArchiving.h"
 #import "RegexKitLite.h"
 #import "RegexKitLiteSupport/RKLMatchEnumerator.h"
+#import "RBSplitView.h"
+#import "RBSplitSubview.h"
 
 // Indices of tab view panes.
 enum {
@@ -173,6 +175,28 @@ enum {
     return [super validateUserInterfaceItem:anItem];
 }
 
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+	if ([menuItem action] == @selector(toggleBrowser:)) {
+		if ([[splitView subviewAtPosition:0] isCollapsed])
+			[menuItem setTitle:NSLocalizedString(@"Show Browser", nil)];
+		else 
+			[menuItem setTitle:NSLocalizedString(@"Hide Browser", nil)];
+	} else if ([menuItem action] == @selector(toggleAproposDrawer:)) {
+		if (([aproposDrawer state] == NSDrawerOpenState) || ([aproposDrawer state] == NSDrawerOpeningState))
+			[menuItem setTitle:NSLocalizedString(@"Hide Apropos Drawer", nil)];
+		else 
+			[menuItem setTitle:NSLocalizedString(@"Show Apropos Drawer", nil)];
+	} else if ([menuItem action] == @selector(toggleFindDrawer::)) {
+		if (([findDrawer state] == NSDrawerOpenState) || ([findDrawer state] == NSDrawerOpeningState))
+			[menuItem setTitle:NSLocalizedString(@"Hide Find Drawer", nil)];
+		else 
+			[menuItem setTitle:NSLocalizedString(@"Show Find Drawer", nil)];
+	}
+	
+	return [super validateMenuItem:menuItem];
+}
+
 - (NSString *)displayName
 {
     // Construct a string of the form "page(section)". 
@@ -202,6 +226,16 @@ enum {
 
 #pragma mark -
 #pragma mark IBActions
+
+- (IBAction)toggleBrowser:(id)sender
+{
+	RBSplitSubview *subview = [splitView subviewAtPosition:0];
+	
+	if ([subview isCollapsed])
+		[subview expand];
+	else 
+		[subview collapse];
+}
 
 - (IBAction)toggleFindDrawer:(id)sender
 {
@@ -381,7 +415,7 @@ enum {
 
 - (IBAction)browserGoToPage:(id)sender
 {
-	NSDictionary *entry;
+	NSString *entry;
 	
 	entry = [[[pageBrowser selectedCell] representedObject] representedObject];
 	if ((entry != nil) && ([entry isKindOfClass:[NSString class]]))
