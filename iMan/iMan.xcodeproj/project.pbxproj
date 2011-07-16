@@ -32,6 +32,8 @@
 		635B7A870F1698CA0043FFEF /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7A830F1698CA0043FFEF /* RegexKitLite.m */; };
 		635B7A890F1698CA0043FFEF /* RKLMatchEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 635B7A850F1698CA0043FFEF /* RKLMatchEnumerator.m */; };
 		635B7AE70F16A19A0043FFEF /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 635B7AE60F16A19A0043FFEF /* libicucore.dylib */; };
+		636FFA5C13D1ED75004F8E60 /* RBSplitView(Sno).framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6355078113D083AD009173DF /* RBSplitView(Sno).framework */; };
+		636FFA6313D1ED89004F8E60 /* RBSplitView(Sno).framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6355078113D083AD009173DF /* RBSplitView(Sno).framework */; };
 		6370BC6011B6BE6800030CB8 /* iManAproposSearchIcon.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 6370BC5E11B6BE6800030CB8 /* iManAproposSearchIcon.tiff */; };
 		63750BE511BB35EF0046200F /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63750BE411BB35EF0046200F /* CoreFoundation.framework */; };
 		6378734711A9753A00D34D02 /* iManSearchResult+Description.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378734511A9753A00D34D02 /* iManSearchResult+Description.m */; };
@@ -72,6 +74,76 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = iManEngine;
 		};
+		6355077613D083AD009173DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6355076713D083AD009173DF /* RBSplitView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D5E002A107328E1100594182;
+			remoteInfo = "Framework(Leo)";
+		};
+		6355077813D083AD009173DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6355076713D083AD009173DF /* RBSplitView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D1AC9740486D14A00FE50C9;
+			remoteInfo = "IBPlugin(Leo)";
+		};
+		6355077A13D083AD009173DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6355076713D083AD009173DF /* RBSplitView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D5E003B9073298FC00594182;
+			remoteInfo = "Library(Leo)";
+		};
+		6355077C13D083AD009173DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6355076713D083AD009173DF /* RBSplitView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D5EA8A09074CF5AB00AE807E;
+			remoteInfo = "SampleApp(Leo)";
+		};
+		6355077E13D083AD009173DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6355076713D083AD009173DF /* RBSplitView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D57553981082D7BC008B2348;
+			remoteInfo = "SampleApp(LeoGC)";
+		};
+		6355078013D083AD009173DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6355076713D083AD009173DF /* RBSplitView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D57553D91082D9DA008B2348;
+			remoteInfo = "Framework(Sno)";
+		};
+		6355078213D083AD009173DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6355076713D083AD009173DF /* RBSplitView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D57553F71082DA31008B2348;
+			remoteInfo = "IBPlugin(Sno)";
+		};
+		6355078413D083AD009173DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6355076713D083AD009173DF /* RBSplitView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D575526B1081C668008B2348;
+			remoteInfo = "Library(Sno)";
+		};
+		6355078613D083AD009173DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6355076713D083AD009173DF /* RBSplitView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D57552A51081CB10008B2348;
+			remoteInfo = "SampleApp(Sno)";
+		};
+		6355078813D083AD009173DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6355076713D083AD009173DF /* RBSplitView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D57552D61081D325008B2348;
+			remoteInfo = "SampleApp(SnoGC)";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -81,6 +153,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				636FFA5C13D1ED75004F8E60 /* RBSplitView(Sno).framework in CopyFiles */,
 				63FCFBF50F1BB7D1004B3D5F /* Sparkle.framework in CopyFiles */,
 				11A1B38B0A9CB69E00115362 /* iManEngine.framework in CopyFiles */,
 			);
@@ -124,6 +197,7 @@
 		630B0FD11352965000E37CE5 /* iManDocumentWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iManDocumentWindowController.h; sourceTree = "<group>"; };
 		630B0FD21352965000E37CE5 /* iManDocumentWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iManDocumentWindowController.m; sourceTree = "<group>"; };
 		6343C1CC11A1E2B40018D313 /* iman */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = iman; sourceTree = "<group>"; };
+		6355076713D083AD009173DF /* RBSplitView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RBSplitView.xcodeproj; path = ../RBSplitView12/RBSplitView.xcodeproj; sourceTree = SOURCE_ROOT; };
 		635B7A820F1698CA0043FFEF /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		635B7A830F1698CA0043FFEF /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		635B7A840F1698CA0043FFEF /* RKLMatchEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKLMatchEnumerator.h; sourceTree = "<group>"; };
@@ -164,6 +238,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				636FFA6313D1ED89004F8E60 /* RBSplitView(Sno).framework in Frameworks */,
 				11A1B38A0A9CB69600115362 /* iManEngine.framework in Frameworks */,
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				635B7AE70F16A19A0043FFEF /* libicucore.dylib in Frameworks */,
@@ -251,6 +326,7 @@
 		19C28FB0FE9D524F11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				6355076713D083AD009173DF /* RBSplitView.xcodeproj */,
 				119D4DE20A99475E00D25E74 /* iManEngine.xcodeproj */,
 				8D15AC370486D014006FF6A4 /* iMan.app */,
 			);
@@ -346,6 +422,23 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		6355076813D083AD009173DF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6355077713D083AD009173DF /* RBSplitView(Leo).framework */,
+				6355077913D083AD009173DF /* RBSplitView(Leo).ibplugin */,
+				6355077B13D083AD009173DF /* libRBSplitView(Leo).a */,
+				6355077D13D083AD009173DF /* SampleApp(Leo).app */,
+				6355077F13D083AD009173DF /* SampleApp(LeoGC).app */,
+				6355078113D083AD009173DF /* RBSplitView(Sno).framework */,
+				6355078313D083AD009173DF /* RBSplitView(Sno).ibplugin */,
+				6355078513D083AD009173DF /* libRBSplitView(Sno).a */,
+				6355078713D083AD009173DF /* SampleApp(Sno).app */,
+				6355078913D083AD009173DF /* SampleApp(SnoGC).app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		635B7A810F1698AB0043FFEF /* RegexKitLite-4.0 */ = {
 			isa = PBXGroup;
 			children = (
@@ -410,6 +503,10 @@
 					ProductGroup = 119D4DE30A99475E00D25E74 /* Products */;
 					ProjectRef = 119D4DE20A99475E00D25E74 /* iManEngine.xcodeproj */;
 				},
+				{
+					ProductGroup = 6355076813D083AD009173DF /* Products */;
+					ProjectRef = 6355076713D083AD009173DF /* RBSplitView.xcodeproj */;
+				},
 			);
 			projectRoot = ..;
 			targets = (
@@ -424,6 +521,76 @@
 			fileType = wrapper.framework;
 			path = iManEngine.framework;
 			remoteRef = 119D4DE60A99475E00D25E74 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6355077713D083AD009173DF /* RBSplitView(Leo).framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = "RBSplitView(Leo).framework";
+			remoteRef = 6355077613D083AD009173DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6355077913D083AD009173DF /* RBSplitView(Leo).ibplugin */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "RBSplitView(Leo).ibplugin";
+			remoteRef = 6355077813D083AD009173DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6355077B13D083AD009173DF /* libRBSplitView(Leo).a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRBSplitView(Leo).a";
+			remoteRef = 6355077A13D083AD009173DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6355077D13D083AD009173DF /* SampleApp(Leo).app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "SampleApp(Leo).app";
+			remoteRef = 6355077C13D083AD009173DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6355077F13D083AD009173DF /* SampleApp(LeoGC).app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "SampleApp(LeoGC).app";
+			remoteRef = 6355077E13D083AD009173DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6355078113D083AD009173DF /* RBSplitView(Sno).framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = "RBSplitView(Sno).framework";
+			remoteRef = 6355078013D083AD009173DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6355078313D083AD009173DF /* RBSplitView(Sno).ibplugin */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "RBSplitView(Sno).ibplugin";
+			remoteRef = 6355078213D083AD009173DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6355078513D083AD009173DF /* libRBSplitView(Sno).a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRBSplitView(Sno).a";
+			remoteRef = 6355078413D083AD009173DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6355078713D083AD009173DF /* SampleApp(Sno).app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "SampleApp(Sno).app";
+			remoteRef = 6355078613D083AD009173DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6355078913D083AD009173DF /* SampleApp(SnoGC).app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "SampleApp(SnoGC).app";
+			remoteRef = 6355078813D083AD009173DF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -778,8 +945,8 @@
 			buildSettings = {
 				GCC_MODEL_TUNING = G5;
 				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/../Externals",
-					"${SRCROOT}/..",
+					"${SRCROOT}/../",
+					"${SRCROOT}/../RBSplitView12/Source",
 				);
 				SDKROOT = macosx10.5;
 			};
@@ -796,8 +963,8 @@
 				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_MODEL_TUNING = G5;
 				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/../Externals",
-					"${SRCROOT}/..",
+					"${SRCROOT}/../",
+					"${SRCROOT}/../RBSplitView12/Source",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				SDKROOT = macosx10.5;
@@ -809,8 +976,8 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/../Externals",
-					"${SRCROOT}/..",
+					"${SRCROOT}/../",
+					"${SRCROOT}/../RBSplitView12/Source",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				SDKROOT = macosx10.5;
