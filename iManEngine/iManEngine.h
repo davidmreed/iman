@@ -6,6 +6,7 @@
 //
 
 #import <iManEngine/iManPage.h>
+#import <iManEngine/iManSection.h>
 #import <iManEngine/iManSearch.h>
 #import <iManEngine/iManIndex.h>
 #import <iManEngine/iManPageCache.h>

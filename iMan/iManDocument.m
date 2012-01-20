@@ -7,6 +7,7 @@
 
 #import "iManDocument.h"
 #import "iManFindResult.h"
+#import "iManPageBrowserSortDescriptor.h"
 #import <iManEngine/iManEngine.h>
 #import <unistd.h>
 #import "iMan.h"
@@ -17,6 +18,8 @@
 #import "NSUserDefaults+DMRArchiving.h"
 #import "RegexKitLite.h"
 #import "RegexKitLiteSupport/RKLMatchEnumerator.h"
+#import "RBSplitView.h"
+#import "RBSplitSubview.h"
 
 // Indices of tab view panes.
 enum {
@@ -38,7 +41,7 @@ enum {
 
 @implementation iManDocument
 
-@synthesize useRegexps, caseSensitive;
+@synthesize useRegexps, caseSensitive, browserTree = _browserTree;
 
 #pragma mark -
 #pragma mark NSDocument Overrides
@@ -50,11 +53,23 @@ enum {
 	if (self != nil) {
 		_documentState = iManDocumentStateNone;
 		_history = [[iManHistoryQueue alloc] init];
+		[self setBrowserTree:[[[NSApp delegate] sharedPageDatabase] sections]];
+		[NSApp addObserver:self forKeyPath:@"delegate.sharedPageDatabase.sections" options:0 context:NULL];
 		[self setCaseSensitive:NO];
 		[self setUseRegexps:NO];
 	}
 	
 	return self;
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([keyPath isEqualToString:@"delegate.sharedPageDatabase.sections"]) {
+		[self setBrowserTree:[[[NSApp delegate] sharedPageDatabase] sections]];
+	} else {
+		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+	}
+
 }
 
 - (NSURL *)fileURL
@@ -75,7 +90,7 @@ enum {
     // This is largely derived from Apple's TextSizingExample code.
     // Note: 1.0e7 is the "LargeNumberForText" used there, it should not be changed.
     
-    [textContainer setWidthTracksTextView:NO];
+	[textContainer setWidthTracksTextView:NO];
     [textContainer setHeightTracksTextView:NO];
     [textContainer setContainerSize:NSMakeSize(1.0e7, 1.0e7)];
 	
@@ -84,6 +99,11 @@ enum {
     [manpageView setHorizontallyResizable:YES];
     [manpageView setVerticallyResizable:YES];
     [manpageView setAutoresizingMask:NSViewNotSizable];
+	
+	// Set up the sort descriptors and double-click action for the browser
+	[browserController setSortDescriptors:[NSArray arrayWithObject:[[[iManPageBrowserSortDescriptor alloc] initWithKey:@"iManPageBrowserTitle" ascending:YES] autorelease]]];
+	[pageBrowser setTarget:self];
+	[pageBrowser setDoubleAction:@selector(browserGoToPage:)];
 	
 	// Setup the search field menu. 
 	for (id anObject in [iManSearch searchTypes]) {
@@ -155,6 +175,28 @@ enum {
     return [super validateUserInterfaceItem:anItem];
 }
 
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+	if ([menuItem action] == @selector(toggleBrowser:)) {
+		if ([[splitView subviewAtPosition:0] isCollapsed])
+			[menuItem setTitle:NSLocalizedString(@"Show Browser", nil)];
+		else 
+			[menuItem setTitle:NSLocalizedString(@"Hide Browser", nil)];
+	} else if ([menuItem action] == @selector(toggleAproposDrawer:)) {
+		if (([aproposDrawer state] == NSDrawerOpenState) || ([aproposDrawer state] == NSDrawerOpeningState))
+			[menuItem setTitle:NSLocalizedString(@"Hide Apropos Drawer", nil)];
+		else 
+			[menuItem setTitle:NSLocalizedString(@"Show Apropos Drawer", nil)];
+	} else if ([menuItem action] == @selector(toggleFindDrawer::)) {
+		if (([findDrawer state] == NSDrawerOpenState) || ([findDrawer state] == NSDrawerOpeningState))
+			[menuItem setTitle:NSLocalizedString(@"Hide Find Drawer", nil)];
+		else 
+			[menuItem setTitle:NSLocalizedString(@"Show Find Drawer", nil)];
+	}
+	
+	return [super validateMenuItem:menuItem];
+}
+
 - (NSString *)displayName
 {
     // Construct a string of the form "page(section)". 
@@ -184,6 +226,16 @@ enum {
 
 #pragma mark -
 #pragma mark IBActions
+
+- (IBAction)toggleBrowser:(id)sender
+{
+	RBSplitSubview *subview = [splitView subviewAtPosition:0];
+	
+	if ([subview isCollapsed])
+		[subview expand];
+	else 
+		[subview collapse];
+}
 
 - (IBAction)toggleFindDrawer:(id)sender
 {
@@ -359,6 +411,15 @@ enum {
 - (IBAction)loadRequestedPage:(id)sender
 {
 	[self loadPageWithStringInput:[sender stringValue]];
+}
+
+- (IBAction)browserGoToPage:(id)sender
+{
+	NSString *entry;
+	
+	entry = [[[pageBrowser selectedCell] representedObject] representedObject];
+	if ((entry != nil) && ([entry isKindOfClass:[NSString class]]))
+		[self loadPage:[iManPage pageWithPath:entry]];
 }
 
 - (IBAction)reload:(id)sender
@@ -1015,12 +1076,14 @@ static NSString *const iManSectionAndNameRegex = @"^([0-9n][a-zA-Z]*)\\s+(\\S+)$
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSApp removeObserver:self forKeyPath:@"delegate.sharedPageDatabase.sections"];
 	// Release top-level nib objects. Note that those in iManDocument.nib are automatically released by the window controller.
     [accessoryView release]; // loaded from iManSavePanelAccessory.nib
 	// Release instance variables.
     [_history release];
 	[_savedSearchType release];
     [_findResults release];
+	[_browserTree release];
 	[page_ release];
 	[search_ release];
     [super dealloc];

@@ -176,24 +176,32 @@
 	NSString *path = [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"iMan/iManPageDatabase"];
 	
 	if ([[NSFileManager defaultManager] isReadableFileAtPath:path]) {
-		_pageDatabase = [NSUnarchiver unarchiveObjectWithFile:path];
+		[self willChangeValueForKey:@"sharedPageDatabase"];
+		@try {
+			_pageDatabase = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+		} @catch (id e) {
+			_pageDatabase = nil;
+		}
 		if (_pageDatabase != nil) {
 			[_pageDatabase retain];
 		} else {
 			[[NSFileManager defaultManager] removeItemAtPath:path error:NULL];
 		}
+		[self didChangeValueForKey:@"sharedPageDatabase"];
 	}
 
 	// Make sure that our current manpath is congruent with that for which the database was generated.
 	// In testing this has gotten out of sync; it's not clear that this would ever happen in real-world usage.
-	if (![[_pageDatabase manpaths] isEqualToArray:[[iManEnginePreferences sharedInstance] manpaths]]) {
+	if ((_pageDatabase != nil) && ![[_pageDatabase manpaths] isEqualToArray:[[iManEnginePreferences sharedInstance] manpaths]]) {
 		[_pageDatabase release];
 		_pageDatabase = nil;
 	}
 
 	if (_pageDatabase == nil) {
 		// Create a new page database, present a dialogue box, and spin off a thread to build the database.
+		[self willChangeValueForKey:@"sharedPageDatabase"];
 		_pageDatabase = [[iManPageDatabase alloc] initWithManpaths:[[iManEnginePreferences sharedInstance] manpaths]];
+		[self didChangeValueForKey:@"sharedPageDatabase"];
 		
 		[NSBundle loadNibNamed:@"iManInitializingDatabaseWindow" owner:self];
 		[progressIndicator startAnimation:self];
@@ -236,7 +244,7 @@
 		[[NSFileManager defaultManager] createDirectoryAtPath:directory attributes:nil];
 	}
 	
-	[NSArchiver archiveRootObject:_pageDatabase toFile:[directory stringByAppendingPathComponent:@"iManPageDatabase"]];	
+	[NSKeyedArchiver archiveRootObject:_pageDatabase toFile:[directory stringByAppendingPathComponent:@"iManPageDatabase"]];	
 	
 	[pool release];
 }
@@ -300,9 +308,11 @@
 
 - (IBAction)rescanDatabase:(id)sender
 {
+	[self willChangeValueForKey:@"sharedPageDatabase"];
 	[_pageDatabase release];
 	_pageDatabase = [[iManPageDatabase alloc] initWithManpaths:[[iManEnginePreferences sharedInstance] manpaths]];
-		
+	[self didChangeValueForKey:@"sharedPageDatabase"];
+	
 	[NSBundle loadNibNamed:@"iManInitializingDatabaseWindow" owner:self];
 	[progressIndicator startAnimation:self];
 	[initializingDatabaseWindow center];
