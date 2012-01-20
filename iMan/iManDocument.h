@@ -7,7 +7,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class iManPage, iManSearch, iManHistoryQueue;
+@class iManPage, iManSearch, iManHistoryQueue, RBSplitView;
 
 typedef enum { 
 	iManDocumentStateNone, 
@@ -60,6 +60,12 @@ typedef enum {
 	
 	// Current document state.
 	iManDocumentState _documentState;
+	
+	// Browser data.
+	IBOutlet NSTreeController *browserController;
+	IBOutlet NSBrowser *pageBrowser;
+	IBOutlet RBSplitView *splitView;
+	NSArray *_browserTree;
 }
 
 - (iManPage *)page;
@@ -86,6 +92,7 @@ typedef enum {
 - (IBAction)changeExportFormat:(id)sender;
 - (void)exportPanelDidEnd:(NSSavePanel *)savePanel returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 
+- (IBAction)toggleBrowser:(id)sender;
 - (IBAction)toggleFindDrawer:(id)sender;
 - (IBAction)toggleAproposDrawer:(id)sender;
 - (IBAction)back:(id)sender;
@@ -112,6 +119,7 @@ typedef enum {
 
 @property BOOL useRegexps;
 @property BOOL caseSensitive;
+@property (readwrite, copy) NSArray *browserTree;
 
 - (void)displayFontDidChange:(NSNotification *)notification;
 - (NSDictionary *)displayStringOptions;
